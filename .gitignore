@@ -43,3 +43,7 @@ coverage/
 # Cache
 .cache/
 *.cache
+
+# Nix/direnv
+.direnv/
+result
