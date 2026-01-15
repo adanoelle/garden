@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dither Animation Patterns</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/commit-mono@1.143/commitmono.css">
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+
+  <style>
+    body {
+      margin: 0;
+      padding: var(--garden-space-8);
+      background: var(--garden-bg);
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      line-height: var(--garden-leading-normal);
+    }
+
+    h1 {
+      font-size: var(--garden-text-xl);
+      font-weight: 400;
+      margin: 0 0 var(--garden-space-2) 0;
+    }
+
+    .subtitle {
+      color: var(--garden-fg-muted);
+      font-size: var(--garden-text-sm);
+      margin-bottom: var(--garden-space-8);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--garden-space-6);
+    }
+
+    .demo-card {
+      border: var(--garden-border-width) solid var(--garden-fg);
+      overflow: hidden;
+    }
+
+    .demo-card h2 {
+      font-size: var(--garden-text-sm);
+      font-weight: 400;
+      margin: 0;
+      padding: var(--garden-space-2) var(--garden-space-3);
+      background: var(--garden-bg-subtle);
+      border-bottom: var(--garden-border-width) solid var(--garden-fg);
+    }
+
+    .demo-area {
+      height: 200px;
+      position: relative;
+      background:
+        linear-gradient(45deg, var(--garden-purbeck) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--garden-purbeck) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--garden-purbeck) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--garden-purbeck) 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background-color: color-mix(in srgb, var(--garden-bg) 70%, transparent);
+      background-image: var(--garden-dither-25);
+      background-size: 4px 4px;
+    }
+
+    .demo-description {
+      padding: var(--garden-space-3);
+      font-size: var(--garden-text-xs);
+      color: var(--garden-fg-muted);
+      border-top: var(--garden-border-width) solid var(--garden-fg);
+    }
+
+    /* 1. Static (no animation) */
+    .static .overlay {
+      /* No animation */
+    }
+
+    /* 2. Marching ants - diagonal crawl */
+    @keyframes march {
+      from { background-position: 0 0; }
+      to { background-position: 4px 4px; }
+    }
+    .marching .overlay {
+      animation: march 0.5s linear infinite;
+    }
+
+    /* 3. Slow march - more subtle */
+    .slow-march .overlay {
+      animation: march 2s linear infinite;
+    }
+
+    /* 4. Breathe - opacity pulse */
+    @keyframes breathe {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .breathe .overlay {
+      animation: breathe 3s ease-in-out infinite;
+    }
+
+    /* 5. Shimmer - horizontal shift */
+    @keyframes shimmer {
+      0%, 100% { background-position: 0 0; }
+      50% { background-position: 2px 0; }
+    }
+    .shimmer .overlay {
+      animation: shimmer 2s ease-in-out infinite;
+    }
+
+    /* 6. Density shift - between 25% and 50% */
+    @keyframes density-shift {
+      0%, 100% {
+        background-image: var(--garden-dither-25);
+        background-size: 4px 4px;
+      }
+      50% {
+        background-image: var(--garden-dither-50);
+        background-size: 2px 2px;
+      }
+    }
+    .density-shift .overlay {
+      animation: density-shift 3s ease-in-out infinite;
+    }
+
+    /* 7. Fade in only (for modal open) */
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .fade-in .overlay {
+      animation: fade-in 0.3s ease-out forwards;
+    }
+
+    /* 8. Grow pattern (for modal open) */
+    @keyframes grow-pattern {
+      from {
+        background-size: 8px 8px;
+        opacity: 0;
+      }
+      to {
+        background-size: 4px 4px;
+        opacity: 1;
+      }
+    }
+    .grow-pattern .overlay {
+      animation: grow-pattern 0.4s ease-out forwards;
+    }
+
+    /* 9. Scanline effect */
+    @keyframes scanline {
+      from { background-position: 0 0; }
+      to { background-position: 0 4px; }
+    }
+    .scanline .overlay {
+      animation: scanline 0.3s linear infinite;
+    }
+
+    /* 10. Gentle drift */
+    @keyframes drift {
+      0% { background-position: 0 0; }
+      25% { background-position: 1px 0; }
+      50% { background-position: 1px 1px; }
+      75% { background-position: 0 1px; }
+      100% { background-position: 0 0; }
+    }
+    .drift .overlay {
+      animation: drift 4s linear infinite;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: var(--garden-space-8);
+      padding: var(--garden-space-4);
+      border: var(--garden-border-width) solid var(--garden-fg);
+      background: var(--garden-bg-subtle);
+    }
+
+    .controls h2 {
+      font-size: var(--garden-text-sm);
+      margin: 0 0 var(--garden-space-3) 0;
+    }
+
+    button {
+      background: transparent;
+      border: var(--garden-border-width) solid var(--garden-fg);
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      font-size: var(--garden-text-sm);
+      padding: var(--garden-space-2) var(--garden-space-3);
+      cursor: pointer;
+      margin-right: var(--garden-space-2);
+      margin-bottom: var(--garden-space-2);
+    }
+
+    button:hover {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+    }
+
+    button.active {
+      background-color: var(--garden-fg);
+      color: var(--garden-bg);
+    }
+  </style>
+</head>
+<body>
+  <h1>Dither Animation Patterns</h1>
+  <p class="subtitle">Exploring animation options for the modal backdrop</p>
+
+  <div class="grid">
+    <div class="demo-card static">
+      <h2>1. Static (current)</h2>
+      <div class="demo-area">
+        <div class="overlay"></div>
+      </div>
+      <p class="demo-description">No animation. Clean and professional. Best for most use cases.</p>
+    </div>
+
+    <div class="demo-card slow-march">
+      <h2>2. Slow March</h2>
+      <div class="demo-area">
+        <div class="overlay"></div>
+      </div>
+      <p class="demo-description">Gentle diagonal crawl. Subtle movement that suggests activity without distraction.</p>
+    </div>
+
+    <div class="demo-card breathe">
+      <h2>3. Breathe</h2>
+      <div class="demo-area">
+        <div class="overlay"></div>
+      </div>
+      <p class="demo-description">Opacity pulses gently. Organic, calming feel. Good for loading states.</p>
+    </div>
+
+    <div class="demo-card shimmer">
+      <h2>4. Shimmer</h2>
+      <div class="demo-area">
+        <div class="overlay"></div>
+      </div>
+      <p class="demo-description">Horizontal micro-shift. Very subtle, almost imperceptible movement.</p>
+    </div>
+
+    <div class="demo-card drift">
+      <h2>5. Drift</h2>
+      <div class="demo-area">
+        <div class="overlay"></div>
+      </div>
+      <p class="demo-description">Slow circular drift. Peaceful, ambient feel. PC-98 screensaver vibes.</p>
+    </div>
+
+    <div class="demo-card marching">
+      <h2>6. Fast March</h2>
+      <div class="demo-area">
+        <div class="overlay"></div>
+      </div>
+      <p class="demo-description">Classic "marching ants" selection effect. Too active for backdrop, but useful for selection states.</p>
+    </div>
+
+    <div class="demo-card density-shift">
+      <h2>7. Density Shift</h2>
+      <div class="demo-area">
+        <div class="overlay"></div>
+      </div>
+      <p class="demo-description">Morphs between dither densities. Interesting but may be too busy.</p>
+    </div>
+
+    <div class="demo-card scanline">
+      <h2>8. Scanline</h2>
+      <div class="demo-area">
+        <div class="overlay"></div>
+      </div>
+      <p class="demo-description">CRT scanline effect. Very retro but can be harsh on the eyes.</p>
+    </div>
+  </div>
+
+  <div class="controls">
+    <h2>Entrance Animations (click to replay)</h2>
+    <button onclick="replayAnimation('fade-in')">Fade In</button>
+    <button onclick="replayAnimation('grow-pattern')">Grow Pattern</button>
+  </div>
+
+  <div class="grid" style="margin-top: var(--garden-space-4);">
+    <div class="demo-card" id="entrance-demo">
+      <h2>Entrance Preview</h2>
+      <div class="demo-area">
+        <div class="overlay" id="entrance-overlay"></div>
+      </div>
+      <p class="demo-description">Click buttons above to preview entrance animations for modal open.</p>
+    </div>
+  </div>
+
+  <script>
+    function replayAnimation(className) {
+      const overlay = document.getElementById('entrance-overlay');
+      overlay.style.animation = 'none';
+      overlay.offsetHeight; // Trigger reflow
+
+      // Clear existing animation classes
+      overlay.className = 'overlay';
+
+      // Add the animation
+      if (className === 'fade-in') {
+        overlay.style.animation = 'fade-in 0.3s ease-out forwards';
+      } else if (className === 'grow-pattern') {
+        overlay.style.animation = 'grow-pattern 0.4s ease-out forwards';
+      }
+    }
+  </script>
+</body>
+</html>

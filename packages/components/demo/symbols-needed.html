@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Symbols We Need - Commit Mono Test</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/commit-mono@1.143/commitmono.css">
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+
+  <style>
+    body {
+      margin: 0;
+      padding: var(--garden-space-8);
+      background: var(--garden-bg);
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      line-height: var(--garden-leading-normal);
+    }
+
+    h1 {
+      font-size: var(--garden-text-xl);
+      font-weight: 400;
+      margin: 0 0 var(--garden-space-4) 0;
+    }
+
+    .instructions {
+      background-color: var(--garden-bg-subtle);
+      border: var(--garden-border-width) solid var(--garden-fg);
+      padding: var(--garden-space-4);
+      margin-bottom: var(--garden-space-8);
+      font-size: var(--garden-text-sm);
+    }
+
+    .section {
+      margin-bottom: var(--garden-space-8);
+    }
+
+    .section h2 {
+      font-size: var(--garden-text-base);
+      font-weight: 400;
+      margin: 0 0 var(--garden-space-4) 0;
+      color: var(--garden-fg-muted);
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: var(--garden-border-width) solid var(--garden-fg);
+      padding: var(--garden-space-3);
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--garden-bg-subtle);
+      font-weight: 400;
+      font-size: var(--garden-text-xs);
+    }
+
+    .symbol {
+      font-size: var(--garden-text-2xl);
+      text-align: center;
+    }
+
+    .symbol-sm {
+      font-size: var(--garden-text-sm);
+    }
+
+    .use-case {
+      font-size: var(--garden-text-xs);
+      color: var(--garden-fg-muted);
+    }
+
+    /* Reference: show same char in system font for comparison */
+    .system-font {
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .commit-mono {
+      font-family: 'Commit Mono', monospace;
+    }
+
+    .comparison {
+      display: flex;
+      gap: var(--garden-space-4);
+      align-items: center;
+    }
+
+    .comparison > span {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--garden-space-1);
+    }
+
+    .font-label {
+      font-size: var(--garden-text-xs);
+      color: var(--garden-fg-muted);
+    }
+
+    .verdict {
+      font-size: var(--garden-text-xs);
+      padding: var(--garden-space-1) var(--garden-space-2);
+    }
+
+    .verdict.yes {
+      background-color: var(--garden-bg-subtle);
+    }
+
+    .verdict.no {
+      background-color: var(--garden-bg-muted);
+    }
+
+    .verdict.maybe {
+      background-color: var(--garden-bg-subtle);
+      border: 1px dashed var(--garden-fg-muted);
+    }
+  </style>
+</head>
+<body>
+  <h1>Symbols We Need</h1>
+
+  <div class="instructions">
+    <strong>How to read this:</strong> Compare "Commit Mono" vs "System Font" columns.
+    If they look identical, the symbol is likely falling back to system font.
+    If Commit Mono looks distinctly monospace/different, it's likely native to the font.
+  </div>
+
+  <section class="section">
+    <h2>1. Garden Block (Play/Stop Controls)</h2>
+    <table>
+      <tr>
+        <th>Symbol</th>
+        <th>Commit Mono</th>
+        <th>System Font</th>
+        <th>Use</th>
+        <th>Notes</th>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">▶</td>
+        <td class="symbol commit-mono">▶</td>
+        <td class="symbol system-font">▶</td>
+        <td>Play</td>
+        <td class="use-case">BLACK RIGHT-POINTING TRIANGLE U+25B6</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">⏵</td>
+        <td class="symbol commit-mono">⏵</td>
+        <td class="symbol system-font">⏵</td>
+        <td>Play alt</td>
+        <td class="use-case">BLACK MEDIUM RIGHT-POINTING TRIANGLE U+23F5</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">►</td>
+        <td class="symbol commit-mono">►</td>
+        <td class="symbol system-font">►</td>
+        <td>Play alt 2</td>
+        <td class="use-case">BLACK RIGHT-POINTING POINTER U+25BA</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">⏹</td>
+        <td class="symbol commit-mono">⏹</td>
+        <td class="symbol system-font">⏹</td>
+        <td>Stop</td>
+        <td class="use-case">BLACK SQUARE FOR STOP U+23F9</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">■</td>
+        <td class="symbol commit-mono">■</td>
+        <td class="symbol system-font">■</td>
+        <td>Stop alt</td>
+        <td class="use-case">BLACK SQUARE U+25A0</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">⏸</td>
+        <td class="symbol commit-mono">⏸</td>
+        <td class="symbol system-font">⏸</td>
+        <td>Pause</td>
+        <td class="use-case">DOUBLE VERTICAL BAR U+23F8</td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>2. Future Checkboxes & Radios</h2>
+    <table>
+      <tr>
+        <th>Symbol</th>
+        <th>Commit Mono</th>
+        <th>System Font</th>
+        <th>Use</th>
+        <th>Notes</th>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">☐</td>
+        <td class="symbol commit-mono">☐</td>
+        <td class="symbol system-font">☐</td>
+        <td>Checkbox empty</td>
+        <td class="use-case">BALLOT BOX U+2610</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">☑</td>
+        <td class="symbol commit-mono">☑</td>
+        <td class="symbol system-font">☑</td>
+        <td>Checkbox checked</td>
+        <td class="use-case">BALLOT BOX WITH CHECK U+2611</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">☒</td>
+        <td class="symbol commit-mono">☒</td>
+        <td class="symbol system-font">☒</td>
+        <td>Checkbox X</td>
+        <td class="use-case">BALLOT BOX WITH X U+2612</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">□</td>
+        <td class="symbol commit-mono">□</td>
+        <td class="symbol system-font">□</td>
+        <td>Empty square</td>
+        <td class="use-case">WHITE SQUARE U+25A1</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">■</td>
+        <td class="symbol commit-mono">■</td>
+        <td class="symbol system-font">■</td>
+        <td>Filled square</td>
+        <td class="use-case">BLACK SQUARE U+25A0</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">○</td>
+        <td class="symbol commit-mono">○</td>
+        <td class="symbol system-font">○</td>
+        <td>Radio empty</td>
+        <td class="use-case">WHITE CIRCLE U+25CB</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">●</td>
+        <td class="symbol commit-mono">●</td>
+        <td class="symbol system-font">●</td>
+        <td>Radio filled</td>
+        <td class="use-case">BLACK CIRCLE U+25CF</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">◉</td>
+        <td class="symbol commit-mono">◉</td>
+        <td class="symbol system-font">◉</td>
+        <td>Radio selected</td>
+        <td class="use-case">FISHEYE U+25C9</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">◯</td>
+        <td class="symbol commit-mono">◯</td>
+        <td class="symbol system-font">◯</td>
+        <td>Large circle</td>
+        <td class="use-case">LARGE CIRCLE U+25EF</td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>3. Button Icons (Common Actions)</h2>
+    <table>
+      <tr>
+        <th>Symbol</th>
+        <th>Commit Mono</th>
+        <th>System Font</th>
+        <th>Use</th>
+        <th>Notes</th>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">←</td>
+        <td class="symbol commit-mono">←</td>
+        <td class="symbol system-font">←</td>
+        <td>Back</td>
+        <td class="use-case">LEFTWARDS ARROW U+2190</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">→</td>
+        <td class="symbol commit-mono">→</td>
+        <td class="symbol system-font">→</td>
+        <td>Next</td>
+        <td class="use-case">RIGHTWARDS ARROW U+2192</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">↑</td>
+        <td class="symbol commit-mono">↑</td>
+        <td class="symbol system-font">↑</td>
+        <td>Up</td>
+        <td class="use-case">UPWARDS ARROW U+2191</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">↓</td>
+        <td class="symbol commit-mono">↓</td>
+        <td class="symbol system-font">↓</td>
+        <td>Down</td>
+        <td class="use-case">DOWNWARDS ARROW U+2193</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">+</td>
+        <td class="symbol commit-mono">+</td>
+        <td class="symbol system-font">+</td>
+        <td>Add</td>
+        <td class="use-case">PLUS SIGN U+002B</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">−</td>
+        <td class="symbol commit-mono">−</td>
+        <td class="symbol system-font">−</td>
+        <td>Remove</td>
+        <td class="use-case">MINUS SIGN U+2212</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">×</td>
+        <td class="symbol commit-mono">×</td>
+        <td class="symbol system-font">×</td>
+        <td>Close</td>
+        <td class="use-case">MULTIPLICATION SIGN U+00D7</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">✓</td>
+        <td class="symbol commit-mono">✓</td>
+        <td class="symbol system-font">✓</td>
+        <td>Confirm</td>
+        <td class="use-case">CHECK MARK U+2713</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">✕</td>
+        <td class="symbol commit-mono">✕</td>
+        <td class="symbol system-font">✕</td>
+        <td>Cancel</td>
+        <td class="use-case">MULTIPLICATION X U+2715</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">↻</td>
+        <td class="symbol commit-mono">↻</td>
+        <td class="symbol system-font">↻</td>
+        <td>Refresh</td>
+        <td class="use-case">CLOCKWISE OPEN CIRCLE ARROW U+21BB</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">↺</td>
+        <td class="symbol commit-mono">↺</td>
+        <td class="symbol system-font">↺</td>
+        <td>Undo</td>
+        <td class="use-case">ANTICLOCKWISE OPEN CIRCLE ARROW U+21BA</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">⋮</td>
+        <td class="symbol commit-mono">⋮</td>
+        <td class="symbol system-font">⋮</td>
+        <td>More (vertical)</td>
+        <td class="use-case">VERTICAL ELLIPSIS U+22EE</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">⋯</td>
+        <td class="symbol commit-mono">⋯</td>
+        <td class="symbol system-font">⋯</td>
+        <td>More (horizontal)</td>
+        <td class="use-case">MIDLINE HORIZONTAL ELLIPSIS U+22EF</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">↗</td>
+        <td class="symbol commit-mono">↗</td>
+        <td class="symbol system-font">↗</td>
+        <td>External link</td>
+        <td class="use-case">NORTH EAST ARROW U+2197</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">⌂</td>
+        <td class="symbol commit-mono">⌂</td>
+        <td class="symbol system-font">⌂</td>
+        <td>Home</td>
+        <td class="use-case">HOUSE U+2302</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">⚙</td>
+        <td class="symbol commit-mono">⚙</td>
+        <td class="symbol system-font">⚙</td>
+        <td>Settings</td>
+        <td class="use-case">GEAR U+2699</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">★</td>
+        <td class="symbol commit-mono">★</td>
+        <td class="symbol system-font">★</td>
+        <td>Favorite</td>
+        <td class="use-case">BLACK STAR U+2605 (in Commit Mono!)</td>
+      </tr>
+      <tr>
+        <td class="symbol commit-mono">☆</td>
+        <td class="symbol commit-mono">☆</td>
+        <td class="symbol system-font">☆</td>
+        <td>Unfavorite</td>
+        <td class="use-case">WHITE STAR U+2606</td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>4. Inline at Text Size</h2>
+    <p>How these look inline at normal text size:</p>
+    <p class="commit-mono" style="font-size: var(--garden-text-sm);">
+      Play ▶ | Stop ■ | Back ← | Next → | Add + | Close × | Check ✓ | More ⋮
+    </p>
+    <p class="commit-mono" style="font-size: var(--garden-text-sm);">
+      Checkbox: ☐ unchecked | ☑ checked | Radio: ○ off | ● on
+    </p>
+  </section>
+
+</body>
+</html>

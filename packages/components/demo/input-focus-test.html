@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Focus States - Comparison</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/commit-mono@1.143/commitmono.css">
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+
+  <style>
+    body {
+      margin: 0;
+      padding: var(--garden-space-8);
+      background: var(--garden-bg);
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      line-height: var(--garden-leading-normal);
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--garden-space-8);
+      padding-bottom: var(--garden-space-4);
+      border-bottom: var(--garden-border-width) solid var(--garden-fg);
+    }
+
+    h1 {
+      font-size: var(--garden-text-xl);
+      font-weight: 400;
+      margin: 0;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: var(--garden-border-width) solid var(--garden-fg);
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      font-size: var(--garden-text-sm);
+      padding: var(--garden-space-2) var(--garden-space-4);
+      cursor: pointer;
+    }
+
+    .theme-toggle:hover {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+      color: var(--garden-bg);
+    }
+
+    .section {
+      margin-bottom: var(--garden-space-8);
+    }
+
+    .section h2 {
+      font-size: var(--garden-text-base);
+      font-weight: 400;
+      margin: 0 0 var(--garden-space-4) 0;
+      color: var(--garden-fg-muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--garden-space-6);
+    }
+
+    .variant {
+      display: flex;
+      flex-direction: column;
+      gap: var(--garden-space-2);
+    }
+
+    .variant-label {
+      font-size: var(--garden-text-xs);
+      color: var(--garden-fg-muted);
+    }
+
+    .variant-desc {
+      font-size: var(--garden-text-xs);
+      color: var(--garden-fg-muted);
+      opacity: 0.7;
+      margin-top: var(--garden-space-1);
+    }
+
+    /* Base input styles */
+    .test-input {
+      appearance: none;
+      border: none;
+      background: none;
+      display: block;
+      width: 100%;
+      padding: var(--garden-space-2) var(--garden-space-3);
+      min-height: 2.5rem;
+      font-family: var(--garden-font-mono);
+      font-size: var(--garden-text-sm);
+      line-height: var(--garden-leading-tight);
+      color: var(--garden-fg);
+      background-color: transparent;
+      border: var(--garden-border-width) solid var(--garden-fg);
+      transition: all var(--garden-duration-fast) var(--garden-ease-out);
+    }
+
+    .test-input::placeholder {
+      color: var(--garden-fg-muted);
+      opacity: 1;
+    }
+
+    .test-input:focus {
+      outline: none;
+    }
+
+    /* ===========================================
+       VARIANT 1: Current (no treatment)
+       =========================================== */
+    .v-current:focus {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+    }
+
+    /* ===========================================
+       VARIANT 2: Soft halo + dither-50
+       =========================================== */
+    .v-halo-soft-50:focus {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+      text-shadow:
+        0 0 2px var(--garden-bg),
+        0 0 4px var(--garden-bg),
+        0 0 6px var(--garden-bg);
+    }
+
+    /* ===========================================
+       VARIANT 3: Crisp halo + dither-50
+       =========================================== */
+    .v-halo-crisp-50:focus {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+      text-shadow:
+        -1px -1px 0 var(--garden-bg),
+         1px -1px 0 var(--garden-bg),
+        -1px  1px 0 var(--garden-bg),
+         1px  1px 0 var(--garden-bg);
+    }
+
+    /* ===========================================
+       VARIANT 4: Soft halo + dither-25
+       =========================================== */
+    .v-halo-soft-25:focus {
+      background-image: var(--garden-dither-25);
+      background-size: 4px 4px;
+      text-shadow:
+        0 0 2px var(--garden-bg),
+        0 0 4px var(--garden-bg);
+    }
+
+    /* ===========================================
+       VARIANT 5: Crisp halo + dither-25
+       =========================================== */
+    .v-halo-crisp-25:focus {
+      background-image: var(--garden-dither-25);
+      background-size: 4px 4px;
+      text-shadow:
+        -1px -1px 0 var(--garden-bg),
+         1px -1px 0 var(--garden-bg),
+        -1px  1px 0 var(--garden-bg),
+         1px  1px 0 var(--garden-bg);
+    }
+
+    /* ===========================================
+       VARIANT 6: No halo + dither-25
+       =========================================== */
+    .v-no-halo-25:focus {
+      background-image: var(--garden-dither-25);
+      background-size: 4px 4px;
+    }
+
+    /* ===========================================
+       VARIANT 7: Inverted text + dither-50
+       =========================================== */
+    .v-inverted-50:focus {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+      color: var(--garden-bg);
+    }
+
+    .v-inverted-50:focus::placeholder {
+      color: var(--garden-bg);
+      opacity: 0.7;
+    }
+
+    /* ===========================================
+       VARIANT 8: Inverted text + dither-25
+       =========================================== */
+    .v-inverted-25:focus {
+      background-image: var(--garden-dither-25);
+      background-size: 4px 4px;
+      color: var(--garden-bg);
+    }
+
+    /* ===========================================
+       VARIANT 9: Solid bg-subtle (no dither)
+       =========================================== */
+    .v-solid-subtle:focus {
+      background-color: var(--garden-bg-subtle);
+    }
+
+    /* ===========================================
+       VARIANT 10: Solid bg-muted (no dither)
+       =========================================== */
+    .v-solid-muted:focus {
+      background-color: var(--garden-bg-muted);
+    }
+
+    /* ===========================================
+       VARIANT 11: Border only (thicker)
+       =========================================== */
+    .v-border-thick:focus {
+      border-width: 2px;
+    }
+
+    /* ===========================================
+       VARIANT 12: Inset/recessed (PC-98 style)
+       =========================================== */
+    .v-inset:focus {
+      border-color: var(--garden-fg);
+      box-shadow:
+        inset 2px 2px 0 var(--garden-fg-muted),
+        inset -1px -1px 0 var(--garden-bg-muted);
+      background-color: var(--garden-bg-subtle);
+    }
+
+    /* ===========================================
+       VARIANT 13: Dither-75 + inverted (heavy)
+       =========================================== */
+    .v-inverted-75:focus {
+      background-image: var(--garden-dither-75);
+      background-size: 4px 4px;
+      color: var(--garden-bg);
+    }
+
+    /* ===========================================
+       VARIANT 14: Halo + dither-50 + thicker halo
+       =========================================== */
+    .v-halo-thick-50:focus {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+      text-shadow:
+        -1px -1px 0 var(--garden-bg),
+         1px -1px 0 var(--garden-bg),
+        -1px  1px 0 var(--garden-bg),
+         1px  1px 0 var(--garden-bg),
+        -2px 0 0 var(--garden-bg),
+         2px 0 0 var(--garden-bg),
+         0 -2px 0 var(--garden-bg),
+         0  2px 0 var(--garden-bg);
+    }
+
+    .instructions {
+      background-color: var(--garden-bg-subtle);
+      border: var(--garden-border-width) solid var(--garden-fg);
+      padding: var(--garden-space-4);
+      margin-bottom: var(--garden-space-8);
+      font-size: var(--garden-text-sm);
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Input Focus States</h1>
+    <button class="theme-toggle" onclick="toggleTheme()">toggle theme</button>
+  </header>
+
+  <div class="instructions">
+    Click into each input to see its focus state. Type to see how text renders against the background.
+  </div>
+
+  <section class="section">
+    <h2>Halo Treatments + Dither</h2>
+    <div class="grid">
+      <div class="variant">
+        <span class="variant-label">1. Current (no halo, dither-50)</span>
+        <input type="text" class="test-input v-current" value="The quick brown fox" />
+        <span class="variant-desc">Baseline - what we have now</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">2. Soft halo + dither-50</span>
+        <input type="text" class="test-input v-halo-soft-50" value="The quick brown fox" />
+        <span class="variant-desc">Blurred text-shadow glow</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">3. Crisp halo + dither-50</span>
+        <input type="text" class="test-input v-halo-crisp-50" value="The quick brown fox" />
+        <span class="variant-desc">Sharp 1px outline</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">4. Thick halo + dither-50</span>
+        <input type="text" class="test-input v-halo-thick-50" value="The quick brown fox" />
+        <span class="variant-desc">2px knockout effect</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Lighter Dither (25%)</h2>
+    <div class="grid">
+      <div class="variant">
+        <span class="variant-label">5. No halo + dither-25</span>
+        <input type="text" class="test-input v-no-halo-25" value="The quick brown fox" />
+        <span class="variant-desc">Subtle pattern, no text treatment</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">6. Soft halo + dither-25</span>
+        <input type="text" class="test-input v-halo-soft-25" value="The quick brown fox" />
+        <span class="variant-desc">Light dither + soft glow</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">7. Crisp halo + dither-25</span>
+        <input type="text" class="test-input v-halo-crisp-25" value="The quick brown fox" />
+        <span class="variant-desc">Light dither + sharp outline</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Inverted Text (like buttons)</h2>
+    <div class="grid">
+      <div class="variant">
+        <span class="variant-label">8. Inverted + dither-25</span>
+        <input type="text" class="test-input v-inverted-25" value="The quick brown fox" />
+        <span class="variant-desc">Light text on light dither</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">9. Inverted + dither-50</span>
+        <input type="text" class="test-input v-inverted-50" value="The quick brown fox" />
+        <span class="variant-desc">Matches button hover exactly</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">10. Inverted + dither-75</span>
+        <input type="text" class="test-input v-inverted-75" value="The quick brown fox" />
+        <span class="variant-desc">Heavy dither, high contrast</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Alternative Approaches (no dither)</h2>
+    <div class="grid">
+      <div class="variant">
+        <span class="variant-label">11. Solid bg-subtle</span>
+        <input type="text" class="test-input v-solid-subtle" value="The quick brown fox" />
+        <span class="variant-desc">Clean, minimal shift</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">12. Solid bg-muted</span>
+        <input type="text" class="test-input v-solid-muted" value="The quick brown fox" />
+        <span class="variant-desc">Stronger background shift</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">13. Border only (2px)</span>
+        <input type="text" class="test-input v-border-thick" value="The quick brown fox" />
+        <span class="variant-desc">Thicker border, no bg change</span>
+      </div>
+
+      <div class="variant">
+        <span class="variant-label">14. Inset/recessed (PC-98)</span>
+        <input type="text" class="test-input v-inset" value="The quick brown fox" />
+        <span class="variant-desc">Classic sunken field effect</span>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+  </script>
+</body>
+</html>

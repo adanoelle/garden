@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icons & Symbols - Commit Mono</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/commit-mono@1.143/commitmono.css">
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+
+  <style>
+    body {
+      margin: 0;
+      padding: var(--garden-space-8);
+      background: var(--garden-bg);
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      line-height: var(--garden-leading-normal);
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--garden-space-8);
+      padding-bottom: var(--garden-space-4);
+      border-bottom: var(--garden-border-width) solid var(--garden-fg);
+    }
+
+    h1 {
+      font-size: var(--garden-text-xl);
+      font-weight: 400;
+      margin: 0;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: var(--garden-border-width) solid var(--garden-fg);
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      font-size: var(--garden-text-sm);
+      padding: var(--garden-space-2) var(--garden-space-4);
+      cursor: pointer;
+    }
+
+    .theme-toggle:hover {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+      color: var(--garden-bg);
+    }
+
+    .section {
+      margin-bottom: var(--garden-space-8);
+    }
+
+    .section h2 {
+      font-size: var(--garden-text-base);
+      font-weight: 400;
+      margin: 0 0 var(--garden-space-4) 0;
+      color: var(--garden-fg-muted);
+    }
+
+    .symbol-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: var(--garden-space-3);
+    }
+
+    .symbol-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--garden-space-3);
+      border: var(--garden-border-width) solid var(--garden-fg);
+      gap: var(--garden-space-2);
+    }
+
+    .symbol {
+      font-size: var(--garden-text-2xl);
+      line-height: 1;
+    }
+
+    .symbol-label {
+      font-size: var(--garden-text-xs);
+      color: var(--garden-fg-muted);
+      text-align: center;
+    }
+
+    .example-row {
+      display: flex;
+      gap: var(--garden-space-4);
+      flex-wrap: wrap;
+      margin-bottom: var(--garden-space-4);
+    }
+
+    .example-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--garden-space-2);
+      padding: var(--garden-space-2) var(--garden-space-4);
+      border: var(--garden-border-width) solid var(--garden-fg);
+      background: transparent;
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      font-size: var(--garden-text-sm);
+      cursor: pointer;
+      transition: all var(--garden-duration-fast) var(--garden-ease-out);
+    }
+
+    .example-btn:hover {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+      color: var(--garden-bg);
+      text-shadow:
+        0 0 2px var(--garden-fg),
+        0 0 4px var(--garden-fg),
+        0 0 6px var(--garden-fg);
+    }
+
+    .ascii-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: var(--garden-space-4);
+    }
+
+    .ascii-item {
+      padding: var(--garden-space-3);
+      border: var(--garden-border-width) solid var(--garden-fg);
+    }
+
+    .ascii-example {
+      font-size: var(--garden-text-base);
+      margin-bottom: var(--garden-space-2);
+    }
+
+    .ascii-label {
+      font-size: var(--garden-text-xs);
+      color: var(--garden-fg-muted);
+    }
+
+    .size-demo {
+      display: flex;
+      align-items: baseline;
+      gap: var(--garden-space-4);
+      flex-wrap: wrap;
+    }
+
+    .size-demo span {
+      display: flex;
+      align-items: center;
+      gap: var(--garden-space-1);
+    }
+
+    .box-drawing {
+      font-size: var(--garden-text-base);
+      line-height: 1.2;
+      white-space: pre;
+      font-family: var(--garden-font-mono);
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Icons & Symbols in Commit Mono</h1>
+    <button class="theme-toggle" onclick="toggleTheme()">toggle theme</button>
+  </header>
+
+  <section class="section">
+    <h2>Arrows</h2>
+    <div class="symbol-grid">
+      <div class="symbol-item"><span class="symbol">→</span><span class="symbol-label">→ right</span></div>
+      <div class="symbol-item"><span class="symbol">←</span><span class="symbol-label">← left</span></div>
+      <div class="symbol-item"><span class="symbol">↑</span><span class="symbol-label">↑ up</span></div>
+      <div class="symbol-item"><span class="symbol">↓</span><span class="symbol-label">↓ down</span></div>
+      <div class="symbol-item"><span class="symbol">↗</span><span class="symbol-label">↗ diagonal</span></div>
+      <div class="symbol-item"><span class="symbol">↘</span><span class="symbol-label">↘ diagonal</span></div>
+      <div class="symbol-item"><span class="symbol">⟵</span><span class="symbol-label">⟵ long</span></div>
+      <div class="symbol-item"><span class="symbol">⟶</span><span class="symbol-label">⟶ long</span></div>
+      <div class="symbol-item"><span class="symbol">↔</span><span class="symbol-label">↔ both</span></div>
+      <div class="symbol-item"><span class="symbol">↕</span><span class="symbol-label">↕ vertical</span></div>
+      <div class="symbol-item"><span class="symbol">⇄</span><span class="symbol-label">⇄ swap</span></div>
+      <div class="symbol-item"><span class="symbol">↻</span><span class="symbol-label">↻ refresh</span></div>
+      <div class="symbol-item"><span class="symbol">↺</span><span class="symbol-label">↺ undo</span></div>
+      <div class="symbol-item"><span class="symbol">▶</span><span class="symbol-label">▶ play</span></div>
+      <div class="symbol-item"><span class="symbol">◀</span><span class="symbol-label">◀ back</span></div>
+      <div class="symbol-item"><span class="symbol">▲</span><span class="symbol-label">▲ up</span></div>
+      <div class="symbol-item"><span class="symbol">▼</span><span class="symbol-label">▼ down</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Actions & Status</h2>
+    <div class="symbol-grid">
+      <div class="symbol-item"><span class="symbol">✓</span><span class="symbol-label">✓ check</span></div>
+      <div class="symbol-item"><span class="symbol">✕</span><span class="symbol-label">✕ close</span></div>
+      <div class="symbol-item"><span class="symbol">✗</span><span class="symbol-label">✗ cross</span></div>
+      <div class="symbol-item"><span class="symbol">+</span><span class="symbol-label">+ add</span></div>
+      <div class="symbol-item"><span class="symbol">−</span><span class="symbol-label">− minus</span></div>
+      <div class="symbol-item"><span class="symbol">×</span><span class="symbol-label">× multiply</span></div>
+      <div class="symbol-item"><span class="symbol">÷</span><span class="symbol-label">÷ divide</span></div>
+      <div class="symbol-item"><span class="symbol">⋮</span><span class="symbol-label">⋮ more</span></div>
+      <div class="symbol-item"><span class="symbol">⋯</span><span class="symbol-label">⋯ ellipsis</span></div>
+      <div class="symbol-item"><span class="symbol">…</span><span class="symbol-label">… dots</span></div>
+      <div class="symbol-item"><span class="symbol">※</span><span class="symbol-label">※ note</span></div>
+      <div class="symbol-item"><span class="symbol">⚠</span><span class="symbol-label">⚠ warning</span></div>
+      <div class="symbol-item"><span class="symbol">⚡</span><span class="symbol-label">⚡ flash</span></div>
+      <div class="symbol-item"><span class="symbol">★</span><span class="symbol-label">★ star</span></div>
+      <div class="symbol-item"><span class="symbol">☆</span><span class="symbol-label">☆ star empty</span></div>
+      <div class="symbol-item"><span class="symbol">♦</span><span class="symbol-label">♦ diamond</span></div>
+      <div class="symbol-item"><span class="symbol">●</span><span class="symbol-label">● bullet</span></div>
+      <div class="symbol-item"><span class="symbol">○</span><span class="symbol-label">○ circle</span></div>
+      <div class="symbol-item"><span class="symbol">◉</span><span class="symbol-label">◉ radio on</span></div>
+      <div class="symbol-item"><span class="symbol">◎</span><span class="symbol-label">◎ target</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Media Controls</h2>
+    <div class="symbol-grid">
+      <div class="symbol-item"><span class="symbol">▶</span><span class="symbol-label">▶ play</span></div>
+      <div class="symbol-item"><span class="symbol">⏸</span><span class="symbol-label">⏸ pause</span></div>
+      <div class="symbol-item"><span class="symbol">⏹</span><span class="symbol-label">⏹ stop</span></div>
+      <div class="symbol-item"><span class="symbol">⏺</span><span class="symbol-label">⏺ record</span></div>
+      <div class="symbol-item"><span class="symbol">⏮</span><span class="symbol-label">⏮ prev</span></div>
+      <div class="symbol-item"><span class="symbol">⏭</span><span class="symbol-label">⏭ next</span></div>
+      <div class="symbol-item"><span class="symbol">⏪</span><span class="symbol-label">⏪ rewind</span></div>
+      <div class="symbol-item"><span class="symbol">⏩</span><span class="symbol-label">⏩ forward</span></div>
+      <div class="symbol-item"><span class="symbol">🔇</span><span class="symbol-label">🔇 mute</span></div>
+      <div class="symbol-item"><span class="symbol">🔊</span><span class="symbol-label">🔊 volume</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Geometric Shapes</h2>
+    <div class="symbol-grid">
+      <div class="symbol-item"><span class="symbol">■</span><span class="symbol-label">■ square</span></div>
+      <div class="symbol-item"><span class="symbol">□</span><span class="symbol-label">□ square empty</span></div>
+      <div class="symbol-item"><span class="symbol">▪</span><span class="symbol-label">▪ small sq</span></div>
+      <div class="symbol-item"><span class="symbol">▫</span><span class="symbol-label">▫ small sq empty</span></div>
+      <div class="symbol-item"><span class="symbol">◆</span><span class="symbol-label">◆ diamond</span></div>
+      <div class="symbol-item"><span class="symbol">◇</span><span class="symbol-label">◇ diamond empty</span></div>
+      <div class="symbol-item"><span class="symbol">▬</span><span class="symbol-label">▬ bar</span></div>
+      <div class="symbol-item"><span class="symbol">▮</span><span class="symbol-label">▮ rect</span></div>
+      <div class="symbol-item"><span class="symbol">▰</span><span class="symbol-label">▰ parallelogram</span></div>
+      <div class="symbol-item"><span class="symbol">▱</span><span class="symbol-label">▱ parallelogram</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Box Drawing (PC-98 style)</h2>
+    <div class="example-row">
+      <div class="box-drawing">┌──────────┐
+│  window  │
+├──────────┤
+│ content  │
+│          │
+└──────────┘</div>
+      <div class="box-drawing">╔══════════╗
+║  window  ║
+╠══════════╣
+║ content  ║
+║          ║
+╚══════════╝</div>
+      <div class="box-drawing">┏━━━━━━━━━━┓
+┃  window  ┃
+┣━━━━━━━━━━┫
+┃ content  ┃
+┃          ┃
+┗━━━━━━━━━━┛</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>ASCII Patterns (for form controls)</h2>
+    <div class="ascii-grid">
+      <div class="ascii-item">
+        <div class="ascii-example">[ ] unchecked</div>
+        <div class="ascii-example">[x] checked</div>
+        <div class="ascii-example">[✓] checked alt</div>
+        <span class="ascii-label">Checkbox</span>
+      </div>
+      <div class="ascii-item">
+        <div class="ascii-example">( ) unselected</div>
+        <div class="ascii-example">(•) selected</div>
+        <div class="ascii-example">(○) selected alt</div>
+        <span class="ascii-label">Radio</span>
+      </div>
+      <div class="ascii-item">
+        <div class="ascii-example">[OFF|on ]</div>
+        <div class="ascii-example">[ off|ON]</div>
+        <span class="ascii-label">Toggle</span>
+      </div>
+      <div class="ascii-item">
+        <div class="ascii-example">&lt; back</div>
+        <div class="ascii-example">next &gt;</div>
+        <div class="ascii-example">&lt;&lt; prev</div>
+        <div class="ascii-example">next &gt;&gt;</div>
+        <span class="ascii-label">Navigation</span>
+      </div>
+      <div class="ascii-item">
+        <div class="ascii-example">[+] expand</div>
+        <div class="ascii-example">[-] collapse</div>
+        <div class="ascii-example">[▶] expand</div>
+        <div class="ascii-example">[▼] collapse</div>
+        <span class="ascii-label">Tree/Accordion</span>
+      </div>
+      <div class="ascii-item">
+        <div class="ascii-example">[▼] dropdown</div>
+        <div class="ascii-example">[^] dropup</div>
+        <span class="ascii-label">Select</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Example Buttons</h2>
+    <div class="example-row">
+      <button class="example-btn">← Back</button>
+      <button class="example-btn">Next →</button>
+      <button class="example-btn">+ Add</button>
+      <button class="example-btn">✕ Close</button>
+      <button class="example-btn">↻ Refresh</button>
+      <button class="example-btn">▶ Play</button>
+      <button class="example-btn">⏹ Stop</button>
+      <button class="example-btn">✓ Save</button>
+      <button class="example-btn">⋮ More</button>
+    </div>
+    <div class="example-row">
+      <button class="example-btn">[save]</button>
+      <button class="example-btn">[cancel]</button>
+      <button class="example-btn">&lt; back</button>
+      <button class="example-btn">next &gt;</button>
+      <button class="example-btn">[+] new</button>
+      <button class="example-btn">[x] delete</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Misc Useful Symbols</h2>
+    <div class="symbol-grid">
+      <div class="symbol-item"><span class="symbol">⌘</span><span class="symbol-label">⌘ cmd</span></div>
+      <div class="symbol-item"><span class="symbol">⌥</span><span class="symbol-label">⌥ opt</span></div>
+      <div class="symbol-item"><span class="symbol">⇧</span><span class="symbol-label">⇧ shift</span></div>
+      <div class="symbol-item"><span class="symbol">⌃</span><span class="symbol-label">⌃ ctrl</span></div>
+      <div class="symbol-item"><span class="symbol">⎋</span><span class="symbol-label">⎋ esc</span></div>
+      <div class="symbol-item"><span class="symbol">⏎</span><span class="symbol-label">⏎ return</span></div>
+      <div class="symbol-item"><span class="symbol">⌫</span><span class="symbol-label">⌫ delete</span></div>
+      <div class="symbol-item"><span class="symbol">⇥</span><span class="symbol-label">⇥ tab</span></div>
+      <div class="symbol-item"><span class="symbol">␣</span><span class="symbol-label">␣ space</span></div>
+      <div class="symbol-item"><span class="symbol">¶</span><span class="symbol-label">¶ para</span></div>
+      <div class="symbol-item"><span class="symbol">§</span><span class="symbol-label">§ section</span></div>
+      <div class="symbol-item"><span class="symbol">†</span><span class="symbol-label">† dagger</span></div>
+      <div class="symbol-item"><span class="symbol">‡</span><span class="symbol-label">‡ double</span></div>
+      <div class="symbol-item"><span class="symbol">°</span><span class="symbol-label">° degree</span></div>
+      <div class="symbol-item"><span class="symbol">′</span><span class="symbol-label">′ prime</span></div>
+      <div class="symbol-item"><span class="symbol">″</span><span class="symbol-label">″ double</span></div>
+      <div class="symbol-item"><span class="symbol">∞</span><span class="symbol-label">∞ infinity</span></div>
+      <div class="symbol-item"><span class="symbol">≈</span><span class="symbol-label">≈ approx</span></div>
+      <div class="symbol-item"><span class="symbol">≠</span><span class="symbol-label">≠ not equal</span></div>
+      <div class="symbol-item"><span class="symbol">≤</span><span class="symbol-label">≤ lte</span></div>
+      <div class="symbol-item"><span class="symbol">≥</span><span class="symbol-label">≥ gte</span></div>
+      <div class="symbol-item"><span class="symbol">∴</span><span class="symbol-label">∴ therefore</span></div>
+      <div class="symbol-item"><span class="symbol">∵</span><span class="symbol-label">∵ because</span></div>
+      <div class="symbol-item"><span class="symbol">⊕</span><span class="symbol-label">⊕ xor</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Size Comparison</h2>
+    <div class="size-demo">
+      <span style="font-size: var(--garden-text-xs);">xs: → ✓ ✕ + ▶</span>
+      <span style="font-size: var(--garden-text-sm);">sm: → ✓ ✕ + ▶</span>
+      <span style="font-size: var(--garden-text-base);">base: → ✓ ✕ + ▶</span>
+      <span style="font-size: var(--garden-text-lg);">lg: → ✓ ✕ + ▶</span>
+      <span style="font-size: var(--garden-text-xl);">xl: → ✓ ✕ + ▶</span>
+    </div>
+  </section>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+  </script>
+</body>
+</html>

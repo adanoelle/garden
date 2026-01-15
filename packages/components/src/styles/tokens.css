@@ -1,0 +1,200 @@
+/*
+ * Garden Design Tokens
+ * 
+ * Color philosophy: Farrow & Ball inspired warm neutrals
+ * Interaction model: rest (clean) → hover (dither texture) → active (inversion)
+ * Typography: Commit Mono throughout
+ */
+
+:root {
+  /* =========================================================================
+   * COLOR PALETTE - Farrow & Ball inspired
+   * ========================================================================= */
+  
+  /* Light mode primaries */
+  --garden-pointing: #f4f2e9;        /* F&B Pointing - warm white */
+  --garden-wimborne: #f2efdf;        /* F&B Wimborne White - creamier */
+  --garden-skimming: #e7e1d3;        /* F&B Skimming Stone - warm gray */
+  --garden-purbeck: #b8ad98;         /* F&B Purbeck Stone - mid neutral */
+  --garden-moles-breath: #8b8074;    /* F&B Mole's Breath - warm dark */
+  --garden-hague: #4a5568;           /* F&B Hague Blue inspired - deep accent */
+  --garden-railings: #2d3748;        /* F&B Railings inspired - near black */
+  
+  /* Semantic mappings - light mode */
+  --garden-bg: var(--garden-pointing);
+  --garden-bg-subtle: var(--garden-wimborne);
+  --garden-bg-muted: var(--garden-skimming);
+  --garden-fg: var(--garden-railings);
+  --garden-fg-muted: var(--garden-moles-breath);
+  --garden-accent: var(--garden-hague);
+  
+  /* =========================================================================
+   * DITHER PATTERNS - SVG data URIs for crisp scaling
+   * ========================================================================= */
+  
+  /* 25% density - subtle texture */
+  --garden-dither-25: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='1' height='1' fill='%232d3748'/%3E%3C/svg%3E");
+  
+  /* 50% density - balanced checkerboard */
+  --garden-dither-50: url("data:image/svg+xml,%3Csvg width='2' height='2' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='1' height='1' fill='%232d3748'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%232d3748'/%3E%3C/svg%3E");
+  
+  /* 75% density - heavy texture */
+  --garden-dither-75: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='4' height='4' fill='%232d3748'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23f4f2e9'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23f4f2e9'/%3E%3C/svg%3E");
+  
+  /* =========================================================================
+   * TYPOGRAPHY - Commit Mono
+   * ========================================================================= */
+  
+  --garden-font-mono: 'Commit Mono', 'SF Mono', 'Consolas', monospace;
+  
+  --garden-text-xs: 0.75rem;    /* 12px */
+  --garden-text-sm: 0.875rem;   /* 14px */
+  --garden-text-base: 1rem;     /* 16px */
+  --garden-text-lg: 1.125rem;   /* 18px */
+  --garden-text-xl: 1.25rem;    /* 20px */
+  --garden-text-2xl: 1.5rem;    /* 24px */
+  --garden-text-3xl: 2rem;      /* 32px */
+  
+  --garden-leading-tight: 1.25;
+  --garden-leading-normal: 1.5;
+  --garden-leading-relaxed: 1.75;
+  
+  /* =========================================================================
+   * SPACING - 4px base unit
+   * ========================================================================= */
+  
+  --garden-space-0: 0;
+  --garden-space-1: 0.25rem;    /* 4px */
+  --garden-space-2: 0.5rem;     /* 8px */
+  --garden-space-3: 0.75rem;    /* 12px */
+  --garden-space-4: 1rem;       /* 16px */
+  --garden-space-5: 1.25rem;    /* 20px */
+  --garden-space-6: 1.5rem;     /* 24px */
+  --garden-space-8: 2rem;       /* 32px */
+  --garden-space-10: 2.5rem;    /* 40px */
+  --garden-space-12: 3rem;      /* 48px */
+  --garden-space-16: 4rem;      /* 64px */
+  
+  /* =========================================================================
+   * BORDERS & RADII
+   * ========================================================================= */
+  
+  --garden-border-width: 1px;
+  --garden-border-color: var(--garden-fg);
+  --garden-radius-none: 0;
+  --garden-radius-sm: 2px;
+  --garden-radius-md: 4px;
+  
+  /* =========================================================================
+   * TRANSITIONS
+   * ========================================================================= */
+  
+  --garden-duration-instant: 0ms;
+  --garden-duration-fast: 100ms;
+  --garden-duration-normal: 200ms;
+  --garden-duration-slow: 400ms;
+  
+  --garden-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --garden-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* =========================================================================
+   * FOCUS
+   * ========================================================================= */
+
+  --garden-focus-ring: 2px solid var(--garden-accent);
+  --garden-focus-offset: 2px;
+
+  /* =========================================================================
+   * DENSITY - full (default) or minimal (mobile)
+   * ========================================================================= */
+
+  --garden-density: full;
+  --garden-divider-color: var(--garden-fg-muted);
+  --garden-divider-width: 1px;
+}
+
+/* =============================================================================
+ * DARK MODE - Values defined once, applied in multiple contexts
+ * ============================================================================= */
+
+/* Dark mode value definitions (stored for reuse) */
+:root {
+  --garden-dark-bg: var(--garden-railings);
+  --garden-dark-bg-subtle: #374151;
+  --garden-dark-bg-muted: var(--garden-moles-breath);
+  --garden-dark-fg: var(--garden-pointing);
+  --garden-dark-fg-muted: var(--garden-purbeck);
+  --garden-dark-accent: #93c5fd;
+
+  /* Inverted dither patterns for dark mode */
+  --garden-dark-dither-25: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='1' height='1' fill='%23f4f2e9'/%3E%3C/svg%3E");
+  --garden-dark-dither-50: url("data:image/svg+xml,%3Csvg width='2' height='2' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='1' height='1' fill='%23f4f2e9'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23f4f2e9'/%3E%3C/svg%3E");
+  --garden-dark-dither-75: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23f4f2e9'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%232d3748'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%232d3748'/%3E%3C/svg%3E");
+}
+
+/* Manual dark mode via attribute or class */
+[data-theme="dark"],
+.garden-dark {
+  --garden-bg: var(--garden-dark-bg);
+  --garden-bg-subtle: var(--garden-dark-bg-subtle);
+  --garden-bg-muted: var(--garden-dark-bg-muted);
+  --garden-fg: var(--garden-dark-fg);
+  --garden-fg-muted: var(--garden-dark-fg-muted);
+  --garden-accent: var(--garden-dark-accent);
+  --garden-dither-25: var(--garden-dark-dither-25);
+  --garden-dither-50: var(--garden-dark-dither-50);
+  --garden-dither-75: var(--garden-dark-dither-75);
+}
+
+/* =============================================================================
+ * PREFERS COLOR SCHEME (auto dark mode)
+ * ============================================================================= */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --garden-bg: var(--garden-dark-bg);
+    --garden-bg-subtle: var(--garden-dark-bg-subtle);
+    --garden-bg-muted: var(--garden-dark-bg-muted);
+    --garden-fg: var(--garden-dark-fg);
+    --garden-fg-muted: var(--garden-dark-fg-muted);
+    --garden-accent: var(--garden-dark-accent);
+    --garden-dither-25: var(--garden-dark-dither-25);
+    --garden-dither-50: var(--garden-dark-dither-50);
+    --garden-dither-75: var(--garden-dark-dither-75);
+  }
+}
+
+/* =============================================================================
+ * DENSITY - Mobile/Minimal Mode
+ * Auto-detect based on viewport width, with manual override support
+ * ============================================================================= */
+
+/* Auto-detect mobile - switch to minimal density */
+@media (max-width: 640px) {
+  :root:not([data-density="full"]) {
+    --garden-density: minimal;
+  }
+}
+
+/* Manual density overrides */
+[data-density="minimal"] {
+  --garden-density: minimal;
+}
+
+[data-density="full"] {
+  --garden-density: full;
+}
+
+/* =============================================================================
+ * REDUCED MOTION - Accessibility
+ * Respect user's motion preferences for vestibular disorders
+ * ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --garden-duration-instant: 0ms;
+    --garden-duration-fast: 0ms;
+    --garden-duration-normal: 0ms;
+    --garden-duration-slow: 0ms;
+  }
+}

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garden Components Demo</title>
+  
+  <!-- Commit Mono font -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/commit-mono@1.143/commitmono.css">
+  
+  <!-- Garden tokens -->
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+  
+  <style>
+    body {
+      margin: 0;
+      padding: var(--garden-space-8);
+      background: var(--garden-bg);
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      line-height: var(--garden-leading-normal);
+      min-height: 100vh;
+      transition: background-color var(--garden-duration-normal) var(--garden-ease-out),
+                  color var(--garden-duration-normal) var(--garden-ease-out);
+    }
+    
+    .demo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--garden-space-8);
+      padding-bottom: var(--garden-space-4);
+      border-bottom: var(--garden-border-width) solid var(--garden-fg);
+    }
+    
+    .demo-title {
+      font-size: var(--garden-text-2xl);
+      font-weight: 400;
+      margin: 0;
+    }
+    
+    .theme-toggle {
+      background: transparent;
+      border: var(--garden-border-width) solid var(--garden-fg);
+      color: var(--garden-fg);
+      font-family: var(--garden-font-mono);
+      font-size: var(--garden-text-sm);
+      padding: var(--garden-space-2) var(--garden-space-4);
+      cursor: pointer;
+      transition: background-color var(--garden-duration-fast) var(--garden-ease-out),
+                  color var(--garden-duration-fast) var(--garden-ease-out);
+    }
+    
+    .theme-toggle:hover {
+      background-image: var(--garden-dither-50);
+      background-size: 2px 2px;
+      color: var(--garden-bg);
+    }
+    
+    .theme-toggle:active {
+      background-image: none;
+      background-color: var(--garden-fg);
+      color: var(--garden-bg);
+    }
+    
+    .demo-section {
+      margin-bottom: var(--garden-space-8);
+    }
+    
+    .demo-section h2 {
+      font-size: var(--garden-text-lg);
+      font-weight: 400;
+      margin: 0 0 var(--garden-space-4) 0;
+      color: var(--garden-fg-muted);
+    }
+    
+    .color-swatches {
+      display: flex;
+      gap: var(--garden-space-2);
+      flex-wrap: wrap;
+    }
+    
+    .swatch {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: flex-end;
+      padding: var(--garden-space-1);
+      font-size: var(--garden-text-xs);
+      border: var(--garden-border-width) solid var(--garden-fg);
+    }
+    
+    .component-grid {
+      display: flex;
+      gap: var(--garden-space-4);
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+  </style>
+</head>
+<body>
+  <header class="demo-header">
+    <h1 class="demo-title">Garden Components</h1>
+    <button class="theme-toggle" onclick="toggleTheme()">toggle theme</button>
+  </header>
+  
+  <section class="demo-section">
+    <h2>Color Palette</h2>
+    <div class="color-swatches">
+      <div class="swatch" style="background: var(--garden-pointing); color: var(--garden-railings);">pointing</div>
+      <div class="swatch" style="background: var(--garden-wimborne); color: var(--garden-railings);">wimborne</div>
+      <div class="swatch" style="background: var(--garden-skimming); color: var(--garden-railings);">skimming</div>
+      <div class="swatch" style="background: var(--garden-purbeck); color: var(--garden-railings);">purbeck</div>
+      <div class="swatch" style="background: var(--garden-moles-breath); color: var(--garden-pointing);">mole's breath</div>
+      <div class="swatch" style="background: var(--garden-hague); color: var(--garden-pointing);">hague</div>
+      <div class="swatch" style="background: var(--garden-railings); color: var(--garden-pointing);">railings</div>
+    </div>
+  </section>
+  
+  <section class="demo-section">
+    <h2>Dither Patterns</h2>
+    <div class="color-swatches">
+      <div class="swatch" style="background-image: var(--garden-dither-25); background-size: 4px 4px; background-color: var(--garden-bg);">25%</div>
+      <div class="swatch" style="background-image: var(--garden-dither-50); background-size: 2px 2px; background-color: var(--garden-bg);">50%</div>
+      <div class="swatch" style="background-image: var(--garden-dither-75); background-size: 4px 4px; background-color: var(--garden-bg);">75%</div>
+    </div>
+  </section>
+  
+  <section class="demo-section">
+    <h2>Button</h2>
+    <div class="component-grid">
+      <!-- Default variant -->
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">default</span>
+        <garden-button>Button</garden-button>
+        <garden-button size="sm">Small</garden-button>
+        <garden-button size="lg">Large</garden-button>
+        <garden-button disabled>Disabled</garden-button>
+      </div>
+
+      <!-- Ghost variant -->
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">ghost</span>
+        <garden-button variant="ghost">Ghost</garden-button>
+        <garden-button variant="ghost" size="sm">Small</garden-button>
+        <garden-button variant="ghost" size="lg">Large</garden-button>
+        <garden-button variant="ghost" disabled>Disabled</garden-button>
+      </div>
+
+      <!-- Solid variant -->
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">solid</span>
+        <garden-button variant="solid">Solid</garden-button>
+        <garden-button variant="solid" size="sm">Small</garden-button>
+        <garden-button variant="solid" size="lg">Large</garden-button>
+        <garden-button variant="solid" disabled>Disabled</garden-button>
+      </div>
+    </div>
+
+    <!-- Full width example -->
+    <div style="margin-top: var(--garden-space-4); max-width: 300px;">
+      <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">full width</span>
+      <garden-button full style="margin-top: var(--garden-space-2);">Full Width Button</garden-button>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Input</h2>
+    <div class="component-grid">
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3); min-width: 250px;">
+        <div>
+          <label style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-1); color: var(--garden-fg-muted);">text input</label>
+          <garden-input placeholder="Enter text..."></garden-input>
+        </div>
+        <div>
+          <label style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-1); color: var(--garden-fg-muted);">email</label>
+          <garden-input type="email" placeholder="you@example.com"></garden-input>
+        </div>
+        <div>
+          <label style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-1); color: var(--garden-fg-muted);">password</label>
+          <garden-input type="password" placeholder="********"></garden-input>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3); min-width: 250px;">
+        <div>
+          <label style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-1); color: var(--garden-fg-muted);">small</label>
+          <garden-input size="sm" placeholder="Small input"></garden-input>
+        </div>
+        <div>
+          <label style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-1); color: var(--garden-fg-muted);">large</label>
+          <garden-input size="lg" placeholder="Large input"></garden-input>
+        </div>
+        <div>
+          <label style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-1); color: var(--garden-fg-muted);">disabled</label>
+          <garden-input disabled value="Cannot edit"></garden-input>
+        </div>
+        <div>
+          <label style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-1); color: var(--garden-fg-muted);">readonly</label>
+          <garden-input readonly value="Read only content"></garden-input>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Checkbox</h2>
+    <div class="component-grid">
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3);">
+        <garden-checkbox name="terms">Accept terms and conditions</garden-checkbox>
+        <garden-checkbox name="newsletter" checked>Subscribe to newsletter</garden-checkbox>
+        <garden-checkbox name="disabled-example" disabled>Disabled checkbox</garden-checkbox>
+        <garden-checkbox name="disabled-checked" disabled checked>Disabled checked</garden-checkbox>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">form example</span>
+        <form onsubmit="event.preventDefault(); alert('Form submitted: ' + JSON.stringify(Object.fromEntries(new FormData(event.target))));">
+          <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+            <garden-checkbox name="feature-a" value="feature-a">Feature A</garden-checkbox>
+            <garden-checkbox name="feature-b" value="feature-b">Feature B</garden-checkbox>
+            <garden-checkbox name="feature-c" value="feature-c">Feature C</garden-checkbox>
+            <garden-button type="submit" style="margin-top: var(--garden-space-2);">Submit</garden-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Radio</h2>
+    <div class="component-grid">
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">color selection</span>
+        <garden-radio name="color" value="red">Red</garden-radio>
+        <garden-radio name="color" value="green" checked>Green</garden-radio>
+        <garden-radio name="color" value="blue">Blue</garden-radio>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">size selection</span>
+        <garden-radio name="size" value="sm">Small</garden-radio>
+        <garden-radio name="size" value="md" checked>Medium</garden-radio>
+        <garden-radio name="size" value="lg">Large</garden-radio>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">disabled</span>
+        <garden-radio name="disabled" value="a" disabled>Option A</garden-radio>
+        <garden-radio name="disabled" value="b" disabled checked>Option B (selected)</garden-radio>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Card</h2>
+    <div class="component-grid">
+      <!-- Static card -->
+      <garden-card style="width: 200px;">
+        <span slot="header">Card Title</span>
+        <p style="margin: 0;">Card content goes here. Simple container.</p>
+      </garden-card>
+
+      <!-- Clickable card -->
+      <garden-card clickable style="width: 200px;" onclick="alert('Card clicked!')">
+        <span slot="header">Clickable</span>
+        <p style="margin: 0;">Click me for interaction.</p>
+        <span slot="footer" style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">footer content</span>
+      </garden-card>
+
+      <!-- Link card -->
+      <garden-card href="https://are.na" target="_blank" style="width: 200px;">
+        <span slot="header">Link Card</span>
+        <p style="margin: 0;">Opens Are.na in new tab</p>
+      </garden-card>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Modal</h2>
+    <div class="component-grid">
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">sizes</span>
+        <garden-button onclick="document.getElementById('modal-sm').show()">Small Modal</garden-button>
+        <garden-button onclick="document.getElementById('modal-md').show()">Medium Modal</garden-button>
+        <garden-button onclick="document.getElementById('modal-lg').show()">Large Modal</garden-button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">use cases</span>
+        <garden-button onclick="document.getElementById('modal-confirm').show()">Confirmation</garden-button>
+        <garden-button onclick="document.getElementById('modal-notification').show()">Notification</garden-button>
+      </div>
+    </div>
+
+    <!-- Small modal -->
+    <garden-modal id="modal-sm" size="sm">
+      <span slot="header">Small Modal</span>
+      <p style="margin: 0;">This is a small modal for compact content.</p>
+      <span slot="footer">
+        <garden-button variant="ghost" onclick="document.getElementById('modal-sm').close()">Close</garden-button>
+      </span>
+    </garden-modal>
+
+    <!-- Medium modal (default) -->
+    <garden-modal id="modal-md">
+      <span slot="header">Medium Modal</span>
+      <p style="margin: 0 0 var(--garden-space-3) 0;">This is the default medium-sized modal. It's suitable for most dialog content like forms, confirmations, and information displays.</p>
+      <p style="margin: 0;">The dithered backdrop creates a distinct visual separation while maintaining the design system aesthetic.</p>
+      <span slot="footer">
+        <garden-button variant="ghost" onclick="document.getElementById('modal-md').close()">Cancel</garden-button>
+        <garden-button onclick="document.getElementById('modal-md').close()">Confirm</garden-button>
+      </span>
+    </garden-modal>
+
+    <!-- Large modal -->
+    <garden-modal id="modal-lg" size="lg">
+      <span slot="header">Large Modal</span>
+      <p style="margin: 0 0 var(--garden-space-3) 0;">Large modals are useful for complex content that needs more space, like detailed forms or content previews.</p>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3);">
+        <garden-input placeholder="Enter something..."></garden-input>
+        <garden-input placeholder="Another field..."></garden-input>
+        <div style="display: flex; gap: var(--garden-space-3);">
+          <garden-checkbox>Option A</garden-checkbox>
+          <garden-checkbox>Option B</garden-checkbox>
+        </div>
+      </div>
+      <span slot="footer">
+        <garden-button variant="ghost" onclick="document.getElementById('modal-lg').close()">Cancel</garden-button>
+        <garden-button onclick="document.getElementById('modal-lg').close()">Save</garden-button>
+      </span>
+    </garden-modal>
+
+    <!-- Confirmation modal -->
+    <garden-modal id="modal-confirm" size="sm">
+      <span slot="header">Confirm Action</span>
+      <p style="margin: 0;">Are you sure you want to proceed? This action cannot be undone.</p>
+      <span slot="footer">
+        <garden-button variant="ghost" onclick="document.getElementById('modal-confirm').close()">Cancel</garden-button>
+        <garden-button onclick="document.getElementById('modal-confirm').close(); alert('Confirmed!')">Yes, proceed</garden-button>
+      </span>
+    </garden-modal>
+
+    <!-- Notification modal -->
+    <garden-modal id="modal-notification" size="sm" close-on-backdrop="false">
+      <span slot="header">Notification</span>
+      <p style="margin: 0;">Your changes have been saved successfully.</p>
+      <span slot="footer">
+        <garden-button onclick="document.getElementById('modal-notification').close()">OK</garden-button>
+      </span>
+    </garden-modal>
+  </section>
+
+  <section class="demo-section">
+    <h2>Block (Strudel)</h2>
+    <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin-bottom: var(--garden-space-4);">
+      Click play to start the pattern. Patterns need <code>.play()</code> at the end.
+    </p>
+    <div style="max-width: 500px;">
+      <div style="margin-bottom: var(--garden-space-4);">
+        <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">simple notes</span>
+        <garden-block code='note("c3 e3 g3 c4").slow(2).play()'></garden-block>
+      </div>
+      <div style="margin-bottom: var(--garden-space-4);">
+        <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">drum pattern</span>
+        <garden-block code='s("bd sd [bd bd] sd").play()'></garden-block>
+      </div>
+      <div>
+        <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">readonly example</span>
+        <garden-block readonly code='note("c2 [e3 g3] c4 [g3 e3]")
+  .s("sawtooth")
+  .cutoff(800)
+  .play()'></garden-block>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Waveform Visualizer</h2>
+    <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin-bottom: var(--garden-space-4);">
+      Fixed at bottom-right. Solid bars show current amplitude, dithered ghosts show peak hold.
+    </p>
+    <div class="component-grid">
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+        <garden-button onclick="document.getElementById('waveform-demo').playing = !document.getElementById('waveform-demo').playing">
+          Toggle Demo Mode
+        </garden-button>
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">
+          Click visualizer or button to toggle
+        </span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">bar count</span>
+        <div style="display: flex; gap: var(--garden-space-2);">
+          <garden-button size="sm" onclick="document.getElementById('waveform-demo').bars = 8">8</garden-button>
+          <garden-button size="sm" onclick="document.getElementById('waveform-demo').bars = 16">16</garden-button>
+          <garden-button size="sm" onclick="document.getElementById('waveform-demo').bars = 24">24</garden-button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">style</span>
+        <garden-checkbox id="borderless-toggle">Borderless</garden-checkbox>
+      </div>
+    </div>
+  </section>
+
+  <!-- Waveform visualizer (fixed position) -->
+  <garden-waveform
+    id="waveform-demo"
+    bars="16"
+    @garden:click="${(e) => e.target.playing = !e.target.playing}"
+  ></garden-waveform>
+
+  <script type="module">
+    import { GardenBlock } from '../src/components/garden-block.ts';
+
+    const waveform = document.getElementById('waveform-demo');
+    let activeBlocks = 0;
+
+    // Make waveform clickable to toggle demo mode
+    waveform.addEventListener('garden:click', function(e) {
+      if (activeBlocks === 0) {
+        this.playing = !this.playing;
+      }
+    });
+
+    // Borderless toggle
+    document.getElementById('borderless-toggle').addEventListener('garden:change', function(e) {
+      waveform.borderless = e.detail.checked;
+    });
+
+    // Connect waveform to Strudel audio when any block starts playing
+    document.querySelectorAll('garden-block').forEach(block => {
+      block.addEventListener('garden:play', () => {
+        activeBlocks++;
+
+        // Try to get the analyser from GardenBlock
+        const analyser = GardenBlock.getAnalyser();
+        if (analyser) {
+          console.log('Connecting analyser to waveform');
+          waveform.connectAnalyser(analyser);
+        } else {
+          console.log('No analyser available, using demo mode');
+          // Clear analyser to use demo mode
+          waveform.analyser = null;
+        }
+        waveform.playing = true;
+      });
+
+      block.addEventListener('garden:stop', () => {
+        activeBlocks = Math.max(0, activeBlocks - 1);
+        if (activeBlocks === 0) {
+          waveform.playing = false;
+        }
+      });
+
+      block.addEventListener('garden:strudel-ready', (e) => {
+        console.log('Strudel ready:', e.detail);
+        if (e.detail.analyser) {
+          waveform.connectAnalyser(e.detail.analyser);
+        }
+      });
+    });
+  </script>
+
+  <script type="module">
+    // Import all components
+    import '../src/components/garden-button.ts';
+    import '../src/components/garden-input.ts';
+    import '../src/components/garden-checkbox.ts';
+    import '../src/components/garden-radio.ts';
+    import '../src/components/garden-card.ts';
+    import '../src/components/garden-modal.ts';
+    import '../src/components/garden-waveform.ts';
+    import '../src/components/garden-block.ts';
+  </script>
+  
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Garden Components - Minimal/Mobile Mode Test</title>
+    <link rel="stylesheet" href="../src/styles/tokens.css" />
+    <style>
+      body {
+        font-family: var(--garden-font-mono);
+        background-color: var(--garden-bg);
+        color: var(--garden-fg);
+        padding: var(--garden-space-4);
+        margin: 0;
+        line-height: var(--garden-leading-normal);
+      }
+
+      h1 {
+        font-size: var(--garden-text-xl);
+        margin-bottom: var(--garden-space-6);
+        font-weight: 400;
+      }
+
+      h2 {
+        font-size: var(--garden-text-sm);
+        color: var(--garden-fg-muted);
+        margin: var(--garden-space-6) 0 var(--garden-space-3) 0;
+        font-weight: 400;
+      }
+
+      .section {
+        margin-bottom: var(--garden-space-8);
+      }
+
+      .control-row {
+        display: flex;
+        gap: var(--garden-space-4);
+        margin-bottom: var(--garden-space-4);
+        flex-wrap: wrap;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--garden-space-8);
+      }
+
+      @media (max-width: 800px) {
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .column {
+        min-width: 0;
+      }
+
+      .column h3 {
+        font-size: var(--garden-text-xs);
+        color: var(--garden-fg-muted);
+        margin-bottom: var(--garden-space-3);
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .mode-switch {
+        position: fixed;
+        top: var(--garden-space-4);
+        right: var(--garden-space-4);
+        display: flex;
+        gap: var(--garden-space-2);
+      }
+
+      .mode-btn {
+        font-family: var(--garden-font-mono);
+        font-size: var(--garden-text-xs);
+        padding: var(--garden-space-1) var(--garden-space-2);
+        border: 1px solid var(--garden-fg);
+        background: transparent;
+        color: var(--garden-fg);
+        cursor: pointer;
+      }
+
+      .mode-btn.active {
+        background: var(--garden-fg);
+        color: var(--garden-bg);
+      }
+
+      .spacer {
+        height: var(--garden-space-4);
+      }
+    </style>
+    <script type="module" src="../src/index.ts"></script>
+  </head>
+  <body>
+    <div class="mode-switch">
+      <button class="mode-btn" onclick="setMode('auto')">auto</button>
+      <button class="mode-btn active" onclick="setMode('full')">full</button>
+      <button class="mode-btn" onclick="setMode('minimal')">minimal</button>
+    </div>
+
+    <h1>Minimal / Mobile Mode</h1>
+
+    <p style="max-width: 600px; margin-bottom: var(--garden-space-8); color: var(--garden-fg-muted);">
+      Comparing full density (bordered, interactive) vs minimal density (text-based, dividers only).
+      On viewports under 640px, components auto-detect minimal mode unless overridden.
+    </p>
+
+    <div class="comparison">
+      <div class="column">
+        <h3>Full Density</h3>
+
+        <h2>Buttons</h2>
+        <div class="control-row">
+          <garden-button density="full">Default</garden-button>
+          <garden-button density="full" variant="ghost">Ghost</garden-button>
+          <garden-button density="full" variant="solid">Solid</garden-button>
+        </div>
+
+        <h2>Input</h2>
+        <garden-input density="full" placeholder="Enter text..."></garden-input>
+
+        <div class="spacer"></div>
+
+        <h2>Card</h2>
+        <garden-card density="full">
+          <div slot="header">Card Title</div>
+          <p>Card content goes here. This is the main body text.</p>
+          <div slot="footer">Footer</div>
+        </garden-card>
+
+        <h2>Checkbox & Radio</h2>
+        <div class="control-row">
+          <garden-checkbox density="full">Option A</garden-checkbox>
+          <garden-checkbox density="full" checked>Option B</garden-checkbox>
+        </div>
+        <div class="control-row">
+          <garden-radio density="full" name="full-group" value="1">Radio 1</garden-radio>
+          <garden-radio density="full" name="full-group" value="2" checked>Radio 2</garden-radio>
+        </div>
+
+        <h2>Strudel Block</h2>
+        <garden-block density="full" code="note('c3 e3 g3').slow(2)"></garden-block>
+
+        <div class="spacer"></div>
+
+        <h2>Waveform</h2>
+        <garden-waveform density="full" playing style="position: relative; bottom: auto; right: auto;"></garden-waveform>
+      </div>
+
+      <div class="column">
+        <h3>Minimal Density</h3>
+
+        <h2>Buttons</h2>
+        <div class="control-row">
+          <garden-button minimal>Default</garden-button>
+          <garden-button minimal variant="ghost">Ghost</garden-button>
+          <garden-button minimal variant="solid">Solid</garden-button>
+        </div>
+
+        <h2>Input</h2>
+        <garden-input minimal placeholder="Enter text..."></garden-input>
+
+        <div class="spacer"></div>
+
+        <h2>Card</h2>
+        <garden-card minimal>
+          <div slot="header">Card Title</div>
+          <p>Card content goes here. This is the main body text.</p>
+          <div slot="footer">Footer</div>
+        </garden-card>
+
+        <h2>Checkbox & Radio</h2>
+        <div class="control-row">
+          <garden-checkbox minimal>Option A</garden-checkbox>
+          <garden-checkbox minimal checked>Option B</garden-checkbox>
+        </div>
+        <div class="control-row">
+          <garden-radio minimal name="min-group" value="1">Radio 1</garden-radio>
+          <garden-radio minimal name="min-group" value="2" checked>Radio 2</garden-radio>
+        </div>
+
+        <h2>Strudel Block (read-only)</h2>
+        <garden-block minimal code="note('c3 e3 g3').slow(2)"></garden-block>
+
+        <div class="spacer"></div>
+
+        <h2>Waveform</h2>
+        <garden-waveform minimal playing></garden-waveform>
+      </div>
+    </div>
+
+    <script>
+      function setMode(mode) {
+        // Update button styles
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.textContent === mode);
+        });
+
+        // Remove existing data-density from root
+        document.documentElement.removeAttribute('data-density');
+
+        if (mode === 'auto') {
+          // Let media query handle it - remove all density attrs from components
+          document.querySelectorAll('[density]').forEach(el => {
+            el.removeAttribute('density');
+            el.removeAttribute('minimal');
+          });
+        } else if (mode === 'full') {
+          document.documentElement.setAttribute('data-density', 'full');
+        } else if (mode === 'minimal') {
+          document.documentElement.setAttribute('data-density', 'minimal');
+        }
+      }
+    </script>
+  </body>
+</html>
