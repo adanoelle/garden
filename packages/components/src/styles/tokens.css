@@ -198,3 +198,25 @@
     --garden-duration-slow: 0ms;
   }
 }
+
+/* =============================================================================
+ * LINK STYLING - Dimmed text, underline on hover
+ * Use .garden-link class for inline links anywhere text appears
+ * ============================================================================= */
+
+.garden-link {
+  color: var(--garden-fg-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--garden-duration-fast) var(--garden-ease-out);
+}
+
+.garden-link:hover {
+  color: var(--garden-fg);
+  text-decoration: underline;
+}
+
+.garden-link:focus-visible {
+  outline: var(--garden-focus-ring);
+  outline-offset: 2px;
+}
