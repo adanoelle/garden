@@ -399,6 +399,269 @@
     </div>
   </section>
 
+  <section class="demo-section">
+    <h2>Breadcrumb Navigation</h2>
+    <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin-bottom: var(--garden-space-4);">
+      Minimal dot-based navigation history. Hollow circles for inactive, dithered fill for active. Hover over ellipsis to reveal hidden pages.
+    </p>
+    <div style="display: flex; flex-direction: column; gap: var(--garden-space-6);">
+      <!-- Basic breadcrumb -->
+      <div>
+        <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">short history (3 items)</span>
+        <garden-breadcrumb id="breadcrumb-short"></garden-breadcrumb>
+      </div>
+
+      <!-- Longer breadcrumb -->
+      <div>
+        <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">medium history (6 items)</span>
+        <garden-breadcrumb id="breadcrumb-medium"></garden-breadcrumb>
+      </div>
+
+      <!-- Truncated breadcrumb -->
+      <div>
+        <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">truncated history (12 items, max 8 visible)</span>
+        <garden-breadcrumb id="breadcrumb-long" max-visible="8"></garden-breadcrumb>
+      </div>
+
+      <!-- Interactive demo -->
+      <div>
+        <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">interactive (click dots, add/remove pages)</span>
+        <div style="display: flex; gap: var(--garden-space-4); align-items: center; margin-bottom: var(--garden-space-2);">
+          <garden-button size="sm" onclick="addPage()">Add Page</garden-button>
+          <garden-button size="sm" variant="ghost" onclick="removePage()">Remove Page</garden-button>
+          <span id="breadcrumb-status" style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);"></span>
+        </div>
+        <garden-breadcrumb id="breadcrumb-interactive"></garden-breadcrumb>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Tooltip</h2>
+    <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin-bottom: var(--garden-space-4);">
+      Wrapper component for hover hints. Hover over buttons to see tooltips.
+    </p>
+    <div class="component-grid">
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">positions</span>
+        <div style="display: flex; gap: var(--garden-space-4); flex-wrap: wrap;">
+          <garden-tooltip text="Above the button" position="top">
+            <garden-button size="sm">Top</garden-button>
+          </garden-tooltip>
+          <garden-tooltip text="Below the button" position="bottom">
+            <garden-button size="sm">Bottom</garden-button>
+          </garden-tooltip>
+          <garden-tooltip text="Left side" position="left">
+            <garden-button size="sm">Left</garden-button>
+          </garden-tooltip>
+          <garden-tooltip text="Right side" position="right">
+            <garden-button size="sm">Right</garden-button>
+          </garden-tooltip>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-3);">
+        <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">with hint text</span>
+        <div style="display: flex; gap: var(--garden-space-4);">
+          <garden-tooltip text="Edit block" hint="⌘E">
+            <garden-button size="sm">Edit</garden-button>
+          </garden-tooltip>
+          <garden-tooltip text="Delete block" hint="⌫">
+            <garden-button size="sm" variant="ghost">Delete</garden-button>
+          </garden-tooltip>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Links</h2>
+    <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin-bottom: var(--garden-space-4);">
+      Dimmed text that underlines on hover. Use <code>.garden-link</code> class.
+    </p>
+    <div style="max-width: 500px;">
+      <p style="margin: 0 0 var(--garden-space-3) 0;">
+        This block was connected from <a href="#" class="garden-link">Design Systems</a> channel
+        and is also in <a href="#" class="garden-link">Typography Research</a>.
+      </p>
+      <p style="margin: 0; font-size: var(--garden-text-sm);">
+        Source: <a href="https://are.na" class="garden-link" target="_blank">are.na</a> ·
+        Added by <a href="#" class="garden-link">@user</a> ·
+        <a href="#" class="garden-link">View history</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2>Context Menu</h2>
+    <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin-bottom: var(--garden-space-4);">
+      Right-click or hover for menu button. Keyboard navigation with ↑↓, Enter, Esc.
+    </p>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--garden-space-4); max-width: 600px;">
+      <garden-card show-menu menu-context="block-1" clickable>
+        <span slot="header">Commit Mono</span>
+        <p style="margin: 0;">Monospace typeface exploration.</p>
+        <span slot="footer">Text · 2d ago</span>
+      </garden-card>
+      <garden-card show-menu menu-context="block-2" clickable>
+        <span slot="header">Dither Patterns</span>
+        <p style="margin: 0;">PC-98 inspired textures.</p>
+        <span slot="footer">Image · 5d ago</span>
+      </garden-card>
+      <garden-card show-menu menu-context="block-3" clickable>
+        <span slot="header">Farrow & Ball</span>
+        <p style="margin: 0;">Color palette reference.</p>
+        <span slot="footer">Link · 1w ago</span>
+      </garden-card>
+    </div>
+    <p style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted); margin-top: var(--garden-space-3);">
+      <span id="context-menu-status">Hover over cards to see ··· button, or right-click</span>
+    </p>
+  </section>
+
+  <!-- Context menu (positioned dynamically) -->
+  <garden-context-menu id="context-menu-demo"></garden-context-menu>
+
+  <!-- Connections modal -->
+  <garden-connections-modal id="connections-modal-demo"></garden-connections-modal>
+
+  <section class="demo-section">
+    <h2>Waypoint</h2>
+    <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin-bottom: var(--garden-space-4);">
+      Navigation modal for wandering without getting lost. Press <code>⌘/</code> or click button to open.
+    </p>
+    <div class="component-grid">
+      <garden-button onclick="document.getElementById('waypoint-demo').show()">Open Waypoint</garden-button>
+      <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted); align-self: center;">
+        or press ⌘/ (Ctrl+/ on Windows)
+      </span>
+    </div>
+  </section>
+
+  <!-- Waypoint component (hidden until opened) -->
+  <garden-waypoint id="waypoint-demo"></garden-waypoint>
+
+  <section class="demo-section">
+    <h2>Grid</h2>
+    <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin-bottom: var(--garden-space-4);">
+      Paginated content grid with responsive columns. No infinite scroll - intentional pagination.
+    </p>
+
+    <!-- Basic grid with cards -->
+    <div style="margin-bottom: var(--garden-space-6);">
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">responsive auto-fit (resize window to see columns adjust)</span>
+      <garden-grid id="grid-demo" page-size="8" total="24">
+        <!-- Items will be added via JS -->
+      </garden-grid>
+    </div>
+
+    <!-- Fixed columns -->
+    <div style="margin-bottom: var(--garden-space-6);">
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">fixed 3 columns with footers</span>
+      <garden-grid columns="3" gap="var(--garden-space-2)" hide-pagination>
+        <garden-card>
+          <span slot="header">Research Notes</span>
+          <p style="margin: 0;">Collection of design references and inspiration.</p>
+          <span slot="footer">12 blocks · updated 2h ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Typography</span>
+          <p style="margin: 0;">Monospace fonts and type hierarchies.</p>
+          <span slot="footer">8 blocks · updated 1d ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Color Theory</span>
+          <p style="margin: 0;">Farrow & Ball palette explorations.</p>
+          <span slot="footer">24 blocks · updated 3d ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">PC-98 Archive</span>
+          <p style="margin: 0;">Screenshots and visual references.</p>
+          <span slot="footer">156 blocks · updated 1w ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Audio Patterns</span>
+          <p style="margin: 0;">Strudel experiments and samples.</p>
+          <span slot="footer">7 blocks · updated 2w ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Reading List</span>
+          <p style="margin: 0;">Articles and essays to revisit.</p>
+          <span slot="footer">42 blocks · updated 1mo ago</span>
+        </garden-card>
+      </garden-grid>
+    </div>
+
+    <!-- Empty state -->
+    <div style="margin-bottom: var(--garden-space-6);">
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">empty state</span>
+      <garden-grid total="0">
+        <div slot="empty">
+          <p style="margin: 0 0 var(--garden-space-2) 0;">This channel is empty</p>
+          <garden-button size="sm">Add first block</garden-button>
+        </div>
+      </garden-grid>
+    </div>
+
+    <!-- Loading state -->
+    <div style="margin-bottom: var(--garden-space-6);">
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">loading state</span>
+      <div style="display: flex; gap: var(--garden-space-2); margin-bottom: var(--garden-space-2);">
+        <garden-button size="sm" onclick="document.getElementById('grid-loading').loading = !document.getElementById('grid-loading').loading">
+          Toggle Loading
+        </garden-button>
+      </div>
+      <garden-grid id="grid-loading" columns="4" hide-pagination>
+        <garden-card>
+          <span slot="header">Sketch 01</span>
+          <p style="margin: 0;">Early explorations.</p>
+          <span slot="footer">Image · 5d ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Sketch 02</span>
+          <p style="margin: 0;">Refined concepts.</p>
+          <span slot="footer">Image · 4d ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Notes</span>
+          <p style="margin: 0;">Process documentation.</p>
+          <span slot="footer">Text · 3d ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Reference</span>
+          <p style="margin: 0;">External inspiration.</p>
+          <span slot="footer">Link · 2d ago</span>
+        </garden-card>
+      </garden-grid>
+    </div>
+
+    <!-- Fill with placeholders -->
+    <div>
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">fixed 3 columns, fill to 6 (4 items + 2 placeholders)</span>
+      <garden-grid columns="3" fill="6" hide-pagination>
+        <garden-card>
+          <span slot="header">Draft 1</span>
+          <p style="margin: 0;">Initial concept.</p>
+          <span slot="footer">Text · 1d ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Draft 2</span>
+          <p style="margin: 0;">Revised approach.</p>
+          <span slot="footer">Text · 12h ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Sketch</span>
+          <p style="margin: 0;">Visual exploration.</p>
+          <span slot="footer">Image · 6h ago</span>
+        </garden-card>
+        <garden-card>
+          <span slot="header">Reference</span>
+          <p style="margin: 0;">External link.</p>
+          <span slot="footer">Link · 2h ago</span>
+        </garden-card>
+      </garden-grid>
+    </div>
+  </section>
+
   <!-- Waveform visualizer (fixed position) -->
   <garden-waveform
     id="waveform-demo"
@@ -468,6 +731,13 @@
     import '../src/components/garden-modal.ts';
     import '../src/components/garden-waveform.ts';
     import '../src/components/garden-block.ts';
+    import '../src/components/garden-breadcrumb.ts';
+    import '../src/components/garden-grid.ts';
+    import '../src/components/garden-placeholder.ts';
+    import '../src/components/garden-tooltip.ts';
+    import '../src/components/garden-waypoint.ts';
+    import '../src/components/garden-context-menu.ts';
+    import '../src/components/garden-connections-modal.ts';
   </script>
   
   <script>
@@ -476,6 +746,296 @@
       const current = html.getAttribute('data-theme');
       html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
     }
+
+    // Breadcrumb demo data
+    const shortHistory = [
+      { id: 'home', title: 'Home', type: 'home' },
+      { id: 'channel-1', title: 'Research Notes', type: 'channel' },
+      { id: 'block-1', title: 'PC-98 Color Theory', type: 'block' }
+    ];
+
+    const mediumHistory = [
+      { id: 'home', title: 'Home', type: 'home' },
+      { id: 'channel-1', title: 'Design Systems', type: 'channel' },
+      { id: 'block-1', title: 'Dither Patterns', type: 'block' },
+      { id: 'channel-2', title: 'Typography', type: 'channel' },
+      { id: 'block-2', title: 'Commit Mono', type: 'block' },
+      { id: 'page-1', title: 'Settings', type: 'page' }
+    ];
+
+    const longHistory = [
+      { id: 'home', title: 'Home', type: 'home' },
+      { id: 'channel-1', title: 'Archives', type: 'channel' },
+      { id: 'block-1', title: 'Vintage Computing', type: 'block' },
+      { id: 'channel-2', title: 'Japanese Design', type: 'channel' },
+      { id: 'block-2', title: 'PC-98 Screenshots', type: 'block' },
+      { id: 'channel-3', title: 'Color Theory', type: 'channel' },
+      { id: 'block-3', title: 'Warm Neutrals', type: 'block' },
+      { id: 'channel-4', title: 'Web Components', type: 'channel' },
+      { id: 'block-4', title: 'Lit Examples', type: 'block' },
+      { id: 'channel-5', title: 'Audio', type: 'channel' },
+      { id: 'block-5', title: 'Strudel Patterns', type: 'block' },
+      { id: 'page-1', title: 'Current Page', type: 'page' }
+    ];
+
+    // Interactive demo state
+    let interactiveHistory = [
+      { id: 'home', title: 'Home', type: 'home' },
+      { id: 'page-1', title: 'Page 1', type: 'page' }
+    ];
+    let pageCounter = 1;
+
+    function addPage() {
+      pageCounter++;
+      interactiveHistory.push({
+        id: 'page-' + pageCounter,
+        title: 'Page ' + pageCounter,
+        type: 'page'
+      });
+      updateInteractiveBreadcrumb();
+    }
+
+    function removePage() {
+      if (interactiveHistory.length > 1) {
+        interactiveHistory.pop();
+        updateInteractiveBreadcrumb();
+      }
+    }
+
+    function updateInteractiveBreadcrumb() {
+      const bc = document.getElementById('breadcrumb-interactive');
+      bc.items = [...interactiveHistory];
+    }
+
+    // Initialize breadcrumbs after components load
+    customElements.whenDefined('garden-breadcrumb').then(() => {
+      document.getElementById('breadcrumb-short').items = shortHistory;
+      document.getElementById('breadcrumb-medium').items = mediumHistory;
+      document.getElementById('breadcrumb-long').items = longHistory;
+      document.getElementById('breadcrumb-interactive').items = [...interactiveHistory];
+
+      // Listen for navigation events
+      document.querySelectorAll('garden-breadcrumb').forEach(bc => {
+        bc.addEventListener('garden:navigate', (e) => {
+          const status = document.getElementById('breadcrumb-status');
+          status.textContent = 'Navigated to: ' + e.detail.item.title + ' (index ' + e.detail.index + ')';
+
+          // For interactive demo, update active state
+          if (bc.id === 'breadcrumb-interactive') {
+            bc.active = e.detail.index;
+          }
+        });
+      });
+    });
+
+    // Grid demo data - 24 items total
+    const gridItems = Array.from({ length: 24 }, (_, i) => ({
+      id: i + 1,
+      title: `Block ${i + 1}`,
+      type: i % 3 === 0 ? 'Image' : i % 3 === 1 ? 'Text' : 'Link'
+    }));
+
+    // Render grid items for current page
+    function renderGridItems(page, pageSize) {
+      const grid = document.getElementById('grid-demo');
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize;
+      const items = gridItems.slice(start, end);
+
+      grid.innerHTML = items.map(item => `
+        <garden-card>
+          <span slot="header">${item.title}</span>
+          <p style="margin: 0;">Sample content for this ${item.type.toLowerCase()} block.</p>
+          <span slot="footer">${item.type} · ${Math.floor(Math.random() * 30) + 1}d ago</span>
+        </garden-card>
+      `).join('');
+    }
+
+    // Initialize context menu demo
+    customElements.whenDefined('garden-context-menu').then(() => {
+      const contextMenu = document.getElementById('context-menu-demo');
+      const statusEl = document.getElementById('context-menu-status');
+
+      // Block context menu items
+      const blockMenuItems = [
+        { id: 'connect', label: 'Connect to...', icon: '→' },
+        { id: 'sep1', separator: true },
+        { id: 'view-connections', label: 'View connections', icon: '→' },
+        { id: 'go-to-source', label: 'Go to source' },
+        { id: 'sep2', separator: true },
+        { id: 'edit', label: 'Edit', shortcut: '⌘E' },
+        { id: 'copy-link', label: 'Copy link', shortcut: '⌘L' },
+        { id: 'sep3', separator: true },
+        { id: 'remove', label: 'Remove from channel' },
+        { id: 'delete', label: 'Delete block', destructive: true, icon: '⚠' }
+      ];
+
+      contextMenu.items = blockMenuItems;
+
+      // Listen for menu-open events from cards
+      document.querySelectorAll('garden-card[show-menu]').forEach(card => {
+        card.addEventListener('garden:menu-open', (e) => {
+          contextMenu.x = e.detail.x;
+          contextMenu.y = e.detail.y;
+          contextMenu.context = {
+            type: 'block',
+            id: e.detail.context,
+            title: card.querySelector('[slot="header"]')?.textContent || 'Block'
+          };
+          contextMenu.open = true;
+          statusEl.textContent = `Menu opened for: ${contextMenu.context.title}`;
+        });
+      });
+
+      // Listen for menu selection
+      contextMenu.addEventListener('garden:menu-select', (e) => {
+        statusEl.textContent = `Selected: "${e.detail.itemId}" on "${e.detail.context?.title || 'unknown'}"`;
+
+        // Handle specific actions
+        if (e.detail.itemId === 'delete') {
+          alert(`This would confirm deletion of "${e.detail.context?.title}"`);
+        } else if (e.detail.itemId === 'connect') {
+          // Open waypoint in connect mode
+          const waypoint = document.getElementById('waypoint-demo');
+          waypoint.mode = 'connect';
+          waypoint.connectTarget = {
+            id: e.detail.context?.id,
+            title: e.detail.context?.title || 'Block',
+            type: 'block'
+          };
+          waypoint.show();
+          statusEl.textContent = `Opening waypoint to connect "${e.detail.context?.title}"...`;
+        } else if (e.detail.itemId === 'view-connections') {
+          // Open connections modal
+          const connectionsModal = document.getElementById('connections-modal-demo');
+          connectionsModal.blockId = e.detail.context?.id;
+          connectionsModal.blockTitle = e.detail.context?.title || 'Block';
+          // Demo connections data
+          connectionsModal.connections = [
+            { channelId: 'typography', channelTitle: 'Typography Research', isSource: true },
+            { channelId: 'design-systems', channelTitle: 'Design Systems' },
+            { channelId: 'pc98-archive', channelTitle: 'PC-98 Archive' }
+          ];
+          connectionsModal.show();
+          statusEl.textContent = `Viewing connections for "${e.detail.context?.title}"`;
+        }
+      });
+
+      contextMenu.addEventListener('garden:menu-close', () => {
+        // Menu closed
+      });
+
+      // Connections modal events
+      const connectionsModal = document.getElementById('connections-modal-demo');
+
+      connectionsModal.addEventListener('garden:navigate', (e) => {
+        console.log('Navigate from connections:', e.detail);
+        statusEl.textContent = `Navigating to channel: ${e.detail.title}`;
+        alert(`Would navigate to channel: ${e.detail.title}`);
+      });
+
+      connectionsModal.addEventListener('garden:disconnect', (e) => {
+        console.log('Disconnect:', e.detail);
+        statusEl.textContent = `Removed "${e.detail.blockTitle}" from "${e.detail.channelTitle}"`;
+        if (e.detail.isLastConnection) {
+          alert(`Block "${e.detail.blockTitle}" is now unconnected`);
+        }
+      });
+
+      connectionsModal.addEventListener('garden:connect-request', (e) => {
+        console.log('Connect request from modal:', e.detail);
+        // Open waypoint in connect mode
+        const waypoint = document.getElementById('waypoint-demo');
+        waypoint.mode = 'connect';
+        waypoint.connectTarget = {
+          id: e.detail.blockId,
+          title: e.detail.blockTitle,
+          type: 'block'
+        };
+        waypoint.show();
+        statusEl.textContent = `Opening waypoint to connect "${e.detail.blockTitle}"...`;
+      });
+    });
+
+    // Initialize waypoint demo
+    customElements.whenDefined('garden-waypoint').then(() => {
+      const waypoint = document.getElementById('waypoint-demo');
+
+      // Demo data
+      waypoint.history = [
+        { id: 'home', title: 'Home', type: 'home' },
+        { id: 'design-systems', title: 'Design Systems', type: 'channel' },
+        { id: 'typography', title: 'Typography', type: 'channel' },
+        { id: 'commit-mono', title: 'Commit Mono', type: 'block' }
+      ];
+
+      waypoint.connections = [
+        { channelId: 'color-theory', channelTitle: 'Color Theory', sharedBlockCount: 3 },
+        { channelId: 'pc98-archive', channelTitle: 'PC-98 Archive', sharedBlockCount: 1 },
+        { channelId: 'web-components', channelTitle: 'Web Components', sharedBlockCount: 5 }
+      ];
+
+      waypoint.recent = [
+        { id: 'audio-patterns', title: 'Audio Patterns', type: 'channel', visitedAt: new Date(Date.now() - 2 * 3600000).toISOString() },
+        { id: 'research-notes', title: 'Research Notes', type: 'channel', visitedAt: new Date(Date.now() - 24 * 3600000).toISOString() },
+        { id: 'strudel-experiments', title: 'Strudel Experiments', type: 'channel', visitedAt: new Date(Date.now() - 3 * 24 * 3600000).toISOString() },
+        { id: 'dither-patterns', title: 'Dither Patterns', type: 'block', visitedAt: new Date(Date.now() - 5 * 24 * 3600000).toISOString() }
+      ];
+
+      waypoint.searchIndex = [
+        { id: 'typography', title: 'Typography Research', type: 'channel', blockCount: 12 },
+        { id: 'prototyping', title: 'Prototyping Notes', type: 'channel', blockCount: 8 },
+        { id: 'design-systems', title: 'Design Systems', type: 'channel', blockCount: 24 },
+        { id: 'color-theory', title: 'Color Theory', type: 'channel', blockCount: 15 },
+        { id: 'pc98-archive', title: 'PC-98 Archive', type: 'channel', blockCount: 156 },
+        { id: 'audio-patterns', title: 'Audio Patterns', type: 'channel', blockCount: 7 },
+        { id: 'commit-mono', title: 'Commit Mono Typeface', type: 'block', parentChannel: 'Typography' },
+        { id: 'type-hierarchy', title: 'Type Hierarchy Notes', type: 'block', parentChannel: 'Design Systems' },
+        { id: 'dither-50', title: 'Dither Pattern 50%', type: 'block', parentChannel: 'PC-98 Archive' },
+        { id: 'farrow-ball', title: 'Farrow & Ball Palette', type: 'block', parentChannel: 'Color Theory' }
+      ];
+
+      waypoint.addEventListener('garden:navigate', (e) => {
+        console.log('Navigate to:', e.detail);
+        alert(`Navigating to: ${e.detail.title} (${e.detail.type})`);
+      });
+
+      waypoint.addEventListener('garden:connect', (e) => {
+        console.log('Connect:', e.detail);
+        alert(`Connected "${e.detail.blockTitle}" to channel "${e.detail.channelTitle}"`);
+        document.getElementById('context-menu-status').textContent =
+          `Connected "${e.detail.blockTitle}" to "${e.detail.channelTitle}"`;
+      });
+
+      waypoint.addEventListener('garden:create-channel', (e) => {
+        console.log('Create channel:', e.detail);
+        const channelName = prompt('Enter new channel name:');
+        if (channelName) {
+          alert(`Would create channel "${channelName}" and connect "${e.detail.connectTarget?.title}"`);
+        }
+      });
+
+      waypoint.addEventListener('garden:close', () => {
+        // Reset to navigate mode when closed
+        waypoint.mode = 'navigate';
+        waypoint.connectTarget = undefined;
+      });
+    });
+
+    // Initialize grid demo
+    customElements.whenDefined('garden-grid').then(() => {
+      const grid = document.getElementById('grid-demo');
+      renderGridItems(1, 8);
+
+      grid.addEventListener('garden:page-change', (e) => {
+        grid.loading = true;
+        // Simulate network delay
+        setTimeout(() => {
+          renderGridItems(e.detail.page, e.detail.pageSize);
+          grid.loading = false;
+        }, 300);
+      });
+    });
   </script>
 </body>
 </html>

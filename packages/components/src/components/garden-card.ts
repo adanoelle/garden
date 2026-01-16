@@ -25,9 +25,11 @@ export class GardenCard extends GardenElement {
     css`
       :host {
         display: block;
+        position: relative;
       }
 
       .card {
+        position: relative;
         background-color: var(--garden-bg);
         border: var(--garden-border-width) solid var(--garden-fg);
         padding: 0;
@@ -78,7 +80,9 @@ export class GardenCard extends GardenElement {
 
       .card-footer {
         padding: var(--garden-space-3) var(--garden-space-4);
-        border-top: var(--garden-border-width) solid var(--garden-fg);
+        color: var(--garden-fg-muted);
+        text-align: left;
+        /* No top border - minimal design */
       }
 
       /* Hide empty slots */
@@ -94,6 +98,74 @@ export class GardenCard extends GardenElement {
       .card-header.empty,
       .card-footer.empty {
         display: none;
+      }
+
+      /* === MENU BUTTON === */
+
+      .menu-button {
+        position: absolute;
+        top: var(--garden-space-2);
+        right: var(--garden-space-2);
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--garden-bg);
+        border: 1px solid transparent;
+        cursor: pointer;
+        opacity: 0;
+        font-family: inherit;
+        font-size: var(--garden-text-base);
+        color: var(--garden-fg-muted);
+        letter-spacing: 1px;
+        transition:
+          opacity var(--garden-duration-fast) var(--garden-ease-out),
+          color var(--garden-duration-fast) var(--garden-ease-out),
+          border-color var(--garden-duration-fast) var(--garden-ease-out),
+          background-image var(--garden-duration-fast) var(--garden-ease-out);
+        z-index: 10;
+      }
+
+      /* Show on card hover (desktop) */
+      .card:hover .menu-button,
+      .menu-button:focus-visible {
+        opacity: 1;
+      }
+
+      .menu-button:hover {
+        color: var(--garden-fg);
+        border-color: var(--garden-fg);
+      }
+
+      .menu-button:focus-visible {
+        outline: var(--garden-focus-ring);
+        outline-offset: var(--garden-focus-offset);
+        border-color: var(--garden-fg);
+      }
+
+      /* Dither hover effect */
+      .menu-button:hover {
+        background-image: var(--garden-dither-50);
+        background-size: 2px 2px;
+        color: var(--garden-bg);
+        text-shadow:
+          0 0 2px var(--garden-fg),
+          0 0 4px var(--garden-fg);
+      }
+
+      .menu-button:active {
+        background-image: none;
+        background-color: var(--garden-fg);
+        color: var(--garden-bg);
+        text-shadow: none;
+      }
+
+      /* Mobile: always show menu button */
+      @media (max-width: 640px) {
+        .menu-button {
+          opacity: 1;
+        }
       }
 
       /* === MINIMAL/MOBILE MODE === */
@@ -189,6 +261,14 @@ export class GardenCard extends GardenElement {
   @property({ reflect: true })
   density?: 'minimal' | 'full';
 
+  /** Show context menu button on hover */
+  @property({ type: Boolean, reflect: true, attribute: 'show-menu' })
+  showMenu = false;
+
+  /** Context ID passed with menu events */
+  @property({ attribute: 'menu-context' })
+  menuContext?: string;
+
   private _handleClick(e: MouseEvent) {
     if (!this.clickable && !this.href) return;
     this.emit('click', { originalEvent: e });
@@ -202,8 +282,47 @@ export class GardenCard extends GardenElement {
     }
   }
 
+  private _handleMenuClick(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    this.emit('menu-open', {
+      x: rect.right,
+      y: rect.bottom,
+      context: this.menuContext,
+      originalEvent: e
+    });
+  }
+
+  private _handleMenuContextMenu(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    this._handleMenuClick(e);
+  }
+
+  private _handleCardContextMenu(e: MouseEvent) {
+    if (!this.showMenu) return;
+    e.preventDefault();
+    this.emit('menu-open', {
+      x: e.clientX,
+      y: e.clientY,
+      context: this.menuContext,
+      originalEvent: e
+    });
+  }
+
   private _renderContent() {
     return html`
+      ${this.showMenu ? html`
+        <button
+          class="menu-button"
+          @click=${this._handleMenuClick}
+          @contextmenu=${this._handleMenuContextMenu}
+          aria-label="Open menu"
+          title="Menu"
+        >···</button>
+      ` : nothing}
       <div class="card-header">
         <slot name="header"></slot>
       </div>
@@ -227,6 +346,7 @@ export class GardenCard extends GardenElement {
           target=${this.target || nothing}
           rel=${rel || nothing}
           @click=${this._handleClick}
+          @contextmenu=${this._handleCardContextMenu}
         >
           ${this._renderContent()}
         </a>
@@ -241,6 +361,7 @@ export class GardenCard extends GardenElement {
         role=${this.clickable ? 'button' : nothing}
         @click=${this.clickable ? this._handleClick : nothing}
         @keydown=${this.clickable ? this._handleKeydown : nothing}
+        @contextmenu=${this._handleCardContextMenu}
       >
         ${this._renderContent()}
       </div>
