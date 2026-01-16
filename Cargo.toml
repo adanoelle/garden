@@ -13,8 +13,38 @@ license = "MIT"
 repository = "https://github.com/ada/garden"
 
 [workspace.dependencies]
+# Serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Database (features enabled per-crate)
+sqlx = { version = "0.8", features = ["runtime-tokio"] }
+
+# Type generation (Rust -> TypeScript)
+ts-rs = "10.0"
+
+# Date/time
+chrono = { version = "0.4", features = ["serde"] }
+
+# UUIDs
+uuid = { version = "1.0", features = ["v4", "serde"] }
+
+# Tauri
 tauri = { version = "2.1", features = [] }
 tauri-build = "2.0"
-tokio = { version = "1", features = ["full"] }
+
+# HTTP server (for garden-server)
+axum = "0.7"
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+# Tracing/logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
