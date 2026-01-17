@@ -1,0 +1,38 @@
+[package]
+name = "garden-db"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Garden database adapters - SQLite and Postgres implementations"
+
+[features]
+default = ["sqlite"]
+sqlite = ["sqlx/sqlite"]
+postgres = ["sqlx/postgres"]
+
+[dependencies]
+garden-core = { path = "../garden-core" }
+
+# Database
+sqlx = { workspace = true, features = ["runtime-tokio", "chrono", "uuid"] }
+
+# Async
+tokio.workspace = true
+async-trait = "0.1"
+
+# Serialization (for JSON columns)
+serde.workspace = true
+serde_json.workspace = true
+
+# Date/time
+chrono.workspace = true
+
+# Error handling
+thiserror.workspace = true
+
+# Tracing
+tracing.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
