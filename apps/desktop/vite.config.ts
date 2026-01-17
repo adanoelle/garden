@@ -11,6 +11,17 @@ export default defineConfig({
       ignored: ['**/src-tauri/**'],
     },
   },
+  // Enable decorator support for Lit
+  esbuild: {
+    target: 'es2020',
+    // Required for Lit decorators
+    tsconfigRaw: {
+      compilerOptions: {
+        experimentalDecorators: true,
+        useDefineForClassFields: false,
+      },
+    },
+  },
   build: {
     outDir: 'dist',
     // Tauri uses Chromium on Windows and WebKit on macOS/Linux

@@ -63,10 +63,10 @@ build-desktop:
 # Generate TypeScript types from Rust structs
 gen-types:
     @echo "Generating TypeScript types from Rust..."
-    cargo test --package garden-core export_typescript_types -- --ignored
+    cargo run --package garden-core --bin export-types
     @echo "Formatting generated types..."
     pnpm --filter @garden/types run format 2>/dev/null || true
-    @echo "Done! Types exported to packages/types/src/generated/"
+    @echo "Done!"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Testing

@@ -4,21 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Garden</title>
-    <link rel="stylesheet" href="node_modules/@garden/components/src/styles/tokens.css" />
     <style>
       body {
-        font-family: var(--garden-font-mono);
-        background-color: var(--garden-bg);
-        color: var(--garden-fg);
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        background-color: #f4f2e9;
+        color: #2d3748;
         margin: 0;
-        padding: var(--garden-space-4);
+        padding: 16px;
         min-height: 100vh;
-        overflow: hidden;
+      }
+      .loading {
+        padding: 20px;
+      }
+      .error {
+        color: red;
+        padding: 20px;
+        white-space: pre-wrap;
       }
     </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="loading">Loading Garden...</div>
+    </div>
+    <script>
+      // Test if basic JS works
+      console.log('[Garden] Inline script running');
+      window.onerror = function(msg, url, line, col, error) {
+        console.error('[Garden] Global error:', msg, url, line);
+        document.getElementById('app').innerHTML =
+          '<div class="error">Error: ' + msg + '\n\nAt: ' + url + ':' + line + '</div>';
+        return true;
+      };
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

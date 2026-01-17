@@ -14,10 +14,23 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build.workspace = true
 
 [dependencies]
+# Tauri
 tauri.workspace = true
 tauri-plugin-shell = "2"
+
+# Garden crates
+garden-tauri = { path = "../../../crates/garden-tauri" }
+
+# Serialization
 serde.workspace = true
 serde_json.workspace = true
+
+# Async runtime
+tokio.workspace = true
+
+# Tracing
+tracing.workspace = true
+tracing-subscriber.workspace = true
 
 [features]
 default = ["custom-protocol"]
