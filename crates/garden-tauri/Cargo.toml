@@ -1,0 +1,34 @@
+[package]
+name = "garden-tauri"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Garden Tauri IPC adapter - commands and state management for the desktop app"
+
+[dependencies]
+# Domain and storage
+garden-core = { path = "../garden-core" }
+garden-db = { path = "../garden-db", features = ["sqlite"] }
+
+# Tauri
+tauri = { workspace = true, features = ["wry"] }
+
+# Async runtime
+tokio.workspace = true
+
+# Serialization
+serde.workspace = true
+serde_json.workspace = true
+
+# Type generation
+ts-rs.workspace = true
+
+# Error handling
+thiserror.workspace = true
+
+# Tracing
+tracing.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
