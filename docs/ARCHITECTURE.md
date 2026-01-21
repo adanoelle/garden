@@ -1,6 +1,8 @@
 # Garden Architecture
 
-Garden is an Are.na-inspired content curation tool with integrated Strudel patterns for generative audio. This document describes the system architecture that enables shared domain logic between Tauri desktop and web server backends.
+Garden is an Are.na-inspired content curation tool with integrated Strudel patterns
+for generative audio. This document describes the system architecture that enables
+shared domain logic between Tauri desktop and web server backends.
 
 ## Design Goals
 
@@ -42,7 +44,8 @@ garden/
 
 ## Hexagonal Architecture
 
-The core principle is **dependency inversion**: the domain has zero dependencies on adapters. Adapters depend on the domain, implementing its traits.
+The core principle is **dependency inversion**: the domain has zero dependencies on
+adapters. Adapters depend on the domain, implementing its traits.
 
 ```
                          ┌─────────────────────────────────────┐
@@ -72,12 +75,12 @@ The core principle is **dependency inversion**: the domain has zero dependencies
 
 ### Crate Responsibilities
 
-| Crate | Purpose | Dependencies |
-|-------|---------|--------------|
-| `garden-core` | Domain models, port traits, pure business logic | None (pure Rust) |
-| `garden-db` | Storage adapters implementing repository traits | `garden-core` |
-| `garden-tauri` | Tauri IPC commands calling domain services | `garden-core`, `garden-db` |
-| `garden-server` | REST API routes calling domain services | `garden-core`, `garden-db` |
+| Crate           | Purpose                                         | Dependencies               |
+| --------------- | ----------------------------------------------- | -------------------------- |
+| `garden-core`   | Domain models, port traits, pure business logic | None (pure Rust)           |
+| `garden-db`     | Storage adapters implementing repository traits | `garden-core`              |
+| `garden-tauri`  | Tauri IPC commands calling domain services      | `garden-core`, `garden-db` |
+| `garden-server` | REST API routes calling domain services         | `garden-core`, `garden-db` |
 
 ## Data Flow
 
@@ -156,12 +159,12 @@ Generates:
 ```typescript
 // packages/types/src/generated/Channel.ts
 export interface Channel {
-    id: ChannelId;
-    title: string;
-    description: string | null;
-    block_count: number;
-    created_at: string;
-    updated_at: string;
+  id: ChannelId;
+  title: string;
+  description: string | null;
+  block_count: number;
+  created_at: string;
+  updated_at: string;
 }
 ```
 
@@ -185,13 +188,13 @@ postgres = ["sqlx/postgres"]
 
 ## Tooling
 
-| Concern | Tool | Scope |
-|---------|------|-------|
-| Rust dependencies | Cargo workspace | `crates/*` |
-| TypeScript dependencies | pnpm workspace | `apps/*`, `packages/*` |
-| TypeScript builds | Turbo | Caching, parallelization |
-| Cross-language tasks | just | Unified commands |
-| Type generation | ts-rs | Rust → TypeScript |
+| Concern                 | Tool            | Scope                    |
+| ----------------------- | --------------- | ------------------------ |
+| Rust dependencies       | Cargo workspace | `crates/*`               |
+| TypeScript dependencies | pnpm workspace  | `apps/*`, `packages/*`   |
+| TypeScript builds       | Turbo           | Caching, parallelization |
+| Cross-language tasks    | just            | Unified commands         |
+| Type generation         | ts-rs           | Rust → TypeScript        |
 
 See `justfile` for available commands.
 
@@ -213,7 +216,7 @@ Views follow **data-down, events-up**:
 
 ```typescript
 // App shell handles events from views
-channelPage.addEventListener('garden:create-block', async (e) => {
+channelPage.addEventListener("garden:create-block", async (e) => {
   const block = await api.createBlock(e.detail);
   channelPage.blocks = [...channelPage.blocks, block];
 });
