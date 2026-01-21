@@ -670,44 +670,95 @@
 
     <!-- Image Block -->
     <div style="margin-bottom: var(--garden-space-6);">
-      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">image block</span>
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">image block (gallery treatment)</span>
+      <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin: 0 0 var(--garden-space-4) 0;">
+        Click image or press <kbd>F</kbd> for gallery fullscreen, <kbd>Shift+F</kbd> for immersive, <kbd>Esc</kbd> to exit.
+      </p>
       <div class="component-grid">
         <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
-          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">default</span>
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">with caption plaque</span>
           <garden-image-block
-            src="https://picsum.photos/400/300"
-            alt="Random landscape"
-            style="width: 200px;"
+            src="https://picsum.photos/800/600"
+            alt="Untitled landscape study"
+            width="800"
+            height="600"
+            style="width: 250px;"
           ></garden-image-block>
         </div>
         <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
-          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">clickable</span>
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">dimensions only</span>
           <garden-image-block
             src="https://picsum.photos/seed/garden/400/300"
-            alt="Seeded image"
+            width="400"
+            height="300"
+            style="width: 200px;"
+          ></garden-image-block>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">hidden caption</span>
+          <garden-image-block
+            src="https://picsum.photos/seed/pc98/600/400"
+            alt="PC-98 palette study"
+            width="600"
+            height="400"
+            hide-caption
+            style="width: 200px;"
+          ></garden-image-block>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">clickable (custom action)</span>
+          <garden-image-block
+            src="https://picsum.photos/seed/click/400/300"
+            alt="Interactive piece"
+            width="400"
+            height="300"
             clickable
             style="width: 200px;"
-            onclick="alert('Image clicked!')"
           ></garden-image-block>
         </div>
-        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
-          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">constrained with cover</span>
+      </div>
+
+      <!-- Gallery showcase -->
+      <div style="margin-top: var(--garden-space-6);">
+        <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">gallery wall (constrained)</span>
+        <div style="display: flex; gap: var(--garden-space-4); flex-wrap: wrap;">
           <garden-image-block
-            src="https://picsum.photos/seed/pc98/800/400"
-            alt="Wide image with cover"
+            src="https://picsum.photos/seed/art1/1200/800"
+            alt="Coastal memory, early morning"
+            width="1200"
+            height="800"
             constrained
-            cover
-            style="width: 200px; height: 200px;"
+            style="width: 300px;"
           ></garden-image-block>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
-          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">error state</span>
           <garden-image-block
-            src="https://invalid-url-that-will-fail.com/image.jpg"
-            alt="This will fail"
-            style="width: 200px; height: 150px;"
+            src="https://picsum.photos/seed/art2/800/1200"
+            alt="Vertical study in blue"
+            width="800"
+            height="1200"
+            constrained
+            style="width: 200px;"
+          ></garden-image-block>
+          <garden-image-block
+            src="https://picsum.photos/seed/art3/1000/1000"
+            alt="Square composition"
+            width="1000"
+            height="1000"
+            constrained
+            style="width: 200px;"
           ></garden-image-block>
         </div>
+      </div>
+
+      <!-- Error state -->
+      <div style="margin-top: var(--garden-space-6);">
+        <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">error state</span>
+        <garden-image-block
+          src="https://invalid-url-that-will-fail.com/image.jpg"
+          alt="Failed to load"
+          width="400"
+          height="300"
+          style="width: 200px;"
+        ></garden-image-block>
       </div>
     </div>
 
@@ -793,8 +844,15 @@
 
     // Listen for media events
     document.querySelectorAll('garden-image-block, garden-video-block, garden-audio-block').forEach(el => {
-      ['garden:load', 'garden:error', 'garden:play', 'garden:pause', 'garden:ended', 'garden:click'].forEach(event => {
+      ['garden:load', 'garden:error', 'garden:play', 'garden:pause', 'garden:ended', 'garden:click', 'garden:fullscreen'].forEach(event => {
         el.addEventListener(event, (e) => logEvent(event.replace('garden:', ''), e.detail || {}));
+      });
+    });
+
+    // Handle clickable image custom action
+    document.querySelectorAll('garden-image-block[clickable]').forEach(el => {
+      el.addEventListener('garden:click', (e) => {
+        alert('Custom click action: ' + (e.detail?.src || 'image'));
       });
     });
   </script>

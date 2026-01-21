@@ -322,28 +322,40 @@ Audio player with playback controls.
 
 #### `<garden-image-block>`
 
-Image display with loading states.
+Gallery-style image display with framed presentation and fullscreen modes.
 
 ```html
 <garden-image-block
   src="asset://localhost/media/images/photo.jpg"
-  alt="Description"
-  width="800"
-  height="600"
+  alt="Coastal memory, early morning"
+  width="1920"
+  height="1080"
 ></garden-image-block>
 ```
 
-| Property      | Type      | Default     | Description      |
-| ------------- | --------- | ----------- | ---------------- |
-| `src`         | `string`  | `''`        | Image source URL |
-| `alt`         | `string`  | `''`        | Alt text         |
-| `width`       | `number`  | `undefined` | Image width      |
-| `height`      | `number`  | `undefined` | Image height     |
-| `constrained` | `boolean` | `false`     | Max 80vh height  |
-| `cover`       | `boolean` | `false`     | Cover fit mode   |
-| `clickable`   | `boolean` | `false`     | Enable click     |
+| Property      | Type      | Default     | Description               |
+| ------------- | --------- | ----------- | ------------------------- |
+| `src`         | `string`  | `''`        | Image source URL          |
+| `alt`         | `string`  | `''`        | Alt text (shown in plaque)|
+| `width`       | `number`  | `undefined` | Image width               |
+| `height`      | `number`  | `undefined` | Image height              |
+| `constrained` | `boolean` | `false`     | Max 80vh height           |
+| `cover`       | `boolean` | `false`     | Cover fit mode            |
+| `clickable`   | `boolean` | `false`     | Custom click (no fullscreen) |
+| `hideCaption` | `boolean` | `false`     | Hide the plaque caption   |
 
-**Events:** `garden:click`, `garden:load`, `garden:error`
+**Fullscreen Modes:**
+
+- **Gallery** (F key) — Image with cream matte background and framed presentation
+- **Immersive** (Shift+F) — Edge-to-edge on pure black, maximum fidelity
+
+**Keyboard shortcuts:**
+
+- `F` — Toggle gallery fullscreen
+- `Shift+F` — Enter immersive fullscreen
+- `Escape` — Exit fullscreen
+
+**Events:** `garden:click`, `garden:load`, `garden:error`, `garden:fullscreen`
 
 #### `<garden-waveform>`
 
