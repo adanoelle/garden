@@ -13,7 +13,7 @@ use ts_rs::TS;
 /// These codes allow the frontend to programmatically handle errors
 /// without parsing error messages.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ErrorCode {
     /// A requested channel was not found.
@@ -30,6 +30,8 @@ pub enum ErrorCode {
     DatabaseError,
     /// Application initialization failed.
     InitializationError,
+    /// A media operation failed (import, download, etc.).
+    MediaError,
     /// An unexpected internal error occurred.
     InternalError,
 }
@@ -42,7 +44,7 @@ pub enum ErrorCode {
 /// - A human-readable `message` for display
 /// - Optional `entity_id` for context (e.g., the ID that wasn't found)
 #[derive(Debug, Clone, Serialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 #[serde(rename_all = "camelCase")]
 pub struct TauriError {
     /// Machine-readable error code.
@@ -51,6 +53,7 @@ pub struct TauriError {
     pub message: String,
     /// Optional entity ID for context.
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
     pub entity_id: Option<String>,
 }
 
@@ -65,7 +68,11 @@ impl TauriError {
     }
 
     /// Create a TauriError with an associated entity ID.
-    pub fn with_entity(code: ErrorCode, message: impl Into<String>, entity_id: impl Into<String>) -> Self {
+    pub fn with_entity(
+        code: ErrorCode,
+        message: impl Into<String>,
+        entity_id: impl Into<String>,
+    ) -> Self {
         Self {
             code,
             message: message.into(),
@@ -81,6 +88,11 @@ impl TauriError {
     /// Create an internal error (for unexpected failures).
     pub fn internal(message: impl Into<String>) -> Self {
         Self::new(ErrorCode::InternalError, message)
+    }
+
+    /// Create a media error (for import/download/file operations).
+    pub fn media(message: impl Into<String>) -> Self {
+        Self::new(ErrorCode::MediaError, message)
     }
 }
 
@@ -116,9 +128,10 @@ impl From<RepoError> for TauriError {
             RepoError::NotFound => Self::new(ErrorCode::DatabaseError, "Record not found"),
             RepoError::Duplicate => Self::new(ErrorCode::DuplicateError, "Record already exists"),
             RepoError::Database(msg) => Self::new(ErrorCode::DatabaseError, msg),
-            RepoError::Serialization(msg) => {
-                Self::new(ErrorCode::InternalError, format!("Serialization error: {}", msg))
-            }
+            RepoError::Serialization(msg) => Self::new(
+                ErrorCode::InternalError,
+                format!("Serialization error: {}", msg),
+            ),
         }
     }
 }
@@ -187,11 +200,8 @@ mod tests {
 
     #[test]
     fn serializes_to_json() {
-        let err = TauriError::with_entity(
-            ErrorCode::ChannelNotFound,
-            "Channel not found",
-            "chan-123",
-        );
+        let err =
+            TauriError::with_entity(ErrorCode::ChannelNotFound, "Channel not found", "chan-123");
 
         let json = serde_json::to_string(&err).unwrap();
         assert!(json.contains("\"code\":\"CHANNEL_NOT_FOUND\""));

@@ -30,10 +30,7 @@ use crate::state::AppState;
 /// - `DATABASE_ERROR` for storage failures
 #[tauri::command]
 #[instrument(skip(state, new_block))]
-pub async fn block_create(
-    state: State<'_, AppState>,
-    new_block: NewBlock,
-) -> CommandResult<Block> {
+pub async fn block_create(state: State<'_, AppState>, new_block: NewBlock) -> CommandResult<Block> {
     state
         .service()
         .create_block(new_block)
@@ -87,10 +84,7 @@ pub async fn block_create_batch(
 /// - `DATABASE_ERROR` for storage failures
 #[tauri::command]
 #[instrument(skip(state), fields(block_id = %id.0))]
-pub async fn block_get(
-    state: State<'_, AppState>,
-    id: BlockId,
-) -> CommandResult<Block> {
+pub async fn block_get(state: State<'_, AppState>, id: BlockId) -> CommandResult<Block> {
     state
         .service()
         .get_block(&id)
@@ -142,10 +136,7 @@ pub async fn block_update(
 /// - `DATABASE_ERROR` for storage failures
 #[tauri::command]
 #[instrument(skip(state), fields(block_id = %id.0))]
-pub async fn block_delete(
-    state: State<'_, AppState>,
-    id: BlockId,
-) -> CommandResult<()> {
+pub async fn block_delete(state: State<'_, AppState>, id: BlockId) -> CommandResult<()> {
     state
         .service()
         .delete_block(&id)

@@ -59,10 +59,7 @@ pub async fn channel_create(
 /// - `DATABASE_ERROR` for storage failures
 #[tauri::command]
 #[instrument(skip(state), fields(channel_id = %id.0))]
-pub async fn channel_get(
-    state: State<'_, AppState>,
-    id: ChannelId,
-) -> CommandResult<Channel> {
+pub async fn channel_get(state: State<'_, AppState>, id: ChannelId) -> CommandResult<Channel> {
     state
         .service()
         .get_channel(&id)
@@ -147,10 +144,7 @@ pub async fn channel_update(
 /// - `DATABASE_ERROR` for storage failures
 #[tauri::command]
 #[instrument(skip(state), fields(channel_id = %id.0))]
-pub async fn channel_delete(
-    state: State<'_, AppState>,
-    id: ChannelId,
-) -> CommandResult<()> {
+pub async fn channel_delete(state: State<'_, AppState>, id: ChannelId) -> CommandResult<()> {
     state
         .service()
         .delete_channel(&id)
@@ -169,9 +163,7 @@ pub async fn channel_delete(
 /// - `DATABASE_ERROR` for storage failures
 #[tauri::command]
 #[instrument(skip(state))]
-pub async fn channel_count(
-    state: State<'_, AppState>,
-) -> CommandResult<usize> {
+pub async fn channel_count(state: State<'_, AppState>) -> CommandResult<usize> {
     state
         .service()
         .count_channels()

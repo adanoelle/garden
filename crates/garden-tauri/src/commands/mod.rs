@@ -1,10 +1,11 @@
 //! Tauri command handlers.
 //!
-//! This module organizes all IPC commands into three categories:
+//! This module organizes all IPC commands into four categories:
 //!
 //! - **Channels**: CRUD operations for channels (collections)
 //! - **Blocks**: CRUD operations for blocks (content)
 //! - **Connections**: Managing block-channel relationships
+//! - **Media**: Importing and managing media files
 //!
 //! All commands follow the naming convention `{domain}_{action}` and are
 //! instrumented with tracing spans for observability.
@@ -12,11 +13,13 @@
 pub mod blocks;
 pub mod channels;
 pub mod connections;
+pub mod media;
 
 // Re-export all commands for easy registration
 pub use blocks::*;
 pub use channels::*;
 pub use connections::*;
+pub use media::*;
 
 /// Generate the Tauri invoke handler with all commands.
 ///
@@ -58,6 +61,12 @@ macro_rules! generate_handler {
             $crate::commands::connection_get_blocks_with_positions,
             $crate::commands::connection_get_channels_for_block,
             $crate::commands::connection_reorder,
+            // Media commands (5)
+            $crate::commands::media_import_from_url,
+            $crate::commands::media_import_from_file,
+            $crate::commands::media_delete,
+            $crate::commands::media_exists,
+            $crate::commands::media_get_full_path,
         ]
     };
 }

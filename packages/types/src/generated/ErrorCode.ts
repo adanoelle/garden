@@ -2,8 +2,13 @@
 
 /**
  * Machine-readable error codes for the frontend.
- *
- * These codes allow the frontend to programmatically handle errors
- * without parsing error messages.
  */
-export type ErrorCode = "CHANNEL_NOT_FOUND" | "BLOCK_NOT_FOUND" | "CONNECTION_NOT_FOUND" | "VALIDATION_ERROR" | "DUPLICATE_ERROR" | "DATABASE_ERROR" | "INITIALIZATION_ERROR" | "INTERNAL_ERROR";
+export type ErrorCode =
+  | "CHANNEL_NOT_FOUND"
+  | "BLOCK_NOT_FOUND"
+  | "CONNECTION_NOT_FOUND"
+  | "VALIDATION_ERROR"
+  | "DUPLICATE_ERROR"
+  | "DATABASE_ERROR"
+  | "INITIALIZATION_ERROR"
+  | "INTERNAL_ERROR";

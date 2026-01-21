@@ -54,7 +54,7 @@
 //!
 //! # Commands
 //!
-//! All 19 commands follow the `{domain}_{action}` naming convention:
+//! All 24 commands follow the `{domain}_{action}` naming convention:
 //!
 //! ## Channels (6)
 //! - `channel_create` - Create a new channel
@@ -80,6 +80,13 @@
 //! - `connection_get_blocks_with_positions` - Get blocks with positions
 //! - `connection_get_channels_for_block` - Get channels for a block
 //! - `connection_reorder` - Reorder a block
+//!
+//! ## Media (5)
+//! - `media_import_from_url` - Import media from a URL
+//! - `media_import_from_file` - Import media from a local file
+//! - `media_delete` - Delete a media file
+//! - `media_exists` - Check if a media file exists
+//! - `media_get_full_path` - Get the full filesystem path for a media file
 //!
 //! # Error Handling
 //!

@@ -1,8 +1,8 @@
-//! Database initialization for Tauri.
+//! Application initialization for Tauri.
 //!
-//! This module handles database setup including:
+//! This module handles application setup including:
 //! - Resolving platform-specific data directories
-//! - Creating the database file
+//! - Creating the database file and media directories
 //! - Running migrations
 //! - Constructing the AppState
 
@@ -17,6 +17,12 @@ use crate::state::AppState;
 
 /// Database filename.
 const DATABASE_FILENAME: &str = "garden.db";
+
+/// Media directory name.
+const MEDIA_DIRNAME: &str = "media";
+
+/// Media subdirectories for different content types.
+const MEDIA_SUBDIRS: &[&str] = &["images", "videos", "audio"];
 
 /// Initialize the database and create the application state.
 ///
@@ -69,11 +75,11 @@ pub async fn initialize_database(app: &AppHandle) -> CommandResult<AppState> {
     if let Some(parent) = db_path.parent() {
         std::fs::create_dir_all(parent).map_err(|e| {
             error!(error = %e, path = %parent.display(), "Failed to create app data directory");
-            TauriError::initialization(format!(
-                "Failed to create app data directory: {}",
-                e
-            ))
+            TauriError::initialization(format!("Failed to create app data directory: {}", e))
         })?;
+
+        // Create media directories
+        initialize_media_directories(parent)?;
     }
 
     // Connect to database
@@ -88,24 +94,24 @@ pub async fn initialize_database(app: &AppHandle) -> CommandResult<AppState> {
         TauriError::initialization(format!("Failed to run migrations: {}", e))
     })?;
 
+    // Get media directory path
+    let media_path = app.path().app_data_dir().map_err(|e| {
+        error!(error = %e, "Failed to resolve app data directory for media");
+        TauriError::initialization(format!("Failed to resolve app data directory: {}", e))
+    })?.join(MEDIA_DIRNAME);
+
     info!("Database initialized successfully");
-    Ok(AppState::new(database))
+    Ok(AppState::new(database, media_path))
 }
 
 /// Resolve the full path to the database file.
 ///
 /// Uses Tauri's path resolver to get the platform-appropriate app data directory.
 fn resolve_database_path(app: &AppHandle) -> CommandResult<PathBuf> {
-    let app_data_dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| {
-            error!(error = %e, "Failed to resolve app data directory");
-            TauriError::initialization(format!(
-                "Failed to resolve app data directory: {}",
-                e
-            ))
-        })?;
+    let app_data_dir = app.path().app_data_dir().map_err(|e| {
+        error!(error = %e, "Failed to resolve app data directory");
+        TauriError::initialization(format!("Failed to resolve app data directory: {}", e))
+    })?;
 
     Ok(app_data_dir.join(DATABASE_FILENAME))
 }
@@ -115,6 +121,34 @@ fn resolve_database_path(app: &AppHandle) -> CommandResult<PathBuf> {
 /// Returns `None` if the path cannot be resolved.
 pub fn get_database_path(app: &AppHandle) -> Option<PathBuf> {
     resolve_database_path(app).ok()
+}
+
+/// Get the media directory path for the current app.
+///
+/// Returns `None` if the path cannot be resolved.
+pub fn get_media_path(app: &AppHandle) -> Option<PathBuf> {
+    app.path()
+        .app_data_dir()
+        .ok()
+        .map(|dir| dir.join(MEDIA_DIRNAME))
+}
+
+/// Initialize the media directory structure.
+///
+/// Creates the media directory and subdirectories for images, videos, and audio.
+fn initialize_media_directories(app_data_dir: &std::path::Path) -> CommandResult<()> {
+    let media_dir = app_data_dir.join(MEDIA_DIRNAME);
+
+    for subdir in MEDIA_SUBDIRS {
+        let path = media_dir.join(subdir);
+        std::fs::create_dir_all(&path).map_err(|e| {
+            error!(error = %e, path = %path.display(), "Failed to create media directory");
+            TauriError::initialization(format!("Failed to create media directory: {}", e))
+        })?;
+    }
+
+    info!(path = %media_dir.display(), "Media directories initialized");
+    Ok(())
 }
 
 #[cfg(test)]
