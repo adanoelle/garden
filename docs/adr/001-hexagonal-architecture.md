@@ -1,78 +1,89 @@
 # ADR-001: Hexagonal Architecture
 
-**Status**: Accepted
-**Date**: 2026-01-16
-**Deciders**: Ada
+## Status
+
+Accepted
+
+## Date
+
+2025-01-15
 
 ## Context
 
-Garden needs to support two deployment targets:
+Garden needs to support multiple deployment targets:
+- **Tauri desktop app** - Direct SQLite access via IPC
+- **Future web app** - REST API with server-side storage
+- **Potential mobile app** - May use different storage backend
 
-1. **Desktop app** (Tauri): Local-first with SQLite/SurrealDB storage
-2. **Web app**: Server-backed with Postgres storage
-
-Both share the same domain concepts (Channels, Blocks, Connections) and business logic. Without careful architecture, we risk:
-
-- Duplicating business logic across backends
-- Tight coupling between domain and storage
-- Difficulty swapping storage backends
-- Type mismatches between Rust and TypeScript
+We need an architecture that:
+1. Keeps business logic independent of I/O concerns
+2. Makes the domain testable without external dependencies
+3. Allows swapping storage backends without changing core logic
+4. Enables code sharing between deployment targets
 
 ## Decision
 
-We will use **hexagonal architecture** (ports and adapters) with Rust as the domain core.
+Adopt **hexagonal architecture** (ports and adapters) for the Rust backend:
 
-### Core Principles
+```
+┌─────────────────────────────────────────────────────────────┐
+│                       Adapters (outer)                       │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────────┐  │
+│  │ garden-tauri│    │ garden-db   │    │ (future: REST)  │  │
+│  │ IPC Commands│    │ SQLite      │    │                 │  │
+│  └──────┬──────┘    └──────┬──────┘    └────────┬────────┘  │
+│         │                  │                    │            │
+│         ▼                  ▼                    ▼            │
+│  ┌─────────────────────────────────────────────────────────┐│
+│  │                    Ports (interfaces)                   ││
+│  │    ChannelRepository    BlockRepository    etc.         ││
+│  └─────────────────────────────────────────────────────────┘│
+│                              │                               │
+│                              ▼                               │
+│  ┌─────────────────────────────────────────────────────────┐│
+│  │                  garden-core (inner)                    ││
+│  │     Models          Services          Validation        ││
+│  │  Channel, Block    GardenService      URL, paths        ││
+│  └─────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Domain at the center**: `garden-core` contains all domain models, business rules, and port definitions (traits). It has no dependencies on storage, networking, or frameworks.
+### Crate Organization
 
-2. **Ports as traits**: Repository interfaces (`ChannelRepository`, `BlockRepository`) are traits in the domain. They define what operations the domain needs, not how they're implemented.
+| Crate | Layer | Responsibility |
+|-------|-------|----------------|
+| `garden-core` | Domain | Pure business logic, models, validation |
+| `garden-db` | Adapter | SQLite implementation of repository traits |
+| `garden-tauri` | Adapter | Tauri IPC command handlers |
 
-3. **Adapters implement ports**: `garden-db` implements repository traits for different backends. `garden-tauri` and `garden-server` implement IPC/HTTP adapters that call domain services.
+### Key Rules
 
-4. **Dependency inversion**: Adapters depend on the domain, never the reverse. The domain defines interfaces; adapters satisfy them.
-
-### Type Safety
-
-Rust structs are the source of truth for types. `ts-rs` generates TypeScript interfaces from Rust, ensuring the frontend and backend agree on data shapes.
+1. **garden-core has zero I/O dependencies** - No database, filesystem, or network
+2. **Ports are traits in garden-core** - `ChannelRepository`, `BlockRepository`, etc.
+3. **Adapters implement ports** - `SqliteChannelRepository` implements `ChannelRepository`
+4. **Dependencies point inward** - Adapters depend on core, never the reverse
 
 ## Consequences
 
 ### Positive
 
-- **Testable domain**: Business logic can be unit tested with mock repositories
-- **Swappable storage**: Changing from SQLite to SurrealDB requires only a new adapter
-- **Shared logic**: Desktop and web share the same domain services
-- **Type safety**: Generated TypeScript types prevent contract mismatches
-- **Clear boundaries**: Each crate has a single responsibility
+- **Testability**: Domain logic tested with in-memory fakes, no SQLite needed
+- **Flexibility**: Can swap SQLite for Postgres, or Tauri for REST, without touching core
+- **Clarity**: Clear boundaries make code navigation easier
+- **Type safety**: Repository traits enforce consistent interfaces
 
 ### Negative
 
-- **More crates**: Initial setup requires multiple Rust crates
-- **Indirection**: Trait-based dispatch adds a layer vs. direct calls
-- **Learning curve**: Contributors must understand hexagonal patterns
+- **Indirection**: More files and traits than a simple layered architecture
+- **Boilerplate**: Repository traits require implementations for each adapter
+- **Learning curve**: Developers must understand the port/adapter pattern
 
 ### Neutral
 
-- **Feature flags**: Storage backends selected via Cargo features
-- **Build complexity**: Need orchestration (justfile) for cross-language builds
-
-## Alternatives Considered
-
-### 1. Separate codebases for desktop and web
-
-Rejected: Would duplicate domain logic and diverge over time.
-
-### 2. Single Rust binary with conditional compilation
-
-Rejected: Too coarse-grained. Feature flags per-crate provide better modularity.
-
-### 3. GraphQL instead of REST for web API
-
-Rejected: REST is simpler for our needs. Can revisit if query flexibility becomes important.
+- Test fixtures use `TestFixture` struct that creates in-memory repositories
+- Error types are defined per layer and converted at boundaries
 
 ## References
 
 - [Hexagonal Architecture (Alistair Cockburn)](https://alistair.cockburn.us/hexagonal-architecture/)
-- [Ports and Adapters Pattern](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software))
-- [ts-rs](https://github.com/Aleph-Alpha/ts-rs)
+- [Ports and Adapters Pattern](https://www.dossier-andreas.net/software_architecture/ports_and_adapters.html)
