@@ -21,5 +21,11 @@ url.workspace = true
 tracing.workspace = true
 async-trait = "0.1"
 
+# Media processing
+reqwest.workspace = true
+image.workspace = true
+mime_guess.workspace = true
+tokio = { workspace = true, features = ["fs", "io-util"] }
+
 [dev-dependencies]
 tokio = { workspace = true, features = ["rt", "macros"] }
