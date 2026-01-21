@@ -23,7 +23,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.0.0"
+    "@tauri-apps/api": "^2.0.0",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
     "prettier": "^3.2.0",

@@ -28,7 +28,7 @@ tokio = { version = "1", features = ["full"] }
 sqlx = { version = "0.8", features = ["runtime-tokio"] }
 
 # Type generation (Rust -> TypeScript)
-ts-rs = "10.0"
+ts-rs = { version = "11.1", features = ["no-serde-warnings"] }
 
 # Date/time
 chrono = { version = "0.4", features = ["serde"] }
@@ -40,7 +40,7 @@ uuid = { version = "1.0", features = ["v4", "serde"] }
 url = "2.5"
 
 # Tauri
-tauri = { version = "2.1", features = [] }
+tauri = { version = "2.1", features = ["protocol-asset"] }
 tauri-build = "2.0"
 
 # HTTP server (for garden-server)
@@ -51,3 +51,8 @@ tower-http = { version = "0.6", features = ["cors", "trace"] }
 # Tracing/logging
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Media processing
+reqwest = { version = "0.12", features = ["stream"] }
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "gif", "webp"] }
+mime_guess = "2.0"

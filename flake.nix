@@ -19,17 +19,18 @@
         };
 
         # Rust toolchain with useful extensions
+        # Using stable.latest for latest stable release
+        # To pin a specific version: pkgs.rust-bin.stable."1.75.0".default
         rustToolchain = pkgs.rust-bin.stable.latest.default.override {
           extensions = [ "rust-src" "rust-analyzer" ];
         };
 
         # Platform-specific Tauri dependencies
+        # New SDK pattern (2025+): Use apple-sdk package instead of individual frameworks
+        # See: https://discourse.nixos.org/t/the-darwin-sdks-have-been-updated/55295
         darwinDeps = with pkgs; lib.optionals stdenv.isDarwin [
-          darwin.apple_sdk.frameworks.WebKit
-          darwin.apple_sdk.frameworks.AppKit
-          darwin.apple_sdk.frameworks.Security
-          darwin.apple_sdk.frameworks.CoreServices
-          darwin.apple_sdk.frameworks.CoreFoundation
+          apple-sdk_14              # Includes WebKit, AppKit, Security, etc.
+          libiconv                  # Common dependency for Rust on Darwin
         ];
 
         linuxDeps = with pkgs; lib.optionals stdenv.isLinux [
@@ -53,6 +54,15 @@
 
             # Rust toolchain
             rustToolchain
+            cargo-watch      # File watcher for Rust development
+
+            # Build orchestration
+            just             # Task runner (our single entry point)
+            turbo            # TypeScript build orchestration
+
+            # Database tools
+            sqlite           # SQLite CLI for database inspection
+            # Note: sqlx-cli should be installed via: cargo install sqlx-cli
 
             # Build essentials
             pkg-config
@@ -60,6 +70,7 @@
             # Dev tools
             figlet
             git
+            direnv           # Automatic environment loading
           ] ++ darwinDeps ++ linuxDeps;
 
           # Environment variables for Tauri on Linux
@@ -71,9 +82,12 @@
             echo ""
             figlet -f slant "garden"
             echo ""
-            echo "  Node:  $(node --version)"
-            echo "  pnpm:  $(pnpm --version)"
-            echo "  Rust:  $(rustc --version | cut -d' ' -f2)"
+            echo "  Node:    $(node --version)"
+            echo "  pnpm:    $(pnpm --version)"
+            echo "  Rust:    $(rustc --version | cut -d' ' -f2)"
+            echo "  SQLite:  $(sqlite3 --version | cut -d' ' -f1)"
+            echo ""
+            echo "  Run 'just' to see available commands"
             echo ""
           '';
         };

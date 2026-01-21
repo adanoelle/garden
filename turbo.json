@@ -1,19 +1,41 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "tsconfig.json",
+    "pnpm-lock.yaml"
+  ],
+  "globalEnv": ["NODE_ENV"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "inputs": ["src/**", "tsconfig.json", "package.json", "vite.config.*"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**", ".tsbuildinfo"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "test": {
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "inputs": ["src/**", "tests/**", "vitest.config.*", "jest.config.*"],
+      "outputs": ["coverage/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json"],
+      "outputs": [".tsbuildinfo"]
     },
     "lint": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", ".eslintrc*", "eslint.config.*"],
+      "outputs": []
+    },
+    "format": {
+      "cache": false
+    },
+    "format:check": {
+      "inputs": ["src/**", ".prettierrc*", "prettier.config.*"],
+      "outputs": []
     },
     "clean": {
       "cache": false
@@ -25,7 +47,11 @@
     },
     "tauri:build": {
       "dependsOn": ["^build"],
+      "inputs": ["src/**", "src-tauri/**"],
       "outputs": ["src-tauri/target/release/bundle/**"]
+    },
+    "//#check": {
+      "dependsOn": ["lint", "typecheck", "test"]
     }
   }
 }

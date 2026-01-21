@@ -26,6 +26,9 @@ importers:
       '@garden/types':
         specifier: workspace:*
         version: link:../../packages/types
+      '@garden/views':
+        specifier: workspace:*
+        version: link:../../packages/views
       '@tauri-apps/api':
         specifier: ^2.0.0
         version: 2.9.1
@@ -55,6 +58,9 @@ importers:
 
   packages/components:
     dependencies:
+      '@garden/types':
+        specifier: workspace:*
+        version: link:../types
       lit:
         specifier: ^3.1.0
         version: 3.3.2
@@ -68,6 +74,9 @@ importers:
       '@strudel/web':
         specifier: ^1.2.6
         version: 1.2.6
+      '@tauri-apps/api':
+        specifier: ^2.0.0
+        version: 2.9.1
       '@types/mocha':
         specifier: ^10.0.10
         version: 10.0.10
@@ -104,6 +113,9 @@ importers:
       '@tauri-apps/api':
         specifier: ^2.0.0
         version: 2.9.1
+      zod:
+        specifier: ^3.23.0
+        version: 3.25.76
     devDependencies:
       prettier:
         specifier: ^3.2.0
@@ -111,6 +123,28 @@ importers:
       typescript:
         specifier: ^5.3.0
         version: 5.6.3
+
+  packages/views:
+    dependencies:
+      '@garden/components':
+        specifier: workspace:*
+        version: link:../components
+      '@garden/types':
+        specifier: workspace:*
+        version: link:../types
+      lit:
+        specifier: ^3.1.0
+        version: 3.3.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.0
+        version: 5.6.3
+      vite:
+        specifier: ^5.0.0
+        version: 5.4.21(@types/node@20.19.30)
+      vite-plugin-dts:
+        specifier: ^3.6.0
+        version: 3.9.1(@types/node@20.19.30)(rollup@4.55.1)(typescript@5.6.3)(vite@5.4.21(@types/node@20.19.30))
 
 packages:
 
