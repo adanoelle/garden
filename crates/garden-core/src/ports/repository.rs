@@ -62,18 +62,14 @@ pub trait ConnectionRepository: Send + Sync {
 
     /// Connect multiple blocks to channels at once.
     /// Each tuple is (block_id, channel_id, position).
-    async fn connect_batch(
-        &self,
-        connections: &[(BlockId, ChannelId, i32)],
-    ) -> RepoResult<()>;
+    async fn connect_batch(&self, connections: &[(BlockId, ChannelId, i32)]) -> RepoResult<()>;
 
     /// Disconnect a block from a channel.
     async fn disconnect(&self, block_id: &BlockId, channel_id: &ChannelId) -> RepoResult<()>;
 
     /// Get all blocks in a channel, ordered by position.
     /// Returns tuples of (Block, position).
-    async fn get_blocks_in_channel(&self, channel_id: &ChannelId)
-        -> RepoResult<Vec<(Block, i32)>>;
+    async fn get_blocks_in_channel(&self, channel_id: &ChannelId) -> RepoResult<Vec<(Block, i32)>>;
 
     /// Get all channels that a block is connected to.
     async fn get_channels_for_block(&self, block_id: &BlockId) -> RepoResult<Vec<Channel>>;

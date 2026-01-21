@@ -206,7 +206,7 @@ export class GardenWaveform extends GardenElement {
   private _peaks: number[] = [];
 
   private _animationId: number | null = null;
-  private _dataArray: Uint8Array<ArrayBuffer> | null = null;
+  private _dataArray: Uint8Array | null = null;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -292,7 +292,7 @@ export class GardenWaveform extends GardenElement {
       return;
     }
 
-    this.analyser.getByteFrequencyData(this._dataArray as Uint8Array<ArrayBuffer>);
+    this.analyser.getByteFrequencyData(this._dataArray!);
 
     const binSize = Math.floor(this._dataArray.length / this.bars);
     const newAmplitudes: number[] = [];

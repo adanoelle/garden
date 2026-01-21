@@ -81,7 +81,7 @@ src/
 └── styles/
     └── tokens.css      # Design tokens - import in HTML, vars available globally
 demo/
-└── index.html          # Component showcase, run with `npm run dev`
+└── index.html          # Component showcase, run with `pnpm dev`
 ```
 
 ## Component Architecture
@@ -138,11 +138,13 @@ States: `disabled`, `pressed`, `full`
 ## Development Workflow
 
 ```bash
-npm run dev      # Start Vite dev server
-npm run build    # Build library to dist/
+pnpm dev         # Start Vite dev server
+pnpm build       # Build library to dist/
 ```
 
 Demo page at `http://localhost:5173/demo/index.html`
+
+> **Note:** For workspace-level commands and architecture context, see the root `CLAUDE.md`.
 
 ## Design Decisions to Preserve
 

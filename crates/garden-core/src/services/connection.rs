@@ -1,4 +1,8 @@
 //! Connection service - domain logic for connecting blocks to channels.
+//!
+//! **Note:** These free functions are provided for backwards compatibility.
+//! For new code, prefer using [`GardenService`](super::GardenService) which
+//! provides the same functionality in a more ergonomic struct-based API.
 
 use crate::error::{DomainError, DomainResult};
 use crate::models::{Block, BlockId, Channel, ChannelId, Connection};
@@ -7,6 +11,7 @@ use crate::ports::{BlockRepository, ChannelRepository, ConnectionRepository};
 /// Connect a block to a channel.
 ///
 /// If position is None, the block is appended to the end.
+#[deprecated(since = "0.1.0", note = "Use GardenService::connect_block instead")]
 pub async fn connect_block(
     channel_repo: &impl ChannelRepository,
     block_repo: &impl BlockRepository,
@@ -45,12 +50,11 @@ pub async fn connect_block(
     conn_repo
         .get_connection(block_id, channel_id)
         .await?
-        .ok_or_else(|| {
-            DomainError::ConnectionNotFound(block_id.clone(), channel_id.clone())
-        })
+        .ok_or_else(|| DomainError::ConnectionNotFound(block_id.clone(), channel_id.clone()))
 }
 
 /// Disconnect a block from a channel.
+#[deprecated(since = "0.1.0", note = "Use GardenService::disconnect_block instead")]
 pub async fn disconnect_block(
     conn_repo: &impl ConnectionRepository,
     block_id: &BlockId,
@@ -67,15 +71,26 @@ pub async fn disconnect_block(
 }
 
 /// Get all blocks in a channel, ordered by position.
+#[deprecated(
+    since = "0.1.0",
+    note = "Use GardenService::get_blocks_in_channel instead"
+)]
 pub async fn get_blocks_in_channel(
     conn_repo: &impl ConnectionRepository,
     channel_id: &ChannelId,
 ) -> DomainResult<Vec<Block>> {
     let blocks_with_pos = conn_repo.get_blocks_in_channel(channel_id).await?;
-    Ok(blocks_with_pos.into_iter().map(|(block, _pos)| block).collect())
+    Ok(blocks_with_pos
+        .into_iter()
+        .map(|(block, _pos)| block)
+        .collect())
 }
 
 /// Get all channels that contain a block.
+#[deprecated(
+    since = "0.1.0",
+    note = "Use GardenService::get_channels_for_block instead"
+)]
 pub async fn get_channels_for_block(
     conn_repo: &impl ConnectionRepository,
     block_id: &BlockId,
@@ -84,6 +99,7 @@ pub async fn get_channels_for_block(
 }
 
 /// Reorder a block within a channel.
+#[deprecated(since = "0.1.0", note = "Use GardenService::reorder_block instead")]
 pub async fn reorder_block(
     conn_repo: &impl ConnectionRepository,
     channel_id: &ChannelId,
@@ -96,7 +112,9 @@ pub async fn reorder_block(
         .await?
         .ok_or_else(|| DomainError::ConnectionNotFound(block_id.clone(), channel_id.clone()))?;
 
-    conn_repo.reorder(channel_id, block_id, new_position).await?;
+    conn_repo
+        .reorder(channel_id, block_id, new_position)
+        .await?;
     Ok(())
 }
 

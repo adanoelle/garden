@@ -61,7 +61,10 @@ impl InMemoryChannelRepository {
 #[async_trait]
 impl ChannelRepository for InMemoryChannelRepository {
     async fn create(&self, channel: &Channel) -> RepoResult<()> {
-        let mut channels = self.channels.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut channels = self
+            .channels
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         if channels.contains_key(&channel.id) {
             return Err(RepoError::Duplicate);
         }
@@ -70,12 +73,18 @@ impl ChannelRepository for InMemoryChannelRepository {
     }
 
     async fn get(&self, id: &ChannelId) -> RepoResult<Option<Channel>> {
-        let channels = self.channels.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let channels = self
+            .channels
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         Ok(channels.get(id).cloned())
     }
 
     async fn list(&self, limit: usize, offset: usize) -> RepoResult<Page<Channel>> {
-        let channels = self.channels.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let channels = self
+            .channels
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         let total = channels.len();
 
         let mut items: Vec<_> = channels.values().cloned().collect();
@@ -88,7 +97,10 @@ impl ChannelRepository for InMemoryChannelRepository {
     }
 
     async fn update(&self, channel: &Channel) -> RepoResult<()> {
-        let mut channels = self.channels.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut channels = self
+            .channels
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         if !channels.contains_key(&channel.id) {
             return Err(RepoError::NotFound);
         }
@@ -97,7 +109,10 @@ impl ChannelRepository for InMemoryChannelRepository {
     }
 
     async fn delete(&self, id: &ChannelId) -> RepoResult<()> {
-        let mut channels = self.channels.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut channels = self
+            .channels
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         if channels.remove(id).is_none() {
             return Err(RepoError::NotFound);
         }
@@ -105,7 +120,10 @@ impl ChannelRepository for InMemoryChannelRepository {
     }
 
     async fn count(&self) -> RepoResult<usize> {
-        let channels = self.channels.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let channels = self
+            .channels
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         Ok(channels.len())
     }
 }
@@ -139,7 +157,10 @@ impl InMemoryBlockRepository {
 #[async_trait]
 impl BlockRepository for InMemoryBlockRepository {
     async fn create(&self, block: &Block) -> RepoResult<()> {
-        let mut blocks = self.blocks.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut blocks = self
+            .blocks
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         if blocks.contains_key(&block.id) {
             return Err(RepoError::Duplicate);
         }
@@ -148,7 +169,10 @@ impl BlockRepository for InMemoryBlockRepository {
     }
 
     async fn create_batch(&self, blocks_to_create: &[Block]) -> RepoResult<()> {
-        let mut blocks = self.blocks.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut blocks = self
+            .blocks
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         for block in blocks_to_create {
             if blocks.contains_key(&block.id) {
                 return Err(RepoError::Duplicate);
@@ -161,12 +185,18 @@ impl BlockRepository for InMemoryBlockRepository {
     }
 
     async fn get(&self, id: &BlockId) -> RepoResult<Option<Block>> {
-        let blocks = self.blocks.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let blocks = self
+            .blocks
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         Ok(blocks.get(id).cloned())
     }
 
     async fn update(&self, block: &Block) -> RepoResult<()> {
-        let mut blocks = self.blocks.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut blocks = self
+            .blocks
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         if !blocks.contains_key(&block.id) {
             return Err(RepoError::NotFound);
         }
@@ -175,7 +205,10 @@ impl BlockRepository for InMemoryBlockRepository {
     }
 
     async fn delete(&self, id: &BlockId) -> RepoResult<()> {
-        let mut blocks = self.blocks.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut blocks = self
+            .blocks
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         if blocks.remove(id).is_none() {
             return Err(RepoError::NotFound);
         }
@@ -283,38 +316,58 @@ impl ConnectionRepository for InMemoryConnectionRepository {
         channel_id: &ChannelId,
         position: i32,
     ) -> RepoResult<()> {
-        let mut connections = self.connections.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut connections = self
+            .connections
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
 
         // Check for duplicate
-        if connections.iter().any(|c| &c.block_id == block_id && &c.channel_id == channel_id) {
+        if connections
+            .iter()
+            .any(|c| &c.block_id == block_id && &c.channel_id == channel_id)
+        {
             return Err(RepoError::Duplicate);
         }
 
-        connections.push(Connection::new(block_id.clone(), channel_id.clone(), position));
+        connections.push(Connection::new(
+            block_id.clone(),
+            channel_id.clone(),
+            position,
+        ));
         Ok(())
     }
 
-    async fn connect_batch(
-        &self,
-        conns: &[(BlockId, ChannelId, i32)],
-    ) -> RepoResult<()> {
-        let mut connections = self.connections.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+    async fn connect_batch(&self, conns: &[(BlockId, ChannelId, i32)]) -> RepoResult<()> {
+        let mut connections = self
+            .connections
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
 
         // Check for duplicates first
         for (block_id, channel_id, _) in conns {
-            if connections.iter().any(|c| &c.block_id == block_id && &c.channel_id == channel_id) {
+            if connections
+                .iter()
+                .any(|c| &c.block_id == block_id && &c.channel_id == channel_id)
+            {
                 return Err(RepoError::Duplicate);
             }
         }
 
         for (block_id, channel_id, position) in conns {
-            connections.push(Connection::new(block_id.clone(), channel_id.clone(), *position));
+            connections.push(Connection::new(
+                block_id.clone(),
+                channel_id.clone(),
+                *position,
+            ));
         }
         Ok(())
     }
 
     async fn disconnect(&self, block_id: &BlockId, channel_id: &ChannelId) -> RepoResult<()> {
-        let mut connections = self.connections.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut connections = self
+            .connections
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         let initial_len = connections.len();
         connections.retain(|c| !(&c.block_id == block_id && &c.channel_id == channel_id));
 
@@ -325,8 +378,14 @@ impl ConnectionRepository for InMemoryConnectionRepository {
     }
 
     async fn get_blocks_in_channel(&self, channel_id: &ChannelId) -> RepoResult<Vec<(Block, i32)>> {
-        let connections = self.connections.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
-        let blocks = self.blocks.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let connections = self
+            .connections
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let blocks = self
+            .blocks
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
 
         let mut result: Vec<_> = connections
             .iter()
@@ -340,8 +399,14 @@ impl ConnectionRepository for InMemoryConnectionRepository {
     }
 
     async fn get_channels_for_block(&self, block_id: &BlockId) -> RepoResult<Vec<Channel>> {
-        let connections = self.connections.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
-        let channels = self.channels.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let connections = self
+            .connections
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let channels = self
+            .channels
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
 
         let result: Vec<_> = connections
             .iter()
@@ -357,7 +422,10 @@ impl ConnectionRepository for InMemoryConnectionRepository {
         block_id: &BlockId,
         channel_id: &ChannelId,
     ) -> RepoResult<Option<Connection>> {
-        let connections = self.connections.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let connections = self
+            .connections
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
         Ok(connections
             .iter()
             .find(|c| &c.block_id == block_id && &c.channel_id == channel_id)
@@ -370,7 +438,10 @@ impl ConnectionRepository for InMemoryConnectionRepository {
         block_id: &BlockId,
         new_position: i32,
     ) -> RepoResult<()> {
-        let mut connections = self.connections.write().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let mut connections = self
+            .connections
+            .write()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
 
         let conn = connections
             .iter_mut()
@@ -382,7 +453,10 @@ impl ConnectionRepository for InMemoryConnectionRepository {
     }
 
     async fn next_position(&self, channel_id: &ChannelId) -> RepoResult<i32> {
-        let connections = self.connections.read().map_err(|_| RepoError::Database("lock poisoned".into()))?;
+        let connections = self
+            .connections
+            .read()
+            .map_err(|_| RepoError::Database("lock poisoned".into()))?;
 
         let max_pos = connections
             .iter()
@@ -523,11 +597,7 @@ mod tests {
     #[tokio::test]
     async fn block_repo_batch_create() {
         let repo = InMemoryBlockRepository::new();
-        let blocks = vec![
-            Block::text("One"),
-            Block::text("Two"),
-            Block::text("Three"),
-        ];
+        let blocks = vec![Block::text("One"), Block::text("Two"), Block::text("Three")];
 
         repo.create_batch(&blocks).await.unwrap();
 
@@ -580,7 +650,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_fixture_service_integration() {
-        use crate::models::{BlockContent, NewBlock, NewChannel};
+        use crate::models::{NewBlock, NewChannel};
 
         let fixture = TestFixture::new();
         let service = fixture.service();
@@ -595,9 +665,7 @@ mod tests {
             .unwrap();
 
         let block = service
-            .create_block(NewBlock {
-                content: BlockContent::text("Test Block"),
-            })
+            .create_block(NewBlock::text("Test Block"))
             .await
             .unwrap();
 

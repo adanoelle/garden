@@ -12,8 +12,8 @@ use tracing_subscriber::EnvFilter;
 /// Log level can be controlled via the `RUST_LOG` environment variable.
 /// Defaults to `info` level logging.
 fn setup_tracing() {
-    let filter = EnvFilter::try_from_default_env()
-        .unwrap_or_else(|_| EnvFilter::new("info,sqlx=warn"));
+    let filter =
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info,sqlx=warn"));
 
     tracing_subscriber::fmt()
         .with_env_filter(filter)

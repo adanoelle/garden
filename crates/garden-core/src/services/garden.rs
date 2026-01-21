@@ -177,9 +177,28 @@ where
     pub async fn update_block(&self, id: &BlockId, update: BlockUpdate) -> DomainResult<Block> {
         let mut block = self.get_block(id).await?;
 
+        // Update content if provided
         if let Some(content) = update.content {
             Self::validate_content(&content)?;
             block.content = content;
+        }
+
+        // Apply archive metadata field updates using FieldUpdate
+        // None means "keep" (field not provided), Some(FieldUpdate) applies the update
+        if let Some(field_update) = update.source_url {
+            block.source_url = field_update.apply(block.source_url);
+        }
+        if let Some(field_update) = update.source_title {
+            block.source_title = field_update.apply(block.source_title);
+        }
+        if let Some(field_update) = update.creator {
+            block.creator = field_update.apply(block.creator);
+        }
+        if let Some(field_update) = update.original_date {
+            block.original_date = field_update.apply(block.original_date);
+        }
+        if let Some(field_update) = update.notes {
+            block.notes = field_update.apply(block.notes);
         }
 
         block.updated_at = Utc::now();
@@ -584,9 +603,7 @@ mod tests {
     async fn create_text_block_success() {
         let service = test_service();
         let block = service
-            .create_block(NewBlock {
-                content: BlockContent::text("Hello, world!"),
-            })
+            .create_block(NewBlock::text("Hello, world!"))
             .await
             .unwrap();
 
@@ -600,9 +617,7 @@ mod tests {
     async fn create_link_block_success() {
         let service = test_service();
         let block = service
-            .create_block(NewBlock {
-                content: BlockContent::link("https://example.com"),
-            })
+            .create_block(NewBlock::link("https://example.com"))
             .await
             .unwrap();
 
@@ -615,11 +630,7 @@ mod tests {
     #[tokio::test]
     async fn create_block_empty_text_fails() {
         let service = test_service();
-        let result = service
-            .create_block(NewBlock {
-                content: BlockContent::text("   "),
-            })
-            .await;
+        let result = service.create_block(NewBlock::text("   ")).await;
 
         assert!(matches!(result, Err(DomainError::InvalidInput(_))));
     }
@@ -627,11 +638,7 @@ mod tests {
     #[tokio::test]
     async fn create_block_invalid_url_fails() {
         let service = test_service();
-        let result = service
-            .create_block(NewBlock {
-                content: BlockContent::link("not-a-url"),
-            })
-            .await;
+        let result = service.create_block(NewBlock::link("not-a-url")).await;
 
         assert!(matches!(result, Err(DomainError::InvalidInput(_))));
     }
@@ -641,15 +648,9 @@ mod tests {
         let service = test_service();
         let blocks = service
             .create_blocks(vec![
-                NewBlock {
-                    content: BlockContent::text("One"),
-                },
-                NewBlock {
-                    content: BlockContent::text("Two"),
-                },
-                NewBlock {
-                    content: BlockContent::text("Three"),
-                },
+                NewBlock::text("One"),
+                NewBlock::text("Two"),
+                NewBlock::text("Three"),
             ])
             .await
             .unwrap();
@@ -669,9 +670,7 @@ mod tests {
     async fn update_block_content() {
         let service = test_service();
         let block = service
-            .create_block(NewBlock {
-                content: BlockContent::text("Original"),
-            })
+            .create_block(NewBlock::text("Original"))
             .await
             .unwrap();
 
@@ -680,6 +679,7 @@ mod tests {
                 &block.id,
                 BlockUpdate {
                     content: Some(BlockContent::text("Updated")),
+                    ..Default::default()
                 },
             )
             .await
@@ -692,14 +692,47 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn delete_block_success() {
+    async fn update_block_metadata() {
         let service = test_service();
-        let block = service
-            .create_block(NewBlock {
-                content: BlockContent::text("Test"),
-            })
+        let block = service.create_block(NewBlock::text("Test")).await.unwrap();
+
+        // Set metadata
+        let updated = service
+            .update_block(
+                &block.id,
+                BlockUpdate {
+                    source_url: Some(FieldUpdate::Set("https://example.com".to_string())),
+                    creator: Some(FieldUpdate::Set("John Doe".to_string())),
+                    ..Default::default()
+                },
+            )
             .await
             .unwrap();
+
+        assert_eq!(updated.source_url, Some("https://example.com".to_string()));
+        assert_eq!(updated.creator, Some("John Doe".to_string()));
+
+        // Clear one field, keep another (or omit to keep)
+        let updated2 = service
+            .update_block(
+                &block.id,
+                BlockUpdate {
+                    source_url: Some(FieldUpdate::Clear),
+                    // creator is omitted (None), which means keep
+                    ..Default::default()
+                },
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(updated2.source_url, None);
+        assert_eq!(updated2.creator, Some("John Doe".to_string()));
+    }
+
+    #[tokio::test]
+    async fn delete_block_success() {
+        let service = test_service();
+        let block = service.create_block(NewBlock::text("Test")).await.unwrap();
 
         service.delete_block(&block.id).await.unwrap();
 
@@ -734,9 +767,7 @@ mod tests {
             .unwrap();
 
         let block = service
-            .create_block(NewBlock {
-                content: BlockContent::text("Test Block"),
-            })
+            .create_block(NewBlock::text("Test Block"))
             .await
             .unwrap();
 
@@ -790,12 +821,7 @@ mod tests {
     #[tokio::test]
     async fn connect_block_nonexistent_channel_fails() {
         let service = test_service();
-        let block = service
-            .create_block(NewBlock {
-                content: BlockContent::text("Test"),
-            })
-            .await
-            .unwrap();
+        let block = service.create_block(NewBlock::text("Test")).await.unwrap();
 
         let result = service
             .connect_block(&block.id, &ChannelId::new(), None)
@@ -860,16 +886,12 @@ mod tests {
             .unwrap();
 
         let block1 = service
-            .create_block(NewBlock {
-                content: BlockContent::text("Block 1"),
-            })
+            .create_block(NewBlock::text("Block 1"))
             .await
             .unwrap();
 
         let block2 = service
-            .create_block(NewBlock {
-                content: BlockContent::text("Block 2"),
-            })
+            .create_block(NewBlock::text("Block 2"))
             .await
             .unwrap();
 
@@ -909,9 +931,7 @@ mod tests {
             .unwrap();
 
         let block = service
-            .create_block(NewBlock {
-                content: BlockContent::text("Test Block"),
-            })
+            .create_block(NewBlock::text("Test Block"))
             .await
             .unwrap();
 
@@ -942,7 +962,10 @@ mod tests {
             .await
             .unwrap();
 
-        let connection = service.get_connection(&block.id, &channel.id).await.unwrap();
+        let connection = service
+            .get_connection(&block.id, &channel.id)
+            .await
+            .unwrap();
         assert_eq!(connection.position, 10);
     }
 
