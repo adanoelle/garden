@@ -177,28 +177,14 @@ struct ChannelRow {
 
 impl ChannelRow {
     fn into_channel(self) -> Result<Channel, crate::error::DbError> {
-        use chrono::DateTime;
-
-        let created_at = DateTime::parse_from_rfc3339(&self.created_at)
-            .map_err(|_| crate::error::DbError::InvalidDatetime {
-                field: "created_at",
-                value: self.created_at.clone(),
-            })?
-            .with_timezone(&chrono::Utc);
-
-        let updated_at = DateTime::parse_from_rfc3339(&self.updated_at)
-            .map_err(|_| crate::error::DbError::InvalidDatetime {
-                field: "updated_at",
-                value: self.updated_at.clone(),
-            })?
-            .with_timezone(&chrono::Utc);
+        use super::util::parse_datetime;
 
         Ok(Channel {
             id: ChannelId(self.id),
             title: self.title,
             description: self.description,
-            created_at,
-            updated_at,
+            created_at: parse_datetime(&self.created_at, "created_at")?,
+            updated_at: parse_datetime(&self.updated_at, "updated_at")?,
         })
     }
 }

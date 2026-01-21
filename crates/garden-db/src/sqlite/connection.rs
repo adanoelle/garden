@@ -54,11 +54,12 @@ impl ConnectionRepository for SqliteConnectionRepository {
     }
 
     #[instrument(skip(self, connections), fields(count = connections.len()))]
-    async fn connect_batch(
-        &self,
-        connections: &[(BlockId, ChannelId, i32)],
-    ) -> RepoResult<()> {
-        let mut tx = self.pool.begin().await.map_err(crate::error::DbError::from)?;
+    async fn connect_batch(&self, connections: &[(BlockId, ChannelId, i32)]) -> RepoResult<()> {
+        let mut tx = self
+            .pool
+            .begin()
+            .await
+            .map_err(crate::error::DbError::from)?;
 
         // Use consistent timestamp for all connections in the batch
         let connected_at = chrono::Utc::now().to_rfc3339();
@@ -85,14 +86,12 @@ impl ConnectionRepository for SqliteConnectionRepository {
 
     #[instrument(skip(self), fields(block_id = %block_id.0, channel_id = %channel_id.0))]
     async fn disconnect(&self, block_id: &BlockId, channel_id: &ChannelId) -> RepoResult<()> {
-        let result = sqlx::query(
-            "DELETE FROM connections WHERE block_id = $1 AND channel_id = $2",
-        )
-        .bind(&block_id.0)
-        .bind(&channel_id.0)
-        .execute(&self.pool)
-        .await
-        .map_err(crate::error::DbError::from)?;
+        let result = sqlx::query("DELETE FROM connections WHERE block_id = $1 AND channel_id = $2")
+            .bind(&block_id.0)
+            .bind(&channel_id.0)
+            .execute(&self.pool)
+            .await
+            .map_err(crate::error::DbError::from)?;
 
         if result.rows_affected() == 0 {
             return Err(garden_core::error::RepoError::NotFound);
@@ -102,16 +101,14 @@ impl ConnectionRepository for SqliteConnectionRepository {
     }
 
     #[instrument(skip(self), fields(channel_id = %channel_id.0), err)]
-    async fn get_blocks_in_channel(
-        &self,
-        channel_id: &ChannelId,
-    ) -> RepoResult<Vec<(Block, i32)>> {
+    async fn get_blocks_in_channel(&self, channel_id: &ChannelId) -> RepoResult<Vec<(Block, i32)>> {
         let start = Instant::now();
 
         let rows = sqlx::query_as::<_, BlockWithPositionRow>(
             r#"
             SELECT
                 b.id, b.content_type, b.content_json, b.created_at, b.updated_at,
+                b.source_url, b.source_title, b.creator, b.original_date, b.notes,
                 c.position
             FROM blocks b
             INNER JOIN connections c ON b.id = c.block_id
@@ -225,20 +222,16 @@ impl ConnectionRepository for SqliteConnectionRepository {
 
     #[instrument(skip(self), fields(channel_id = %channel_id.0))]
     async fn next_position(&self, channel_id: &ChannelId) -> RepoResult<i32> {
-        let result: Option<(Option<i32>,)> = sqlx::query_as(
-            "SELECT MAX(position) FROM connections WHERE channel_id = $1",
-        )
-        .bind(&channel_id.0)
-        .fetch_optional(&self.pool)
-        .await
-        .map_err(crate::error::DbError::from)?;
+        let result: Option<(Option<i32>,)> =
+            sqlx::query_as("SELECT MAX(position) FROM connections WHERE channel_id = $1")
+                .bind(&channel_id.0)
+                .fetch_optional(&self.pool)
+                .await
+                .map_err(crate::error::DbError::from)?;
 
         // If no connections exist, or max is NULL, start at 0
         // Otherwise, return max + 1
-        Ok(result
-            .and_then(|(max,)| max)
-            .map(|m| m + 1)
-            .unwrap_or(0))
+        Ok(result.and_then(|(max,)| max).map(|m| m + 1).unwrap_or(0))
     }
 }
 
@@ -254,20 +247,13 @@ struct ConnectionRow {
 
 impl ConnectionRow {
     fn into_connection(self) -> Result<Connection, crate::error::DbError> {
-        use chrono::DateTime;
-
-        let connected_at = DateTime::parse_from_rfc3339(&self.connected_at)
-            .map_err(|_| crate::error::DbError::InvalidDatetime {
-                field: "connected_at",
-                value: self.connected_at.clone(),
-            })?
-            .with_timezone(&chrono::Utc);
+        use super::util::parse_datetime;
 
         Ok(Connection {
             block_id: BlockId(self.block_id),
             channel_id: ChannelId(self.channel_id),
             position: self.position,
-            connected_at,
+            connected_at: parse_datetime(&self.connected_at, "connected_at")?,
         })
     }
 }
@@ -280,36 +266,33 @@ struct BlockWithPositionRow {
     content_json: String,
     created_at: String,
     updated_at: String,
+    // Archive metadata fields
+    source_url: Option<String>,
+    source_title: Option<String>,
+    creator: Option<String>,
+    original_date: Option<String>,
+    notes: Option<String>,
     position: i32,
 }
 
 impl BlockWithPositionRow {
     fn into_block_with_position(self) -> RepoResult<(Block, i32)> {
-        use chrono::DateTime;
+        use super::util::parse_datetime;
 
-        let content: BlockContent = serde_json::from_str(&self.content_json)
-            .map_err(crate::error::DbError::from)?;
-
-        let created_at = DateTime::parse_from_rfc3339(&self.created_at)
-            .map_err(|_| crate::error::DbError::InvalidDatetime {
-                field: "created_at",
-                value: self.created_at.clone(),
-            })?
-            .with_timezone(&chrono::Utc);
-
-        let updated_at = DateTime::parse_from_rfc3339(&self.updated_at)
-            .map_err(|_| crate::error::DbError::InvalidDatetime {
-                field: "updated_at",
-                value: self.updated_at.clone(),
-            })?
-            .with_timezone(&chrono::Utc);
+        let content: BlockContent =
+            serde_json::from_str(&self.content_json).map_err(crate::error::DbError::from)?;
 
         Ok((
             Block {
                 id: BlockId(self.id),
                 content,
-                created_at,
-                updated_at,
+                created_at: parse_datetime(&self.created_at, "created_at")?,
+                updated_at: parse_datetime(&self.updated_at, "updated_at")?,
+                source_url: self.source_url,
+                source_title: self.source_title,
+                creator: self.creator,
+                original_date: self.original_date,
+                notes: self.notes,
             },
             self.position,
         ))
@@ -327,28 +310,14 @@ struct ChannelRow {
 
 impl ChannelRow {
     fn into_channel(self) -> Result<Channel, crate::error::DbError> {
-        use chrono::DateTime;
-
-        let created_at = DateTime::parse_from_rfc3339(&self.created_at)
-            .map_err(|_| crate::error::DbError::InvalidDatetime {
-                field: "created_at",
-                value: self.created_at.clone(),
-            })?
-            .with_timezone(&chrono::Utc);
-
-        let updated_at = DateTime::parse_from_rfc3339(&self.updated_at)
-            .map_err(|_| crate::error::DbError::InvalidDatetime {
-                field: "updated_at",
-                value: self.updated_at.clone(),
-            })?
-            .with_timezone(&chrono::Utc);
+        use super::util::parse_datetime;
 
         Ok(Channel {
             id: ChannelId(self.id),
             title: self.title,
             description: self.description,
-            created_at,
-            updated_at,
+            created_at: parse_datetime(&self.created_at, "created_at")?,
+            updated_at: parse_datetime(&self.updated_at, "updated_at")?,
         })
     }
 }

@@ -5,8 +5,8 @@ use std::path::Path;
 use std::str::FromStr;
 use tracing::{info, instrument};
 
-use crate::error::DbResult;
 use super::{SqliteBlockRepository, SqliteChannelRepository, SqliteConnectionRepository};
+use crate::error::DbResult;
 
 /// SQLite database connection manager.
 ///
@@ -82,10 +82,10 @@ impl SqliteDatabase {
         const REQUIRED_TABLES: &[&str] = &["channels", "blocks", "connections"];
 
         for table in REQUIRED_TABLES {
-            let exists: (i32,) = sqlx::query_as(&format!(
-                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='{}'",
-                table
-            ))
+            let exists: (i32,) = sqlx::query_as(
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?",
+            )
+            .bind(*table)
             .fetch_one(&self.pool)
             .await
             .map_err(crate::error::DbError::from)?;

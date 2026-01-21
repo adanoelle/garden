@@ -29,8 +29,9 @@ impl BlockRepository for SqliteBlockRepository {
 
         sqlx::query(
             r#"
-            INSERT INTO blocks (id, content_type, content_json, created_at, updated_at)
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO blocks (id, content_type, content_json, created_at, updated_at,
+                               source_url, source_title, creator, original_date, notes)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             "#,
         )
         .bind(&block.id.0)
@@ -38,6 +39,11 @@ impl BlockRepository for SqliteBlockRepository {
         .bind(&content_json)
         .bind(block.created_at.to_rfc3339())
         .bind(block.updated_at.to_rfc3339())
+        .bind(&block.source_url)
+        .bind(&block.source_title)
+        .bind(&block.creator)
+        .bind(&block.original_date)
+        .bind(&block.notes)
         .execute(&self.pool)
         .await
         .map_err(crate::error::DbError::from)?;
@@ -48,15 +54,20 @@ impl BlockRepository for SqliteBlockRepository {
     #[instrument(skip(self, blocks), fields(count = blocks.len()))]
     async fn create_batch(&self, blocks: &[Block]) -> RepoResult<()> {
         // Use a transaction for atomicity
-        let mut tx = self.pool.begin().await.map_err(crate::error::DbError::from)?;
+        let mut tx = self
+            .pool
+            .begin()
+            .await
+            .map_err(crate::error::DbError::from)?;
 
         for block in blocks {
             let (content_type, content_json) = serialize_content(&block.content)?;
 
             sqlx::query(
                 r#"
-                INSERT INTO blocks (id, content_type, content_json, created_at, updated_at)
-                VALUES ($1, $2, $3, $4, $5)
+                INSERT INTO blocks (id, content_type, content_json, created_at, updated_at,
+                                   source_url, source_title, creator, original_date, notes)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                 "#,
             )
             .bind(&block.id.0)
@@ -64,6 +75,11 @@ impl BlockRepository for SqliteBlockRepository {
             .bind(&content_json)
             .bind(block.created_at.to_rfc3339())
             .bind(block.updated_at.to_rfc3339())
+            .bind(&block.source_url)
+            .bind(&block.source_title)
+            .bind(&block.creator)
+            .bind(&block.original_date)
+            .bind(&block.notes)
             .execute(&mut *tx)
             .await
             .map_err(crate::error::DbError::from)?;
@@ -77,7 +93,8 @@ impl BlockRepository for SqliteBlockRepository {
     async fn get(&self, id: &BlockId) -> RepoResult<Option<Block>> {
         let row = sqlx::query_as::<_, BlockRow>(
             r#"
-            SELECT id, content_type, content_json, created_at, updated_at
+            SELECT id, content_type, content_json, created_at, updated_at,
+                   source_url, source_title, creator, original_date, notes
             FROM blocks
             WHERE id = $1
             "#,
@@ -100,7 +117,9 @@ impl BlockRepository for SqliteBlockRepository {
         let result = sqlx::query(
             r#"
             UPDATE blocks
-            SET content_type = $2, content_json = $3, updated_at = $4
+            SET content_type = $2, content_json = $3, updated_at = $4,
+                source_url = $5, source_title = $6, creator = $7,
+                original_date = $8, notes = $9
             WHERE id = $1
             "#,
         )
@@ -108,6 +127,11 @@ impl BlockRepository for SqliteBlockRepository {
         .bind(&content_type)
         .bind(&content_json)
         .bind(block.updated_at.to_rfc3339())
+        .bind(&block.source_url)
+        .bind(&block.source_title)
+        .bind(&block.creator)
+        .bind(&block.original_date)
+        .bind(&block.notes)
         .execute(&self.pool)
         .await
         .map_err(crate::error::DbError::from)?;
@@ -140,10 +164,12 @@ fn serialize_content(content: &BlockContent) -> RepoResult<(String, String)> {
     let content_type = match content {
         BlockContent::Text { .. } => "text",
         BlockContent::Link { .. } => "link",
+        BlockContent::Image { .. } => "image",
+        BlockContent::Video { .. } => "video",
+        BlockContent::Audio { .. } => "audio",
     };
 
-    let content_json =
-        serde_json::to_string(content).map_err(crate::error::DbError::from)?;
+    let content_json = serde_json::to_string(content).map_err(crate::error::DbError::from)?;
 
     Ok((content_type.to_string(), content_json))
 }
@@ -157,34 +183,31 @@ struct BlockRow {
     content_json: String,
     created_at: String,
     updated_at: String,
+    // Archive metadata fields
+    source_url: Option<String>,
+    source_title: Option<String>,
+    creator: Option<String>,
+    original_date: Option<String>,
+    notes: Option<String>,
 }
 
 impl BlockRow {
     fn into_block(self) -> RepoResult<Block> {
-        use chrono::DateTime;
+        use super::util::parse_datetime;
 
         let content: BlockContent =
             serde_json::from_str(&self.content_json).map_err(crate::error::DbError::from)?;
 
-        let created_at = DateTime::parse_from_rfc3339(&self.created_at)
-            .map_err(|_| crate::error::DbError::InvalidDatetime {
-                field: "created_at",
-                value: self.created_at.clone(),
-            })?
-            .with_timezone(&chrono::Utc);
-
-        let updated_at = DateTime::parse_from_rfc3339(&self.updated_at)
-            .map_err(|_| crate::error::DbError::InvalidDatetime {
-                field: "updated_at",
-                value: self.updated_at.clone(),
-            })?
-            .with_timezone(&chrono::Utc);
-
         Ok(Block {
             id: BlockId(self.id),
             content,
-            created_at,
-            updated_at,
+            created_at: parse_datetime(&self.created_at, "created_at")?,
+            updated_at: parse_datetime(&self.updated_at, "updated_at")?,
+            source_url: self.source_url,
+            source_title: self.source_title,
+            creator: self.creator,
+            original_date: self.original_date,
+            notes: self.notes,
         })
     }
 }

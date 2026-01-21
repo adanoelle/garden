@@ -9,7 +9,9 @@ use garden_db::sqlite::SqliteDatabase;
 
 /// Helper to set up a clean test database.
 async fn setup_db() -> SqliteDatabase {
-    let db = SqliteDatabase::in_memory().await.expect("Failed to create in-memory database");
+    let db = SqliteDatabase::in_memory()
+        .await
+        .expect("Failed to create in-memory database");
     db.migrate().await.expect("Failed to run migrations");
     db
 }
@@ -25,7 +27,9 @@ async fn channel_create_and_get() {
 
     let channel = Channel::with_description("Test Channel", "A test");
 
-    repo.create(&channel).await.expect("Failed to create channel");
+    repo.create(&channel)
+        .await
+        .expect("Failed to create channel");
 
     let retrieved = repo
         .get(&channel.id)
@@ -57,7 +61,10 @@ async fn channel_update() {
         .expect("Not found");
 
     assert_eq!(retrieved.title, "Updated");
-    assert_eq!(retrieved.description, Some("Now with description".to_string()));
+    assert_eq!(
+        retrieved.description,
+        Some("Now with description".to_string())
+    );
 }
 
 #[tokio::test]
@@ -154,6 +161,7 @@ async fn block_create_link() {
         url: "https://example.com".to_string(),
         title: Some("Example".to_string()),
         description: Some("An example site".to_string()),
+        alt_text: Some("Example site screenshot".to_string()),
     });
 
     repo.create(&block).await.expect("Failed to create");
@@ -169,10 +177,12 @@ async fn block_create_link() {
             url,
             title,
             description,
+            alt_text,
         } => {
             assert_eq!(url, "https://example.com");
             assert_eq!(title, Some("Example".to_string()));
             assert_eq!(description, Some("An example site".to_string()));
+            assert_eq!(alt_text, Some("Example site screenshot".to_string()));
         }
         _ => panic!("Wrong content type"),
     }
@@ -234,7 +244,9 @@ async fn block_create_batch() {
         })
         .collect();
 
-    repo.create_batch(&blocks).await.expect("Failed to batch create");
+    repo.create_batch(&blocks)
+        .await
+        .expect("Failed to batch create");
 
     // Verify all were created
     for block in &blocks {
@@ -264,7 +276,10 @@ async fn connection_connect_and_get() {
         body: "Test block".to_string(),
     });
 
-    channels.create(&channel).await.expect("Failed to create channel");
+    channels
+        .create(&channel)
+        .await
+        .expect("Failed to create channel");
     blocks.create(&block).await.expect("Failed to create block");
 
     // Connect them
@@ -297,9 +312,15 @@ async fn connection_disconnect() {
         body: "Test".to_string(),
     });
 
-    channels.create(&channel).await.expect("Failed to create channel");
+    channels
+        .create(&channel)
+        .await
+        .expect("Failed to create channel");
     blocks.create(&block).await.expect("Failed to create block");
-    conns.connect(&block.id, &channel.id, 0).await.expect("Failed to connect");
+    conns
+        .connect(&block.id, &channel.id, 0)
+        .await
+        .expect("Failed to connect");
 
     // Disconnect
     conns
@@ -323,12 +344,21 @@ async fn connection_get_blocks_in_channel() {
     let conns = db.connection_repository();
 
     let channel = Channel::new("Test");
-    channels.create(&channel).await.expect("Failed to create channel");
+    channels
+        .create(&channel)
+        .await
+        .expect("Failed to create channel");
 
     // Create and connect 3 blocks with specific positions
-    let block1 = Block::new(BlockContent::Text { body: "First".to_string() });
-    let block2 = Block::new(BlockContent::Text { body: "Second".to_string() });
-    let block3 = Block::new(BlockContent::Text { body: "Third".to_string() });
+    let block1 = Block::new(BlockContent::Text {
+        body: "First".to_string(),
+    });
+    let block2 = Block::new(BlockContent::Text {
+        body: "Second".to_string(),
+    });
+    let block3 = Block::new(BlockContent::Text {
+        body: "Third".to_string(),
+    });
 
     blocks.create(&block1).await.unwrap();
     blocks.create(&block2).await.unwrap();
@@ -362,7 +392,9 @@ async fn connection_get_channels_for_block() {
     let conns = db.connection_repository();
 
     // Create one block and multiple channels
-    let block = Block::new(BlockContent::Text { body: "Shared block".to_string() });
+    let block = Block::new(BlockContent::Text {
+        body: "Shared block".to_string(),
+    });
     blocks.create(&block).await.unwrap();
 
     let channel1 = Channel::new("Channel 1");
@@ -397,7 +429,9 @@ async fn connection_reorder() {
     let channel = Channel::new("Test");
     channels.create(&channel).await.unwrap();
 
-    let block = Block::new(BlockContent::Text { body: "Test".to_string() });
+    let block = Block::new(BlockContent::Text {
+        body: "Test".to_string(),
+    });
     blocks.create(&block).await.unwrap();
 
     conns.connect(&block.id, &channel.id, 0).await.unwrap();
@@ -428,12 +462,19 @@ async fn connection_next_position() {
     channels.create(&channel).await.unwrap();
 
     // Empty channel should have next position 0
-    let pos = conns.next_position(&channel.id).await.expect("Failed to get next position");
+    let pos = conns
+        .next_position(&channel.id)
+        .await
+        .expect("Failed to get next position");
     assert_eq!(pos, 0);
 
     // Add some blocks
-    let block1 = Block::new(BlockContent::Text { body: "1".to_string() });
-    let block2 = Block::new(BlockContent::Text { body: "2".to_string() });
+    let block1 = Block::new(BlockContent::Text {
+        body: "1".to_string(),
+    });
+    let block2 = Block::new(BlockContent::Text {
+        body: "2".to_string(),
+    });
 
     blocks.create(&block1).await.unwrap();
     blocks.create(&block2).await.unwrap();
@@ -442,7 +483,10 @@ async fn connection_next_position() {
     conns.connect(&block2.id, &channel.id, 5).await.unwrap();
 
     // Next position should be max + 1 = 6
-    let pos = conns.next_position(&channel.id).await.expect("Failed to get next position");
+    let pos = conns
+        .next_position(&channel.id)
+        .await
+        .expect("Failed to get next position");
     assert_eq!(pos, 6);
 }
 
@@ -458,7 +502,11 @@ async fn connection_batch_connect() {
 
     // Create 5 blocks
     let block_list: Vec<Block> = (0..5)
-        .map(|i| Block::new(BlockContent::Text { body: format!("Block {}", i) }))
+        .map(|i| {
+            Block::new(BlockContent::Text {
+                body: format!("Block {}", i),
+            })
+        })
         .collect();
 
     blocks.create_batch(&block_list).await.unwrap();
@@ -470,7 +518,10 @@ async fn connection_batch_connect() {
         .map(|(i, b)| (b.id.clone(), channel.id.clone(), i as i32))
         .collect();
 
-    conns.connect_batch(&connections).await.expect("Failed to batch connect");
+    conns
+        .connect_batch(&connections)
+        .await
+        .expect("Failed to batch connect");
 
     // Verify all connections
     let blocks_in_channel = conns.get_blocks_in_channel(&channel.id).await.unwrap();
@@ -489,7 +540,9 @@ async fn cascade_delete_channel_removes_connections() {
     let conns = db.connection_repository();
 
     let channel = Channel::new("To Delete");
-    let block = Block::new(BlockContent::Text { body: "Test".to_string() });
+    let block = Block::new(BlockContent::Text {
+        body: "Test".to_string(),
+    });
 
     channels.create(&channel).await.unwrap();
     blocks.create(&block).await.unwrap();
@@ -515,7 +568,9 @@ async fn cascade_delete_block_removes_connections() {
     let conns = db.connection_repository();
 
     let channel = Channel::new("Test");
-    let block = Block::new(BlockContent::Text { body: "To Delete".to_string() });
+    let block = Block::new(BlockContent::Text {
+        body: "To Delete".to_string(),
+    });
 
     channels.create(&channel).await.unwrap();
     blocks.create(&block).await.unwrap();
