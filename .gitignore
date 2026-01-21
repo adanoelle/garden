@@ -10,6 +10,10 @@ dist/
 target/
 Cargo.lock
 
+# ts-rs bindings (keep only packages/types/src/generated/)
+bindings/
+crates/*/bindings/
+
 # Tauri
 apps/desktop/src-tauri/target/
 
