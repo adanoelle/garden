@@ -78,11 +78,17 @@ doctor:
     fi
 
 # Install all dependencies (run after cloning or updating)
-setup:
+setup: setup-hooks
     @echo "📦 Installing dependencies..."
     pnpm install
     @echo ""
     @echo "✅ Setup complete! Run 'just doctor' to verify environment."
+
+# Configure git to use project hooks
+setup-hooks:
+    @echo "🪝 Setting up git hooks..."
+    git config core.hooksPath .githooks
+    @echo "  ✓ Git hooks configured"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Development

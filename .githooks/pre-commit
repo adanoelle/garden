@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Pre-commit hook to ensure TypeScript types are regenerated when Rust files change.
+# Install with: git config core.hooksPath .githooks
+#
+
+# Check if any Rust files are staged
+if git diff --cached --name-only | grep -q '\.rs$'; then
+    echo "🦀 Rust files changed, checking if types need regeneration..."
+
+    # Run type generation
+    if ! just gen-types; then
+        echo "❌ Type generation failed"
+        exit 1
+    fi
+
+    # Check if generated types changed
+    if git diff --name-only packages/types/src/generated/ | grep -q .; then
+        echo "📝 Generated types updated, staging changes..."
+        git add packages/types/src/generated/
+    else
+        echo "✅ Generated types are up to date"
+    fi
+fi
+
+exit 0
