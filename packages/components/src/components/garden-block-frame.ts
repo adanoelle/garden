@@ -65,24 +65,25 @@ export class GardenBlockFrame extends GardenElement {
         max-height: 80vh;
       }
 
-      /* Content wrapper - constrains and centers */
+      /* Content wrapper - constrains and centers with matte effect */
       .content {
-        max-width: 100%;
-        max-height: 100%;
+        width: 100%;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
+        /* Matte effect - creates breathing room around slotted content */
+        padding: var(--garden-frame-matte, 10%);
+        box-sizing: border-box;
       }
 
-      /* Slotted media fits within, preserving ratio */
+      /* Slotted media fits within the padded content area */
       ::slotted(img),
       ::slotted(video),
       ::slotted(garden-video-block),
       ::slotted(garden-image-block) {
         max-width: 100%;
         max-height: 100%;
-        width: auto;
-        height: auto;
         object-fit: contain;
       }
 
