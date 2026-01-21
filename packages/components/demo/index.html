@@ -662,6 +662,143 @@
     </div>
   </section>
 
+  <section class="demo-section">
+    <h2>Media Blocks</h2>
+    <p style="font-size: var(--garden-text-sm); color: var(--garden-fg-muted); margin-bottom: var(--garden-space-4);">
+      Image, video, and audio components for media content. Designed for Tauri's asset:// protocol, but works with any URLs.
+    </p>
+
+    <!-- Image Block -->
+    <div style="margin-bottom: var(--garden-space-6);">
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">image block</span>
+      <div class="component-grid">
+        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">default</span>
+          <garden-image-block
+            src="https://picsum.photos/400/300"
+            alt="Random landscape"
+            style="width: 200px;"
+          ></garden-image-block>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">clickable</span>
+          <garden-image-block
+            src="https://picsum.photos/seed/garden/400/300"
+            alt="Seeded image"
+            clickable
+            style="width: 200px;"
+            onclick="alert('Image clicked!')"
+          ></garden-image-block>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">constrained with cover</span>
+          <garden-image-block
+            src="https://picsum.photos/seed/pc98/800/400"
+            alt="Wide image with cover"
+            constrained
+            cover
+            style="width: 200px; height: 200px;"
+          ></garden-image-block>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">error state</span>
+          <garden-image-block
+            src="https://invalid-url-that-will-fail.com/image.jpg"
+            alt="This will fail"
+            style="width: 200px; height: 150px;"
+          ></garden-image-block>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Block -->
+    <div style="margin-bottom: var(--garden-space-6);">
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">video block</span>
+      <div class="component-grid">
+        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">default (click to play)</span>
+          <garden-video-block
+            src="https://www.w3schools.com/html/mov_bbb.mp4"
+            poster="https://picsum.photos/seed/video/400/225"
+            duration="10"
+            style="width: 300px;"
+          ></garden-video-block>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: var(--garden-space-2);">
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">muted autoplay loop</span>
+          <garden-video-block
+            src="https://www.w3schools.com/html/mov_bbb.mp4"
+            autoplay
+            muted
+            loop
+            style="width: 200px;"
+          ></garden-video-block>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio Block -->
+    <div style="margin-bottom: var(--garden-space-6);">
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">audio block</span>
+      <div style="display: flex; flex-direction: column; gap: var(--garden-space-4); max-width: 400px;">
+        <div>
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">default with metadata</span>
+          <garden-audio-block
+            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+            track-title="SoundHelix Song 1"
+            artist="SoundHelix"
+            duration="371"
+            style="margin-top: var(--garden-space-2);"
+          ></garden-audio-block>
+        </div>
+        <div>
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">compact variant</span>
+          <garden-audio-block
+            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+            track-title="SoundHelix Song 2"
+            artist="SoundHelix"
+            compact
+            style="margin-top: var(--garden-space-2);"
+          ></garden-audio-block>
+        </div>
+        <div>
+          <span style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted);">without metadata (filename fallback)</span>
+          <garden-audio-block
+            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+            style="margin-top: var(--garden-space-2);"
+          ></garden-audio-block>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event logging -->
+    <div>
+      <span style="font-size: var(--garden-text-xs); display: block; margin-bottom: var(--garden-space-2); color: var(--garden-fg-muted);">event log</span>
+      <div id="media-event-log" style="font-size: var(--garden-text-xs); color: var(--garden-fg-muted); padding: var(--garden-space-2); border: 1px solid var(--garden-fg-muted); min-height: 60px; max-height: 120px; overflow-y: auto;">
+        Interact with media components to see events...
+      </div>
+    </div>
+  </section>
+
+  <script type="module">
+    // Media event logging
+    const mediaLog = document.getElementById('media-event-log');
+    const logEvent = (type, detail) => {
+      const time = new Date().toLocaleTimeString();
+      const line = document.createElement('div');
+      line.textContent = `[${time}] ${type}: ${JSON.stringify(detail).slice(0, 80)}`;
+      mediaLog.appendChild(line);
+      mediaLog.scrollTop = mediaLog.scrollHeight;
+    };
+
+    // Listen for media events
+    document.querySelectorAll('garden-image-block, garden-video-block, garden-audio-block').forEach(el => {
+      ['garden:load', 'garden:error', 'garden:play', 'garden:pause', 'garden:ended', 'garden:click'].forEach(event => {
+        el.addEventListener(event, (e) => logEvent(event.replace('garden:', ''), e.detail || {}));
+      });
+    });
+  </script>
+
   <!-- Waveform visualizer (fixed position) -->
   <garden-waveform
     id="waveform-demo"
@@ -738,6 +875,9 @@
     import '../src/components/garden-waypoint.ts';
     import '../src/components/garden-context-menu.ts';
     import '../src/components/garden-connections-modal.ts';
+    import '../src/components/garden-image-block.ts';
+    import '../src/components/garden-video-block.ts';
+    import '../src/components/garden-audio-block.ts';
   </script>
   
   <script>

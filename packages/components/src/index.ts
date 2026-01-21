@@ -32,3 +32,17 @@ export type {
 } from './components/garden-context-menu.js';
 export { GardenConnectionsModal } from './components/garden-connections-modal.js';
 export type { BlockConnection } from './components/garden-connections-modal.js';
+
+// Block detail view components
+export { GardenBlockFrame } from './components/garden-block-frame.js';
+export { GardenArchiveInfo } from './components/garden-archive-info.js';
+export { GardenNotesSection } from './components/garden-notes-section.js';
+export { GardenChannelsModal } from './components/garden-channels-modal.js';
+export type { ChannelItem } from './components/garden-channels-modal.js';
+export { GardenMetadataModal } from './components/garden-metadata-modal.js';
+export type { MetadataValues } from './components/garden-metadata-modal.js';
+
+// Media block components
+export { GardenImageBlock } from './components/garden-image-block.js';
+export { GardenVideoBlock } from './components/garden-video-block.js';
+export { GardenAudioBlock } from './components/garden-audio-block.js';

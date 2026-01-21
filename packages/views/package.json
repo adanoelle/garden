@@ -1,0 +1,35 @@
+{
+  "name": "@garden/views",
+  "version": "0.1.0",
+  "description": "Garden views - page compositions built with Lit web components",
+  "type": "module",
+  "main": "./dist/garden-views.js",
+  "module": "./dist/garden-views.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/garden-views.js",
+      "development": "./src/index.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && npm run build:types",
+    "build:types": "tsc --emitDeclarationOnly",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "lit": "^3.1.0",
+    "@garden/components": "workspace:*",
+    "@garden/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^3.6.0"
+  }
+}
