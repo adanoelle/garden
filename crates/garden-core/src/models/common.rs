@@ -10,7 +10,7 @@ use ts_rs::TS;
 /// - Clearing a field to None (Clear)
 /// - Setting a field to a new value (Set)
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 #[serde(tag = "action", content = "value", rename_all = "snake_case")]
 pub enum FieldUpdate<T> {
     /// Keep the current value (don't update).
@@ -40,7 +40,7 @@ impl<T> FieldUpdate<T> {
 
 /// A paginated response.
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 pub struct Page<T> {
     /// The items in this page.
     pub items: Vec<T>,
@@ -98,20 +98,32 @@ mod tests {
 
     #[test]
     fn field_update_keep() {
-        assert_eq!(FieldUpdate::<String>::Keep.apply(Some("old".to_string())), Some("old".to_string()));
+        assert_eq!(
+            FieldUpdate::<String>::Keep.apply(Some("old".to_string())),
+            Some("old".to_string())
+        );
         assert_eq!(FieldUpdate::<String>::Keep.apply(None), None);
     }
 
     #[test]
     fn field_update_clear() {
-        assert_eq!(FieldUpdate::<String>::Clear.apply(Some("old".to_string())), None);
+        assert_eq!(
+            FieldUpdate::<String>::Clear.apply(Some("old".to_string())),
+            None
+        );
         assert_eq!(FieldUpdate::<String>::Clear.apply(None), None);
     }
 
     #[test]
     fn field_update_set() {
-        assert_eq!(FieldUpdate::Set("new".to_string()).apply(Some("old".to_string())), Some("new".to_string()));
-        assert_eq!(FieldUpdate::Set("new".to_string()).apply(None), Some("new".to_string()));
+        assert_eq!(
+            FieldUpdate::Set("new".to_string()).apply(Some("old".to_string())),
+            Some("new".to_string())
+        );
+        assert_eq!(
+            FieldUpdate::Set("new".to_string()).apply(None),
+            Some("new".to_string())
+        );
     }
 
     #[test]

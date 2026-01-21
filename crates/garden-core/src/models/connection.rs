@@ -11,7 +11,7 @@ use super::{BlockId, ChannelId};
 /// Blocks can belong to multiple channels, and this is the join table.
 /// The position field allows ordering blocks within a channel.
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 pub struct Connection {
     /// The block being connected.
     pub block_id: BlockId,
@@ -38,7 +38,7 @@ impl Connection {
 
 /// Data for creating a new connection.
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 pub struct NewConnection {
     pub block_id: BlockId,
     pub channel_id: ChannelId,

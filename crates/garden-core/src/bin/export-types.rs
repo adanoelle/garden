@@ -6,9 +6,9 @@
 //!
 //! # Output Location
 //!
-//! Types are exported to `packages/types/src/generated/` relative to the
-//! workspace root. This path is configured in each model's `#[ts(export_to)]`
-//! attribute.
+//! Types are exported to the directory specified by the `TS_RS_EXPORT_DIR`
+//! environment variable. This is typically set by the justfile to
+//! `{workspace}/packages/types/src/generated`.
 //!
 //! # Important
 //!
@@ -18,7 +18,7 @@
 use std::path::Path;
 use ts_rs::TS;
 
-/// The expected output directory relative to workspace root.
+/// The expected output directory relative to workspace root (for verification).
 const OUTPUT_DIR: &str = "packages/types/src/generated";
 
 fn main() {

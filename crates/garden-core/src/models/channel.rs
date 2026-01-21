@@ -6,7 +6,7 @@ use ts_rs::TS;
 
 /// Unique identifier for a channel.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 pub struct ChannelId(pub String);
 
 impl ChannelId {
@@ -35,7 +35,7 @@ impl std::fmt::Display for ChannelId {
 
 /// A channel is a collection of blocks.
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 pub struct Channel {
     /// Unique identifier.
     pub id: ChannelId,
@@ -74,7 +74,7 @@ impl Channel {
 
 /// Data for creating a new channel.
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 pub struct NewChannel {
     pub title: String,
     pub description: Option<String>,
@@ -82,7 +82,7 @@ pub struct NewChannel {
 
 /// Data for updating a channel.
 #[derive(Debug, Clone, Default, Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../../packages/types/src/generated/")]
+#[ts(export)]
 pub struct ChannelUpdate {
     /// New title (None = keep current).
     #[serde(default)]

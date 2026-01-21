@@ -3,8 +3,8 @@
 /**
  * The content of a block.
  *
- * Currently supports Text and Link types.
- * Future types: Image, Audio, Code.
+ * Supports Text, Link, Image, Video, and Audio types.
+ * Future types: Code.
  */
 export type BlockContent = { "type": "text", 
 /**
@@ -22,4 +22,84 @@ title: string | null,
 /**
  * Optional description (often extracted from meta tags).
  */
-description: string | null, };
+description: string | null, 
+/**
+ * Alt text for accessibility.
+ */
+alt_text: string | null, } | { "type": "image", 
+/**
+ * Relative path within media directory: "images/{uuid}.{ext}"
+ */
+file_path: string, 
+/**
+ * Original URL where image was downloaded from.
+ */
+original_url: string | null, 
+/**
+ * Image width in pixels.
+ */
+width: number | null, 
+/**
+ * Image height in pixels.
+ */
+height: number | null, 
+/**
+ * MIME type: "image/jpeg", "image/png", etc.
+ */
+mime_type: string, 
+/**
+ * Alt text for accessibility.
+ */
+alt_text: string | null, } | { "type": "video", 
+/**
+ * Relative path within media directory: "videos/{uuid}.{ext}"
+ */
+file_path: string, 
+/**
+ * Original URL where video was downloaded from.
+ */
+original_url: string | null, 
+/**
+ * Video width in pixels.
+ */
+width: number | null, 
+/**
+ * Video height in pixels.
+ */
+height: number | null, 
+/**
+ * Duration in seconds.
+ */
+duration: number | null, 
+/**
+ * MIME type: "video/mp4", "video/webm", etc.
+ */
+mime_type: string, 
+/**
+ * Alt text for accessibility.
+ */
+alt_text: string | null, } | { "type": "audio", 
+/**
+ * Relative path within media directory: "audio/{uuid}.{ext}"
+ */
+file_path: string, 
+/**
+ * Original URL where audio was downloaded from.
+ */
+original_url: string | null, 
+/**
+ * Duration in seconds.
+ */
+duration: number | null, 
+/**
+ * MIME type: "audio/mpeg", "audio/ogg", etc.
+ */
+mime_type: string, 
+/**
+ * Title from ID3 tags or filename.
+ */
+title: string | null, 
+/**
+ * Artist from ID3 tags.
+ */
+artist: string | null, };

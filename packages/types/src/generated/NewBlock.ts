@@ -4,4 +4,24 @@ import type { BlockContent } from "./BlockContent";
 /**
  * Data for creating a new block.
  */
-export type NewBlock = { content: BlockContent, };
+export type NewBlock = { content: BlockContent, 
+/**
+ * Original URL where content was curated from.
+ */
+source_url: string | null, 
+/**
+ * Custom display text for the source link.
+ */
+source_title: string | null, 
+/**
+ * Author or artist of the original content.
+ */
+creator: string | null, 
+/**
+ * Original publication date (flexible format string).
+ */
+original_date: string | null, 
+/**
+ * User's personal notes about this block.
+ */
+notes: string | null, };

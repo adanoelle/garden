@@ -15,10 +15,30 @@ id: BlockId,
  */
 content: BlockContent, 
 /**
- * When the block was created.
+ * When the block was created (archived).
  */
 created_at: string, 
 /**
  * When the block was last updated.
  */
-updated_at: string, };
+updated_at: string, 
+/**
+ * Original URL where content was curated from.
+ */
+source_url: string | null, 
+/**
+ * Custom display text for the source link.
+ */
+source_title: string | null, 
+/**
+ * Author or artist of the original content.
+ */
+creator: string | null, 
+/**
+ * Original publication date (flexible format string).
+ */
+original_date: string | null, 
+/**
+ * User's personal notes about this block.
+ */
+notes: string | null, };

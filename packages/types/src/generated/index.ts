@@ -1,27 +1,30 @@
-// Auto-generated types from Rust via ts-rs
-// Run `just gen-types` to regenerate
+// Re-export all generated types
+// This file is manually maintained to aggregate ts-rs generated types
 
 // Channel types
-export type { Channel } from './Channel.js';
-export type { ChannelId } from './ChannelId.js';
-export type { ChannelUpdate } from './ChannelUpdate.js';
-export type { NewChannel } from './NewChannel.js';
+export type { Channel } from "./Channel";
+export type { ChannelId } from "./ChannelId";
+export type { NewChannel } from "./NewChannel";
+export type { ChannelUpdate } from "./ChannelUpdate";
 
 // Block types
-export type { Block } from './Block.js';
-export type { BlockId } from './BlockId.js';
-export type { BlockContent } from './BlockContent.js';
-export type { BlockUpdate } from './BlockUpdate.js';
-export type { NewBlock } from './NewBlock.js';
+export type { Block } from "./Block";
+export type { BlockId } from "./BlockId";
+export type { BlockContent } from "./BlockContent";
+export type { NewBlock } from "./NewBlock";
+export type { BlockUpdate } from "./BlockUpdate";
 
 // Connection types
-export type { Connection } from './Connection.js';
-export type { NewConnection } from './NewConnection.js';
+export type { Connection } from "./Connection";
+export type { NewConnection } from "./NewConnection";
 
-// Common types
-export type { FieldUpdate } from './FieldUpdate.js';
-export type { Page } from './Page.js';
+// Utility types
+export type { FieldUpdate } from "./FieldUpdate";
+export type { Page } from "./Page";
 
 // Error types (from garden-tauri)
-export type { ErrorCode } from './ErrorCode.js';
-export type { TauriError } from './TauriError.js';
+export type { ErrorCode } from "./ErrorCode";
+export type { TauriError } from "./TauriError";
+
+// Media types (from garden-tauri)
+export type { MediaImportResult } from "./MediaImportResult";
