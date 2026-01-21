@@ -45,7 +45,7 @@ If you prefer not to use Nix:
 
 - Node.js 20+
 - pnpm 9+
-- Rust 1.75+ (via rustup)
+- Rust 1.92+ (via rustup)
 - just (task runner)
 
 **Optional:**
@@ -67,12 +67,22 @@ just doctor
 ### First-Time Setup
 
 ```bash
-# Install all dependencies
+# Install all dependencies and configure git hooks
 just setup
 
 # Run the desktop app
 just dev-desktop
 ```
+
+### Git Hooks
+
+The project includes pre-commit hooks that automatically regenerate TypeScript types when Rust files change. These are configured during `just setup`, but you can also set them up manually:
+
+```bash
+just setup-hooks
+```
+
+The hooks live in `.githooks/` and are version-controlled.
 
 ---
 
