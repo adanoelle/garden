@@ -19,9 +19,10 @@
         };
 
         # Rust toolchain with useful extensions
-        # Using stable.latest for latest stable release
-        # To pin a specific version: pkgs.rust-bin.stable."1.75.0".default
-        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+        # Pinned to specific version for reproducibility
+        # To update: change version and run `nix flake update`
+        # Available versions: nix flake show github:oxalica/rust-overlay
+        rustToolchain = pkgs.rust-bin.stable."1.92.0".default.override {
           extensions = [ "rust-src" "rust-analyzer" ];
         };
 
