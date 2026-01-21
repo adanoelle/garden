@@ -5,7 +5,14 @@
 export * from "./generated/index.js";
 
 // Re-export API wrapper
-export { garden, channels, blocks, connections, media, GardenError } from "./api.js";
+export {
+  garden,
+  channels,
+  blocks,
+  connections,
+  media,
+  GardenError,
+} from "./api.js";
 export type { ErrorCode, TauriError } from "./api.js";
 
 // Re-export media utilities

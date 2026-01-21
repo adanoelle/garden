@@ -31,7 +31,7 @@ declare global {
  * Check if we're running in a Tauri context.
  */
 export function isTauri(): boolean {
-  return typeof window !== 'undefined' && '__TAURI__' in window;
+  return typeof window !== "undefined" && "__TAURI__" in window;
 }
 
 /**
@@ -47,7 +47,7 @@ export function isTauri(): boolean {
 export async function setFullscreen(fullscreen: boolean): Promise<void> {
   if (isTauri()) {
     // Use Tauri's window API
-    const { getCurrentWindow } = await import('@tauri-apps/api/window');
+    const { getCurrentWindow } = await import("@tauri-apps/api/window");
     await getCurrentWindow().setFullscreen(fullscreen);
   } else {
     // Browser fallback using Fullscreen API
@@ -55,7 +55,7 @@ export async function setFullscreen(fullscreen: boolean): Promise<void> {
       if (document.documentElement.requestFullscreen) {
         await document.documentElement.requestFullscreen();
       } else {
-        throw new Error('Fullscreen not supported');
+        throw new Error("Fullscreen not supported");
       }
     } else {
       if (document.exitFullscreen && document.fullscreenElement) {
@@ -72,7 +72,7 @@ export async function setFullscreen(fullscreen: boolean): Promise<void> {
  */
 export async function isFullscreen(): Promise<boolean> {
   if (isTauri()) {
-    const { getCurrentWindow } = await import('@tauri-apps/api/window');
+    const { getCurrentWindow } = await import("@tauri-apps/api/window");
     return await getCurrentWindow().isFullscreen();
   } else {
     return document.fullscreenElement !== null;
@@ -100,7 +100,10 @@ export function isFullscreenSupported(): boolean {
     // Tauri window fullscreen is always supported
     return true;
   }
-  return typeof document !== 'undefined' && !!document.documentElement.requestFullscreen;
+  return (
+    typeof document !== "undefined" &&
+    !!document.documentElement.requestFullscreen
+  );
 }
 
 /**
