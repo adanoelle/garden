@@ -1,9 +1,15 @@
 import { html, css, CSSResultGroup, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { GardenView } from '../GardenView.js';
 import type { Block, Channel } from '@garden/types';
-import { getMediaAssetUrl } from '@garden/types';
+import { getMediaAssetUrl, isTauri } from '@garden/types';
 import type { MetadataValues, ContextMenuItem } from '@garden/components';
+
+/**
+ * Fullscreen mode states for media viewing
+ */
+type FullscreenMode = 'normal' | 'gallery' | 'immersive';
 
 // Import components for side effects
 import '@garden/components';
@@ -184,6 +190,75 @@ export class GardenBlockPage extends GardenView {
       .block-audio audio {
         width: 100%;
       }
+
+      /* Fullscreen overlay */
+      .fullscreen-overlay {
+        display: none;
+      }
+
+      .fullscreen-overlay.active {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        background: var(--garden-bg);
+      }
+
+      /* Gallery mode - frame with matte */
+      .fullscreen-overlay.gallery {
+        padding: var(--garden-space-8);
+      }
+
+      .fullscreen-overlay.gallery .fullscreen-frame {
+        width: 100%;
+        height: 100%;
+        max-width: 90vw;
+        max-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--garden-fg);
+        padding: var(--garden-space-6);
+        background: var(--garden-bg);
+      }
+
+      .fullscreen-overlay.gallery .fullscreen-media {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      /* Immersive mode - edge to edge */
+      .fullscreen-overlay.immersive {
+        background: #000;
+      }
+
+      .fullscreen-overlay.immersive .fullscreen-media {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .fullscreen-close {
+        position: fixed;
+        top: var(--garden-space-4);
+        right: var(--garden-space-4);
+        z-index: 10000;
+        background: var(--garden-bg);
+        border: 1px solid var(--garden-fg);
+        padding: var(--garden-space-2) var(--garden-space-3);
+        cursor: pointer;
+        font-family: inherit;
+        font-size: var(--garden-text-sm);
+        color: var(--garden-fg);
+      }
+
+      .fullscreen-close:hover {
+        background: var(--garden-fg);
+        color: var(--garden-bg);
+      }
     `,
   ];
 
@@ -225,10 +300,24 @@ export class GardenBlockPage extends GardenView {
   @state()
   private _mediaLoading = true;
 
+  /** Current fullscreen mode */
+  @state()
+  private _fullscreenMode: FullscreenMode = 'normal';
+
   /** Menu items for block actions */
   private _menuItems: ContextMenuItem[] = [
     { id: 'edit-metadata', label: 'Edit metadata' },
   ];
+
+  override connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('keydown', this._handleKeydown);
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('keydown', this._handleKeydown);
+  }
 
   override updated(changedProps: Map<string, unknown>) {
     super.updated(changedProps);
@@ -266,6 +355,123 @@ export class GardenBlockPage extends GardenView {
   private _handleBack = () => {
     this.goBack();
   };
+
+  /**
+   * Check if an input element is currently focused, traversing Shadow DOM boundaries.
+   * This is necessary because events at the window level have retargeted targets
+   * that don't reflect the actual focused element inside shadow roots.
+   */
+  private _isInputFocused(): boolean {
+    let activeElement = document.activeElement;
+
+    // Traverse into shadow roots to find the actual focused element
+    while (activeElement?.shadowRoot?.activeElement) {
+      activeElement = activeElement.shadowRoot.activeElement;
+    }
+
+    if (!activeElement) return false;
+
+    const tagName = activeElement.tagName;
+    return (
+      tagName === 'INPUT' ||
+      tagName === 'TEXTAREA' ||
+      (activeElement as HTMLElement).isContentEditable
+    );
+  }
+
+  private _handleKeydown = (e: KeyboardEvent) => {
+    // Don't capture keypresses when user is typing in an input
+    // Use activeElement and traverse shadow roots to find the actual focused element
+    if (this._isInputFocused()) {
+      return;
+    }
+
+    // Only handle fullscreen for media blocks
+    if (!this.block) return;
+    const isMedia = ['image', 'video'].includes(this.block.content.type);
+    if (!isMedia) return;
+
+    // Escape exits fullscreen
+    if (e.key === 'Escape' && this._fullscreenMode !== 'normal') {
+      e.preventDefault();
+      this._exitFullscreen();
+      return;
+    }
+
+    // F key controls fullscreen modes
+    // F = gallery mode, Shift+F = immersive mode
+    // Pressing the same shortcut again exits, different shortcut switches modes
+    if (e.key === 'f' || e.key === 'F') {
+      e.preventDefault();
+      const targetMode: FullscreenMode = e.shiftKey ? 'immersive' : 'gallery';
+
+      if (this._fullscreenMode === 'normal') {
+        // Enter the requested mode
+        this._enterFullscreen(targetMode);
+      } else if (this._fullscreenMode === targetMode) {
+        // Same mode pressed again - exit
+        this._exitFullscreen();
+      } else {
+        // Different mode - switch without exiting native fullscreen
+        this._fullscreenMode = targetMode;
+      }
+    }
+  };
+
+  private async _enterFullscreen(mode: FullscreenMode) {
+    // Enter native fullscreen in Tauri
+    if (isTauri()) {
+      try {
+        const { getCurrentWindow } = await import('@tauri-apps/api/window');
+        await getCurrentWindow().setFullscreen(true);
+        // Only update state after success
+        this._fullscreenMode = mode;
+      } catch (err) {
+        console.error('Failed to enter Tauri fullscreen:', err);
+        // State remains 'normal' on failure
+      }
+    } else {
+      // Browser fullscreen
+      try {
+        await document.documentElement.requestFullscreen();
+        // Only update state after success
+        this._fullscreenMode = mode;
+      } catch (err) {
+        console.error('Failed to enter browser fullscreen:', err);
+        // State remains 'normal' on failure
+      }
+    }
+  }
+
+  private async _exitFullscreen() {
+    // Exit native fullscreen in Tauri
+    if (isTauri()) {
+      try {
+        const { getCurrentWindow } = await import('@tauri-apps/api/window');
+        await getCurrentWindow().setFullscreen(false);
+        // Only update state after success
+        this._fullscreenMode = 'normal';
+      } catch (err) {
+        console.error('Failed to exit Tauri fullscreen:', err);
+        // State remains in current mode on failure
+      }
+    } else {
+      // Browser fullscreen
+      if (document.fullscreenElement) {
+        try {
+          await document.exitFullscreen();
+          // Only update state after success
+          this._fullscreenMode = 'normal';
+        } catch (err) {
+          console.error('Failed to exit browser fullscreen:', err);
+          // State remains in current mode on failure
+        }
+      } else {
+        // No fullscreen element, just reset state
+        this._fullscreenMode = 'normal';
+      }
+    }
+  }
 
   private _handleMenuClick = (e: CustomEvent<{ x: number; y: number }>) => {
     this._contextMenuX = e.detail.x;
@@ -397,13 +603,10 @@ export class GardenBlockPage extends GardenView {
         return html`<div class="media-loading">Loading image...</div>`;
       }
       return html`
-        <garden-image-block
+        <img
           src=${this._mediaAssetUrl}
           alt=${content.alt_text ?? ''}
-          width=${content.width ?? nothing}
-          height=${content.height ?? nothing}
-          constrained
-        ></garden-image-block>
+        />
       `;
     }
 
@@ -437,6 +640,69 @@ export class GardenBlockPage extends GardenView {
     }
 
     return html`<div>Unknown block type</div>`;
+  }
+
+  private _renderFullscreenOverlay(block: Block) {
+    const content = block.content;
+    const isMedia = content.type === 'image' || content.type === 'video';
+
+    if (!isMedia || this._fullscreenMode === 'normal') {
+      return nothing;
+    }
+
+    const overlayClasses = {
+      'fullscreen-overlay': true,
+      'active': true,
+      'gallery': this._fullscreenMode === 'gallery',
+      'immersive': this._fullscreenMode === 'immersive',
+    };
+
+    // Render the media content for fullscreen
+    let mediaContent;
+    if (content.type === 'image' && this._mediaAssetUrl) {
+      mediaContent = html`<img class="fullscreen-media" src=${this._mediaAssetUrl} alt=${content.alt_text ?? ''} />`;
+    } else if (content.type === 'video' && this._mediaAssetUrl) {
+      mediaContent = html`<video class="fullscreen-media" src=${this._mediaAssetUrl} controls autoplay></video>`;
+    } else {
+      return nothing;
+    }
+
+    if (this._fullscreenMode === 'gallery') {
+      return html`
+        <div
+          class=${classMap(overlayClasses)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Fullscreen gallery view"
+        >
+          <button
+            class="fullscreen-close"
+            @click=${this._exitFullscreen}
+            aria-label="Exit fullscreen (Escape)"
+          >Close (Esc)</button>
+          <div class="fullscreen-frame">
+            ${mediaContent}
+          </div>
+        </div>
+      `;
+    }
+
+    // Immersive mode - no frame
+    return html`
+      <div
+        class=${classMap(overlayClasses)}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Fullscreen immersive view"
+      >
+        <button
+          class="fullscreen-close"
+          @click=${this._exitFullscreen}
+          aria-label="Exit fullscreen (Escape)"
+        >Close (Esc)</button>
+        ${mediaContent}
+      </div>
+    `;
   }
 
   private _getChannelItems(): ChannelDisplayItem[] {
@@ -520,10 +786,13 @@ export class GardenBlockPage extends GardenView {
       <garden-metadata-modal
         ?open=${this._metadataModalOpen}
         .values=${this._getMetadataValues()}
-        ?is-link=${block.content.type === 'link'}
+        ?show-alt-text=${['link', 'image', 'video'].includes(block.content.type)}
         @garden:modal-close=${this._handleMetadataModalClose}
         @garden:metadata-save=${this._handleMetadataSave}
       ></garden-metadata-modal>
+
+      <!-- Fullscreen Overlay -->
+      ${this._renderFullscreenOverlay(block)}
     `;
   }
 }
