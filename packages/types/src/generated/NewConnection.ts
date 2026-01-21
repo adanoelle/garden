@@ -5,8 +5,11 @@ import type { ChannelId } from "./ChannelId";
 /**
  * Data for creating a new connection.
  */
-export type NewConnection = { block_id: BlockId, channel_id: ChannelId, 
-/**
- * Optional position; if not provided, append to end.
- */
-position: number | null, };
+export type NewConnection = {
+  block_id: BlockId;
+  channel_id: ChannelId;
+  /**
+   * Optional position; if not provided, append to end.
+   */
+  position: number | null;
+};

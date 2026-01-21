@@ -139,7 +139,14 @@ where
     pub async fn create_block(&self, new_block: NewBlock) -> DomainResult<Block> {
         Self::validate_content(&new_block.content)?;
 
-        let block = Block::new(new_block.content);
+        let mut block = Block::new(new_block.content);
+        // Apply metadata from NewBlock
+        block.source_url = new_block.source_url;
+        block.source_title = new_block.source_title;
+        block.creator = new_block.creator;
+        block.original_date = new_block.original_date;
+        block.notes = new_block.notes;
+
         self.blocks.create(&block).await?;
         info!(block_id = %block.id.0, "Block created");
         Ok(block)

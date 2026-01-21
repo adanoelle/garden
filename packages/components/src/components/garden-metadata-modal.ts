@@ -31,13 +31,14 @@ export class GardenMetadataModal extends GardenElement {
         display: contents;
       }
 
-      /* Backdrop overlay */
+      /* Backdrop overlay with dither */
       .backdrop {
         position: fixed;
         inset: 0;
-        background-color: var(--garden-bg);
-        opacity: 0.9;
         z-index: 100;
+        background-color: color-mix(in srgb, var(--garden-bg) 70%, transparent);
+        background-image: var(--garden-dither-25);
+        background-size: 4px 4px;
       }
 
       /* Modal container */

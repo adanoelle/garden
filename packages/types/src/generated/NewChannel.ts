@@ -3,4 +3,4 @@
 /**
  * Data for creating a new channel.
  */
-export type NewChannel = { title: string, description: string | null, };
+export type NewChannel = { title: string; description: string | null };

@@ -41,6 +41,11 @@ export { GardenChannelsModal } from './components/garden-channels-modal.js';
 export type { ChannelItem } from './components/garden-channels-modal.js';
 export { GardenMetadataModal } from './components/garden-metadata-modal.js';
 export type { MetadataValues } from './components/garden-metadata-modal.js';
+export { GardenImportModal } from './components/garden-import-modal.js';
+export type { ImportContentType, MediaSubtype, ImportFormValues } from './components/garden-import-modal.js';
+export { GardenSearchModal } from './components/garden-search-modal.js';
+export type { SearchChannel, SearchBlock, SearchData } from './components/garden-search-modal.js';
+export { GardenConfirmModal } from './components/garden-confirm-modal.js';
 
 // Media block components
 export { GardenImageBlock } from './components/garden-image-block.js';

@@ -6,28 +6,29 @@
  * Contains the stored file path and metadata that can be used to create
  * a block with the appropriate content type.
  */
-export type MediaImportResult = { 
-/**
- * Relative path within media directory (e.g., "images/{uuid}.jpg").
- */
-file_path: string, 
-/**
- * MIME type of the file (e.g., "image/jpeg").
- */
-mime_type: string, 
-/**
- * Image/video width in pixels (None for audio).
- */
-width: number | null, 
-/**
- * Image/video height in pixels (None for audio).
- */
-height: number | null, 
-/**
- * Duration in seconds (for video/audio, None for images).
- */
-duration: number | null, 
-/**
- * Original URL if imported from web.
- */
-original_url: string | null, };
+export type MediaImportResult = {
+  /**
+   * Relative path within media directory (e.g., "images/{uuid}.jpg").
+   */
+  file_path: string;
+  /**
+   * MIME type of the file (e.g., "image/jpeg").
+   */
+  mime_type: string;
+  /**
+   * Image/video width in pixels (None for audio).
+   */
+  width: number | null;
+  /**
+   * Image/video height in pixels (None for audio).
+   */
+  height: number | null;
+  /**
+   * Duration in seconds (for video/audio, None for images).
+   */
+  duration: number | null;
+  /**
+   * Original URL if imported from web.
+   */
+  original_url: string | null;
+};

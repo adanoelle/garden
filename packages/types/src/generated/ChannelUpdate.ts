@@ -4,12 +4,13 @@ import type { FieldUpdate } from "./FieldUpdate";
 /**
  * Data for updating a channel.
  */
-export type ChannelUpdate = { 
-/**
- * New title (None = keep current).
- */
-title: string | null, 
-/**
- * Description update (Keep/Clear/Set).
- */
-description: FieldUpdate<string>, };
+export type ChannelUpdate = {
+  /**
+   * New title (None = keep current).
+   */
+  title: string | null;
+  /**
+   * Description update (Keep/Clear/Set).
+   */
+  description: FieldUpdate<string>;
+};

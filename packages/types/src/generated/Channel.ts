@@ -4,24 +4,25 @@ import type { ChannelId } from "./ChannelId";
 /**
  * A channel is a collection of blocks.
  */
-export type Channel = { 
-/**
- * Unique identifier.
- */
-id: ChannelId, 
-/**
- * Display title.
- */
-title: string, 
-/**
- * Optional description.
- */
-description: string | null, 
-/**
- * When the channel was created.
- */
-created_at: string, 
-/**
- * When the channel was last updated.
- */
-updated_at: string, };
+export type Channel = {
+  /**
+   * Unique identifier.
+   */
+  id: ChannelId;
+  /**
+   * Display title.
+   */
+  title: string;
+  /**
+   * Optional description.
+   */
+  description: string | null;
+  /**
+   * When the channel was created.
+   */
+  created_at: string;
+  /**
+   * When the channel was last updated.
+   */
+  updated_at: string;
+};

@@ -48,21 +48,36 @@ export class GardenBlockPage extends GardenView {
 
       .header {
         margin-bottom: var(--garden-space-6);
+        padding-bottom: var(--garden-space-4);
+        border-bottom: 1px solid var(--garden-fg);
       }
 
-      .back-link {
-        display: inline-flex;
+      .breadcrumb {
+        display: flex;
         align-items: center;
-        gap: var(--garden-space-1);
-        color: var(--garden-fg-muted);
-        font-size: var(--garden-text-sm);
-        cursor: pointer;
-        text-decoration: none;
+        gap: var(--garden-space-2);
+        margin: 0;
+        font-size: var(--garden-text-2xl);
+        font-weight: 700;
       }
 
-      .back-link:hover {
+      .breadcrumb-link {
+        color: var(--garden-fg-muted);
+        cursor: pointer;
+      }
+
+      .breadcrumb-link:hover {
         color: var(--garden-fg);
         text-decoration: underline;
+      }
+
+      .breadcrumb-separator {
+        color: var(--garden-fg-muted);
+        font-weight: 400;
+      }
+
+      .breadcrumb-current {
+        color: var(--garden-fg);
       }
 
       /* Main content area - two column layout */
@@ -270,6 +285,10 @@ export class GardenBlockPage extends GardenView {
   @property({ type: Array })
   channels: Channel[] = [];
 
+  /** The channel the user navigated from (for breadcrumb) */
+  @property({ type: Object })
+  sourceChannel: Channel | null = null;
+
   /** Whether notes are editable */
   @property({ type: Boolean })
   notesEditable = true;
@@ -354,6 +373,12 @@ export class GardenBlockPage extends GardenView {
 
   private _handleBack = () => {
     this.goBack();
+  };
+
+  private _handleNavigateToChannel = () => {
+    if (this.sourceChannel) {
+      this.emit('navigate-channel', { channelId: this.sourceChannel.id });
+    }
   };
 
   /**
@@ -722,7 +747,15 @@ export class GardenBlockPage extends GardenView {
 
     return html`
       <div class="header">
-        <a class="back-link" @click=${this._handleBack}>&larr; Back</a>
+        <h1 class="breadcrumb">
+          <span class="breadcrumb-link" @click=${this._handleBack}>Garden</span>
+          <span class="breadcrumb-separator">/</span>
+          ${this.sourceChannel ? html`
+            <span class="breadcrumb-link" @click=${this._handleNavigateToChannel}>${this.sourceChannel.title}</span>
+            <span class="breadcrumb-separator">/</span>
+          ` : null}
+          <span class="breadcrumb-current">Block</span>
+        </h1>
       </div>
 
       <div class="main-content">

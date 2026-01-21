@@ -3,20 +3,21 @@
 /**
  * A paginated response.
  */
-export type Page<T> = { 
-/**
- * The items in this page.
- */
-items: Array<T>, 
-/**
- * Total number of items across all pages.
- */
-total: number, 
-/**
- * Offset of the first item in this page.
- */
-offset: number, 
-/**
- * Maximum number of items per page.
- */
-limit: number, };
+export type Page<T> = {
+  /**
+   * The items in this page.
+   */
+  items: Array<T>;
+  /**
+   * Total number of items across all pages.
+   */
+  total: number;
+  /**
+   * Offset of the first item in this page.
+   */
+  offset: number;
+  /**
+   * Maximum number of items per page.
+   */
+  limit: number;
+};

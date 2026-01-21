@@ -94,6 +94,10 @@ export class GardenAppShell extends GardenView {
   @state()
   private blocksInChannel: Block[] = [];
 
+  /** The channel the user navigated from when viewing a block */
+  @state()
+  private sourceChannel: Channel | null = null;
+
   @state()
   private loading = true;
 
@@ -140,6 +144,8 @@ export class GardenAppShell extends GardenView {
         break;
       case 'block':
         if (params?.id) {
+          // Save the current channel as the source channel when navigating to a block
+          this.sourceChannel = this.currentChannel;
           this.route = { name: 'block', id: params.id };
           this.loadBlock(params.id);
         }
@@ -229,6 +235,10 @@ export class GardenAppShell extends GardenView {
     this.navigateTo('block', { id: e.detail.blockId });
   };
 
+  private _handleNavigateToChannel = (e: CustomEvent<{ channelId: string }>) => {
+    this.navigateTo('channel', { id: e.detail.channelId });
+  };
+
   private handleNotesUpdate = async (e: CustomEvent<{ blockId: string; notes: string }>) => {
     const { blockId, notes } = e.detail;
     try {
@@ -301,20 +311,27 @@ export class GardenAppShell extends GardenView {
     }
   };
 
+  private get showHeader(): boolean {
+    // All pages now have their own breadcrumb headers
+    return false;
+  }
+
   override render() {
     return html`
-      <header>
-        <span class="logo" @click=${this.handleLogoClick}>Garden</span>
-        <nav>
-          <garden-button
-            variant="ghost"
-            size="sm"
-            @click=${() => this.navigateTo('home')}
-          >
-            Channels
-          </garden-button>
-        </nav>
-      </header>
+      ${this.showHeader ? html`
+        <header>
+          <span class="logo" @click=${this.handleLogoClick}>Garden</span>
+          <nav>
+            <garden-button
+              variant="ghost"
+              size="sm"
+              @click=${() => this.navigateTo('home')}
+            >
+              Channels
+            </garden-button>
+          </nav>
+        </header>
+      ` : null}
 
       ${this.error ? html`<div class="error">${this.error}</div>` : null}
 
@@ -352,8 +369,10 @@ export class GardenAppShell extends GardenView {
           <garden-block-page
             .block=${this.currentBlock}
             .channels=${this.channelsForBlock}
+            .sourceChannel=${this.sourceChannel}
             @garden:notes-update=${this.handleNotesUpdate}
             @garden:metadata-update=${this.handleMetadataUpdate}
+            @garden:navigate-channel=${this._handleNavigateToChannel}
           ></garden-block-page>
         `;
       default:

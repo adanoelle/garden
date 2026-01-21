@@ -10,28 +10,29 @@ import type { FieldUpdate } from "./FieldUpdate";
  * - `{ action: 'clear' }` → set to null
  * - `{ action: 'set', value: '...' }` → set to new value
  */
-export type BlockUpdate = { 
-/**
- * New content (if changing). Omit = keep current.
- */
-content?: BlockContent, 
-/**
- * Source URL update. Omit = keep current.
- */
-source_url?: FieldUpdate<string>, 
-/**
- * Source title update. Omit = keep current.
- */
-source_title?: FieldUpdate<string>, 
-/**
- * Creator update. Omit = keep current.
- */
-creator?: FieldUpdate<string>, 
-/**
- * Original date update. Omit = keep current.
- */
-original_date?: FieldUpdate<string>, 
-/**
- * Notes update. Omit = keep current.
- */
-notes?: FieldUpdate<string>, };
+export type BlockUpdate = {
+  /**
+   * New content (if changing). Omit = keep current.
+   */
+  content?: BlockContent;
+  /**
+   * Source URL update. Omit = keep current.
+   */
+  source_url?: FieldUpdate<string>;
+  /**
+   * Source title update. Omit = keep current.
+   */
+  source_title?: FieldUpdate<string>;
+  /**
+   * Creator update. Omit = keep current.
+   */
+  creator?: FieldUpdate<string>;
+  /**
+   * Original date update. Omit = keep current.
+   */
+  original_date?: FieldUpdate<string>;
+  /**
+   * Notes update. Omit = keep current.
+   */
+  notes?: FieldUpdate<string>;
+};

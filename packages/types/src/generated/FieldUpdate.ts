@@ -8,4 +8,7 @@
  * - Clearing a field to None (Clear)
  * - Setting a field to a new value (Set)
  */
-export type FieldUpdate<T> = { "action": "keep" } | { "action": "clear" } | { "action": "set", "value": T };
+export type FieldUpdate<T> =
+  | { action: "keep" }
+  | { action: "clear" }
+  | { action: "set"; value: T };

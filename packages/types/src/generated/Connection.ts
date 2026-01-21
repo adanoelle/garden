@@ -8,20 +8,21 @@ import type { ChannelId } from "./ChannelId";
  * Blocks can belong to multiple channels, and this is the join table.
  * The position field allows ordering blocks within a channel.
  */
-export type Connection = { 
-/**
- * The block being connected.
- */
-block_id: BlockId, 
-/**
- * The channel the block is connected to.
- */
-channel_id: ChannelId, 
-/**
- * Position within the channel (for ordering).
- */
-position: number, 
-/**
- * When this connection was created.
- */
-connected_at: string, };
+export type Connection = {
+  /**
+   * The block being connected.
+   */
+  block_id: BlockId;
+  /**
+   * The channel the block is connected to.
+   */
+  channel_id: ChannelId;
+  /**
+   * Position within the channel (for ordering).
+   */
+  position: number;
+  /**
+   * When this connection was created.
+   */
+  connected_at: string;
+};
