@@ -189,9 +189,13 @@ export class GardenMetadataModal extends GardenElement {
     altText: '',
   };
 
-  /** Whether the block is a link (shows alt text field) */
+  /** Whether the block is a link (deprecated, use showAltText) */
   @property({ type: Boolean, attribute: 'is-link' })
   isLink = false;
+
+  /** Whether to show the alt text field (for links, images, videos) */
+  @property({ type: Boolean, attribute: 'show-alt-text' })
+  showAltText = false;
 
   /** Title shown in the modal header */
   @property()
@@ -375,7 +379,7 @@ export class GardenMetadataModal extends GardenElement {
             <span class="field-hint">When the original content was published</span>
           </div>
 
-          ${this.isLink ? html`
+          ${this.showAltText || this.isLink ? html`
             <div class="field">
               <label class="field-label" for="alt-text">Alt Text</label>
               <textarea

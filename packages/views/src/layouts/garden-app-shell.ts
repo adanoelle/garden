@@ -256,14 +256,31 @@ export class GardenAppShell extends GardenView {
       // Absent fields = don't change, present fields = set to value
       const update: Record<string, unknown> = {};
 
-      // Build content update if this is a link block and alt_text changed
-      if (this.currentBlock.content.type === 'link') {
-        const linkContent = this.currentBlock.content;
+      // Build content update for blocks with alt_text field
+      const content = this.currentBlock.content;
+      if (content.type === 'link') {
         update.content = {
           type: 'link',
-          url: linkContent.url,
-          title: linkContent.title,
-          description: linkContent.description,
+          url: content.url,
+          title: content.title,
+          description: content.description,
+          alt_text: values.altText || null,
+        };
+      } else if (content.type === 'image') {
+        update.content = {
+          type: 'image',
+          file_path: content.file_path,
+          width: content.width,
+          height: content.height,
+          alt_text: values.altText || null,
+        };
+      } else if (content.type === 'video') {
+        update.content = {
+          type: 'video',
+          file_path: content.file_path,
+          width: content.width,
+          height: content.height,
+          duration: content.duration,
           alt_text: values.altText || null,
         };
       }
