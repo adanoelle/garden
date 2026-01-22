@@ -15,5 +15,11 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
 
+      - name: Install dependencies
+        run: nix develop --command pnpm install
+
+      - name: Install Playwright browsers
+        run: nix develop --command bash -c "cd packages/components && npx playwright install chromium"
+
       - name: Run CI checks
         run: nix develop --command just ci
