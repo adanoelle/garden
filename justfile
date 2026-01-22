@@ -299,6 +299,7 @@ adr title:
 # CI needs: pnpm install first, then build TS (creates dist/), then Rust checks
 ci: doctor
     pnpm install
+    pnpm exec playwright install chromium
     just build-ts
     just check-rust
     just gen-types
