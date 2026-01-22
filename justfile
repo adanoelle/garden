@@ -296,7 +296,14 @@ adr title:
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Run the full CI pipeline locally (use before pushing!)
-ci: doctor check-rust gen-types build-ts typecheck test
+# CI needs: pnpm install first, then build TS (creates dist/), then Rust checks
+ci: doctor
+    pnpm install
+    just build-ts
+    just check-rust
+    just gen-types
+    just typecheck
+    just test
     @echo ""
     @echo "════════════════════════════════════════════════════════════════════"
     @echo "✅ CI simulation complete! Safe to push."
