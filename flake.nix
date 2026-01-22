@@ -71,6 +71,7 @@
             # Dev tools
             figlet
             git
+            gh               # GitHub CLI for CI/PR management
             direnv           # Automatic environment loading
           ] ++ darwinDeps ++ linuxDeps;
 

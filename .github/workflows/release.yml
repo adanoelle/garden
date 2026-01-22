@@ -1,0 +1,95 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target universal-apple-darwin
+          - platform: ubuntu-22.04
+            args: ''
+          - platform: windows-latest
+            args: ''
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # macOS/Linux: Use Nix for reproducible environment
+      - uses: DeterminateSystems/nix-installer-action@main
+        if: matrix.platform != 'windows-latest'
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+        if: matrix.platform != 'windows-latest'
+
+      # Windows: Manual setup (no Nix support)
+      - uses: pnpm/action-setup@v2
+        if: matrix.platform == 'windows-latest'
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        if: matrix.platform == 'windows-latest'
+        with:
+          node-version: 20
+      - uses: dtolnay/rust-toolchain@stable
+        if: matrix.platform == 'windows-latest'
+
+      # Linux: Install webkit/gtk dependencies
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      # Build with Nix (macOS/Linux)
+      - name: Build (Nix)
+        if: matrix.platform != 'windows-latest'
+        run: |
+          nix develop --command bash -c "
+            pnpm install
+            pnpm turbo build
+            cd apps/desktop && pnpm tauri build ${{ matrix.args }}
+          "
+
+      # Build on Windows
+      - name: Build (Windows)
+        if: matrix.platform == 'windows-latest'
+        run: |
+          pnpm install
+          pnpm turbo build
+          cd apps/desktop
+          pnpm tauri build
+
+      # Upload build artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bundles-${{ matrix.platform }}
+          path: |
+            target/release/bundle/macos/*.dmg
+            target/release/bundle/macos/*.app
+            target/release/bundle/deb/*.deb
+            target/release/bundle/appimage/*.AppImage
+            target/release/bundle/msi/*.msi
+          if-no-files-found: ignore
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true

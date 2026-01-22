@@ -35,3 +35,4 @@ tracing-subscriber.workspace = true
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
+devtools = ["tauri/devtools"]

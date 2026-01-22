@@ -48,8 +48,12 @@ doctor:
 
     check_optional() {
         if command -v "$1" &> /dev/null; then
-            version=$($2 2>&1 | head -1)
-            echo "  ✓ $1: $version"
+            # Wrap in subshell to catch crashes (e.g., turbo can SIGABRT in CI)
+            if version=$($2 2>&1 | head -1); then
+                echo "  ✓ $1: $version"
+            else
+                echo "  ○ $1: installed but version check failed"
+            fi
         else
             echo "  ○ $1: not installed (optional)"
         fi
@@ -137,10 +141,20 @@ build-rust:
 build: build-rust build-ts
     @echo "✅ Full build complete!"
 
-# Build desktop app for distribution
+# Build desktop app for distribution (full release with all bundles)
 build-desktop:
     pnpm turbo build --filter=@garden/views
     cd apps/desktop && pnpm tauri build
+
+# Build production .app only (fast, skips DMG for local testing)
+build-app:
+    pnpm turbo build --filter=@garden/views
+    cd apps/desktop && pnpm tauri build --bundles app
+    @echo "✅ Built: target/release/bundle/macos/Garden.app"
+
+# Build and open the production app for testing
+run-prod: build-app
+    open target/release/bundle/macos/Garden.app
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Quality Checks
