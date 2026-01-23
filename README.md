@@ -3,7 +3,7 @@
 [![CI](https://github.com/adanoelle/garden/actions/workflows/ci.yml/badge.svg)](https://github.com/adanoelle/garden/actions/workflows/ci.yml)
 
 <div align="center">
-  <video src="assets/demo-small.mp4" controls autoplay loop muted></video>
+  <video src="https://github.com/adanoelle/garden/raw/main/assets/demo-small.mp4" controls autoplay loop muted></video>
 </div>
 
 A personal content curation system with PC-98 inspired aesthetics.
