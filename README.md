@@ -4,6 +4,8 @@
 
 A personal content curation system with PC-98 inspired aesthetics.
 
+https://github.com/adanoelle/garden/raw/main/assets/demo.mp4
+
 Garden is an [Are.na](https://are.na)-inspired tool for collecting and organizing
 content—images, videos, audio, links, and text—into channels. Built with a
 local-first architecture for privacy and offline use.
