@@ -1,9 +1,7 @@
 # Garden
 
-[![CI](https://github.com/adanoelle/garden/actions/workflows/ci.yml/badge.svg)](https://github.com/adanoelle/garden/actions/workflows/ci.yml)
-
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/34af038c-6776-495c-861e-193ebeef2dc6" controls autoplay loop muted></video>
+  <video src="https://github.com/user-attachments/assets/e242537b-d22e-4374-9383-8eeafd6feef8" controls autoplay loop muted></video>
 </div>
 
 A personal content curation system with PC-98 inspired aesthetics.
@@ -11,6 +9,10 @@ A personal content curation system with PC-98 inspired aesthetics.
 Garden is an [Are.na](https://are.na)-inspired tool for collecting and organizing
 content—images, videos, audio, links, and text—into channels. Built with a
 local-first architecture for privacy and offline use.
+
+--- 
+
+[![CI](https://github.com/adanoelle/garden/actions/workflows/ci.yml/badge.svg)](https://github.com/adanoelle/garden/actions/workflows/ci.yml)
 
 ## Features
 
