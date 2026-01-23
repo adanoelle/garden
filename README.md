@@ -1,5 +1,7 @@
 # Garden
 
+[![CI](https://github.com/adanoelle/garden/actions/workflows/ci.yml/badge.svg)](https://github.com/adanoelle/garden/actions/workflows/ci.yml)
+
 A personal content curation system with PC-98 inspired aesthetics.
 
 Garden is an [Are.na](https://are.na)-inspired tool for collecting and organizing
