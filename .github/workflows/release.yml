@@ -60,11 +60,11 @@ jobs:
         with:
           name: bundles-${{ matrix.platform }}
           path: |
-            target/release/bundle/macos/*.dmg
-            target/release/bundle/macos/*.app
             target/release/bundle/deb/*.deb
             target/release/bundle/appimage/*.AppImage
             target/release/bundle/msi/*.msi
+            target/universal-apple-darwin/release/bundle/macos/*.app
+            target/universal-apple-darwin/release/bundle/dmg/*.dmg
           if-no-files-found: ignore
 
   release:
