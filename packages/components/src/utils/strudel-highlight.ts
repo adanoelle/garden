@@ -55,7 +55,8 @@ export function highlightStrudel(code: string): string {
   const funcPattern = new RegExp(`\\b(${FUNCTIONS.join('|')})\\b`, 'g');
   html = html.replace(funcPattern, (m) => tokenize(m, 'hl-function'));
 
-  // Restore tokens
+  // Restore tokens (control characters used intentionally as unique placeholders)
+  // eslint-disable-next-line no-control-regex
   html = html.replace(/\x01T(\d+)T\x01/g, (_, index) => tokens[parseInt(index)]);
 
   return html;

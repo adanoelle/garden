@@ -23,6 +23,7 @@
     "build": "vite build && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
     "preview": "vite preview",
     "test": "web-test-runner",
     "test:watch": "web-test-runner --config web-test-runner.config.single.mjs",

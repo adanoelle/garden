@@ -51,3 +51,4 @@ coverage/
 # Nix/direnv
 .direnv/
 result
+.npm-global/
