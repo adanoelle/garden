@@ -21,54 +21,39 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # macOS/Linux: Use Nix for reproducible environment
-      - uses: DeterminateSystems/nix-installer-action@main
-        if: matrix.platform != 'windows-latest'
-      - uses: DeterminateSystems/magic-nix-cache-action@main
-        if: matrix.platform != 'windows-latest'
-
-      # Windows: Manual setup (no Nix support)
+      # All platforms: Use standard toolchain setup
       - uses: pnpm/action-setup@v2
-        if: matrix.platform == 'windows-latest'
         with:
           version: 9
       - uses: actions/setup-node@v4
-        if: matrix.platform == 'windows-latest'
         with:
           node-version: 20
       - uses: dtolnay/rust-toolchain@stable
-        if: matrix.platform == 'windows-latest'
 
-      # Linux: Install webkit/gtk dependencies and FUSE for AppImage
+      # Linux: Install webkit/gtk dependencies
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libfuse2
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       # macOS: Add Intel target for universal binary
       - name: Add Intel target (macOS)
         if: matrix.platform == 'macos-latest'
         run: rustup target add x86_64-apple-darwin
 
-      # Build with Nix (macOS/Linux)
-      - name: Build (Nix)
-        if: matrix.platform != 'windows-latest'
-        run: |
-          nix develop --command bash -c "
-            pnpm install
-            pnpm turbo build
-            cd apps/desktop && pnpm tauri build ${{ matrix.args }}
-          "
+      - name: Install dependencies
+        run: pnpm install
 
-      # Build on Windows
-      - name: Build (Windows)
-        if: matrix.platform == 'windows-latest'
-        run: |
-          pnpm install
-          pnpm turbo build
-          cd apps/desktop
-          pnpm tauri build
+      - name: Build frontend
+        run: pnpm turbo build
+
+      - name: Build Tauri app
+        working-directory: apps/desktop
+        run: pnpm tauri build ${{ matrix.args }}
+        env:
+          # Allow linuxdeploy AppImage to run without FUSE
+          APPIMAGE_EXTRACT_AND_RUN: 1
 
       # Upload build artifacts
       - uses: actions/upload-artifact@v4
