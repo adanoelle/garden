@@ -35,6 +35,18 @@ just setup
 just dev-desktop
 ```
 
+### Install with Nix (Linux)
+
+The flake also builds the desktop app as a package:
+
+```bash
+nix run github:adanoelle/garden      # try it
+nix build github:adanoelle/garden    # ./result/bin/garden-desktop
+```
+
+In a NixOS or Home Manager flake, add this repository as an input and
+install `inputs.garden.packages.${system}.default`.
+
 ### Manual Setup
 
 **Prerequisites**: Node.js 20+, pnpm 9+, Rust 1.75+
