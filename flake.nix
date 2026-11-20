@@ -56,8 +56,8 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             # Node.js ecosystem
-            nodejs_22
-            pnpm_10
+            nodejs_20
+            pnpm
 
             # Rust toolchain
             rustToolchain
