@@ -19,6 +19,7 @@
   librsvg,
   libsoup_3,
   openssl,
+  poppler-utils,
   webkitgtk_4_1,
 }:
 
@@ -65,6 +66,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   # The Rust tests run in CI; here they would only repeat that work.
   doCheck = false;
+
+  # The inbox splits PDFs into pages with pdftoppm.
+  preFixup = ''
+    gappsWrapperArgs+=(--prefix PATH : ${lib.makeBinPath [ poppler-utils ]})
+  '';
 
   meta = {
     description = "A personal curation system with PC-98 aesthetics";

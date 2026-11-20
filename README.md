@@ -14,6 +14,7 @@ local-first architecture for privacy and offline use.
 
 - **Local-first**: Your data stays on your machine. No accounts, no cloud sync (yet).
 - **Media support**: Import images, videos, and audio from files or URLs
+- **Inbox folder**: Drop scans and files into a folder; they appear in an "Inbox" channel
 - **Channels**: Organize content into themed collections
 - **Connections**: Link blocks across multiple channels
 - **PC-98 aesthetics**: Warm neutral palette, dither patterns, Commit Mono typography
@@ -64,6 +65,24 @@ just dev-desktop
 ```bash
 just doctor
 ```
+
+## The Inbox Folder
+
+While Garden is running it watches one folder, `garden` in your home
+folder (`~/garden`), and imports what arrives there into a channel called
+"Inbox".
+
+- **Images, video and audio** become one block each (JPEG, PNG, GIF and
+  WebP images).
+- **A PDF** becomes one image block per page, in page order. This needs
+  `pdftoppm` from [Poppler](https://poppler.freedesktop.org) on your
+  `PATH`; the Nix package includes it. Without it, PDFs stay in the folder.
+- **Originals are kept.** After import a file moves to
+  `~/garden/imported`. Empty that folder whenever you like.
+- A file is imported a few seconds after it stops changing. Other file
+  types are left where they are.
+
+Set `GARDEN_INBOX` to use a different folder.
 
 ## Documentation
 

@@ -1100,6 +1100,7 @@ dependencies = [
 name = "garden-tauri"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "garden-core",
  "garden-db",
  "serde",

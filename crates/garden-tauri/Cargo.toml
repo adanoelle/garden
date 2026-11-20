@@ -30,5 +30,8 @@ thiserror.workspace = true
 # Tracing
 tracing.workspace = true
 
+# Port traits implemented here
+async-trait = "0.1"
+
 [dev-dependencies]
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

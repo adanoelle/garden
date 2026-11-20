@@ -1,5 +1,6 @@
 import { html, css, CSSResultGroup } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { GardenView } from '../GardenView.js';
 import { garden, GardenError } from '@garden/types';
 import type { Channel, Block, BlockUpdate } from '@garden/types';
@@ -12,6 +13,13 @@ export type Route =
   | { name: 'home' }
   | { name: 'channel'; id: string }
   | { name: 'block'; id: string };
+
+/** Payload of the backend's `inbox:imported` event. */
+interface InboxImported {
+  channel_id: string;
+  files: number;
+  blocks: number;
+}
 
 /**
  * Main application shell that handles routing and layout.
@@ -104,17 +112,45 @@ export class GardenAppShell extends GardenView {
   @state()
   private error: string | null = null;
 
+  /** Stops listening for inbox imports. */
+  private unlistenInbox: UnlistenFn | null = null;
+
   override connectedCallback() {
     super.connectedCallback();
     this.addEventListener('garden:navigate', this.handleNavigate as EventListener);
     this.addEventListener('garden:navigate-back', this.handleNavigateBack);
     this.loadInitialData();
+    this.listenForInbox();
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('garden:navigate', this.handleNavigate as EventListener);
     this.removeEventListener('garden:navigate-back', this.handleNavigateBack);
+    this.unlistenInbox?.();
+    this.unlistenInbox = null;
+  }
+
+  /**
+   * Refresh the view when the backend imports files from the inbox folder.
+   * Outside Tauri (tests, the component demo) there is nothing to listen to.
+   */
+  private async listenForInbox() {
+    try {
+      this.unlistenInbox = await listen<InboxImported>('inbox:imported', (event) => {
+        this.handleInboxImported(event.payload);
+      });
+    } catch {
+      this.unlistenInbox = null;
+    }
+  }
+
+  private handleInboxImported(imported: InboxImported) {
+    if (this.route.name === 'home') {
+      this.loadInitialData();
+    } else if (this.route.name === 'channel' && this.route.id === imported.channel_id) {
+      this.loadChannel(this.route.id);
+    }
   }
 
   private handleNavigate = (e: CustomEvent<{ route: string; params?: Record<string, string> }>) => {

@@ -36,6 +36,7 @@ pub fn run() {
                 match garden_tauri::initialize_database(&handle).await {
                     Ok(state) => {
                         info!("Database initialized successfully");
+                        garden_tauri::spawn_inbox_watcher(&handle, state.clone());
                         handle.manage(state);
                         Ok(())
                     }

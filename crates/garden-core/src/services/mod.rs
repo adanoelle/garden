@@ -22,10 +22,12 @@ pub mod block;
 pub mod channel;
 pub mod connection;
 pub mod garden;
+pub mod inbox;
 pub mod media;
 
 pub use block::*;
 pub use channel::*;
 pub use connection::*;
 pub use garden::GardenService;
+pub use inbox::{InboxImporter, InboxReport, PageRasterizer};
 pub use media::{MediaError, MediaInfo, MediaResult, MediaService, MediaType};

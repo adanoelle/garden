@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Inbox folder: files dropped into `~/garden` are imported into an
+  "Inbox" channel. A PDF becomes one image block per page. Originals move
+  to `~/garden/imported`.
+- Nix package for the desktop app (`nix run github:adanoelle/garden`).
+
 ## [0.1.0] - 2026-01-23
 
 ### Added
