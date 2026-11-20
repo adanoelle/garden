@@ -96,11 +96,13 @@
 
 pub mod commands;
 pub mod error;
+pub mod inbox;
 pub mod init;
 pub mod state;
 
 // Re-export primary types for ergonomic usage
 pub use error::{CommandResult, ErrorCode, TauriError};
+pub use inbox::spawn_inbox_watcher;
 pub use init::initialize_database;
 pub use state::AppState;
 
