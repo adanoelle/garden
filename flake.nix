@@ -47,11 +47,17 @@
         ];
 
       in {
+        # The desktop app: `nix build`, `nix run`.
+        packages = pkgs.lib.optionalAttrs pkgs.stdenv.isLinux rec {
+          garden = pkgs.callPackage ./nix/package.nix { };
+          default = garden;
+        };
+
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             # Node.js ecosystem
-            nodejs_20
-            pnpm
+            nodejs_22
+            pnpm_10
 
             # Rust toolchain
             rustToolchain

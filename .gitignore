@@ -8,7 +8,6 @@ dist/
 
 # Rust/Cargo
 target/
-Cargo.lock
 
 # ts-rs bindings (keep only packages/types/src/generated/)
 bindings/
