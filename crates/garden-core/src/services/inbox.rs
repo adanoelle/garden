@@ -12,7 +12,7 @@
 //!   left alone.
 //! - Images, video and audio become one block each. A PDF becomes one image
 //!   block per page, in page order.
-//! - After a successful import the original moves to an `Imported` folder
+//! - After a successful import the original moves to an `imported` folder
 //!   inside the inbox. Nothing is deleted.
 //! - A file that cannot be imported stays where it is and is not tried
 //!   again until it changes.
@@ -34,7 +34,7 @@ use crate::services::{GardenService, MediaInfo, MediaService};
 pub const INBOX_CHANNEL_TITLE: &str = "Inbox";
 
 /// Folder inside the inbox that originals move to once imported.
-pub const IMPORTED_DIRNAME: &str = "Imported";
+pub const IMPORTED_DIRNAME: &str = "imported";
 
 const INBOX_CHANNEL_DESCRIPTION: &str = "Files dropped into the inbox folder land here.";
 
@@ -329,7 +329,7 @@ impl<R: PageRasterizer> InboxImporter<R> {
         Ok((channel_id, blocks))
     }
 
-    /// Move an imported original into the `Imported` folder.
+    /// Move an imported original into the `imported` folder.
     async fn move_to_imported(&self, path: &Path) -> std::io::Result<()> {
         let imported_dir = self.dir.join(IMPORTED_DIRNAME);
         tokio::fs::create_dir_all(&imported_dir).await?;

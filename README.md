@@ -78,7 +78,7 @@ folder (`~/garden`), and imports what arrives there into a channel called
   `pdftoppm` from [Poppler](https://poppler.freedesktop.org) on your
   `PATH`; the Nix package includes it. Without it, PDFs stay in the folder.
 - **Originals are kept.** After import a file moves to
-  `~/garden/Imported`. Empty that folder whenever you like.
+  `~/garden/imported`. Empty that folder whenever you like.
 - A file is imported a few seconds after it stops changing. Other file
   types are left where they are.
 
